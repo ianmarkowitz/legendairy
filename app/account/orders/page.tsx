@@ -65,7 +65,6 @@ export default async function OrdersPage() {
       ) : (
         <div className="space-y-3">
           {orders.map(order => {
-            // @ts-expect-error Supabase join type
             const flavor = order.flavor_creations
             const statusStyle = STATUS_STYLES[order.status] ?? STATUS_STYLES.pending
             const statusLabel = STATUS_LABELS[order.status] ?? order.status
