@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { stripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/stripe'
 import { supabase } from '@/lib/supabase'
 import { PRICE_PER_QUART_CENTS, MIN_QUARTS, QUART_INCREMENT } from '@/lib/constants'
 import { buildSpecSheet } from '@/lib/utils'
@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
     enabled_mix_ins:     JSON.stringify(customizations.enabledMixIns).slice(0, 490),
   }
 
-  const session = await stripe.checkout.sessions.create({
+  const session = await getStripe().checkout.sessions.create({
     mode:               'payment',
     line_items: [{
       quantity:   1,
