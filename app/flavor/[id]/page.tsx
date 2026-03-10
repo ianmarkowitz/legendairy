@@ -32,6 +32,7 @@ export default async function FlavorPage({ params }: Props) {
     suggestedColor:   data.suggested_color,
     makerNotes:       data.maker_notes ?? '',
     personalNote:     data.personal_note ?? null,
+    sessionId:        data.session_id ?? null,
     createdAt:        data.created_at,
   }
 
