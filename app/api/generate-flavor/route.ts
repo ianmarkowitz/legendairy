@@ -3,6 +3,7 @@ import Anthropic from '@anthropic-ai/sdk'
 import { z } from 'zod'
 import { FLAVOR_SYSTEM_PROMPT } from '@/lib/flavorPrompt'
 import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase-server'
 
 // ── Zod schema — mirrors the JSON schema in the system prompt ─────────────────
 
@@ -50,6 +51,11 @@ export async function POST(req: NextRequest) {
   const prompt:    string = body.prompt.trim().slice(0, 2000) // prevent abuse
   const sessionId: string = body.sessionId ?? null
 
+  // Attach to user account if logged in
+  const serverSupabase = await createClient()
+  const { data: { user } } = await serverSupabase.auth.getUser()
+  const userId: string | null = user?.id ?? null
+
   // Call Claude — retry once on malformed JSON
   let flavorData
   for (let attempt = 1; attempt <= 2; attempt++) {
@@ -94,6 +100,7 @@ export async function POST(req: NextRequest) {
     .from('flavor_creations')
     .insert({
       session_id:       sessionId,
+      user_id:          userId,
       customer_prompt:  prompt,
       flavor_name:      flavorData.flavorName,
       tagline:          flavorData.tagline,
