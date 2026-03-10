@@ -48,6 +48,7 @@ export async function POST(req: NextRequest) {
     const customFlavorName = meta.custom_flavor_name || null
     const personalNote     = meta.personal_note || null
     const enabledMixIns: string[] = JSON.parse(meta.enabled_mix_ins ?? '[]')
+    const userId           = meta.user_id || null
 
     if (!flavorCreationId) {
       console.error('Webhook missing flavor_creation_id in metadata')
@@ -147,6 +148,7 @@ export async function POST(req: NextRequest) {
         stripe_session_id:        session.id,
         customer_name:            customerName,
         customer_email:           customerEmail,
+        user_id:                  userId,
         status:                   'paid',
         delivery_type:            deliveryAddress ? 'delivery' : 'pickup',
         delivery_address:         deliveryAddress,

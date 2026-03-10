@@ -1,11 +1,16 @@
 import { notFound } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase-server'
 import FlavorClient from './FlavorClient'
 import type { FlavorCreation } from '@/types/flavor'
 
 interface Props { params: { id: string } }
 
 export default async function FlavorPage({ params }: Props) {
+  // Read auth session (null for guests)
+  const serverSupabase = await createClient()
+  const { data: { user } } = await serverSupabase.auth.getUser()
+
   const { data, error } = await supabase
     .from('flavor_creations')
     .select('*')
@@ -36,5 +41,5 @@ export default async function FlavorPage({ params }: Props) {
     createdAt:        data.created_at,
   }
 
-  return <FlavorClient flavor={flavor} />
+  return <FlavorClient flavor={flavor} userId={user?.id ?? null} />
 }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { getStripe } from '@/lib/stripe'
 import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase-server'
 import { PRICE_PER_QUART_CENTS, MIN_QUARTS, QUART_INCREMENT } from '@/lib/constants'
 import { buildSpecSheet } from '@/lib/utils'
 import type { FlavorOutput, FlavorCustomizations } from '@/types/flavor'
@@ -33,6 +34,10 @@ export async function POST(req: NextRequest) {
 
   const { flavorCreationId, quantityQuarts, customizations } = parsed.data
   const totalCents = quantityQuarts * PRICE_PER_QUART_CENTS
+
+  // Read auth session — include user_id in Stripe metadata if logged in
+  const serverSupabase = await createClient()
+  const { data: { user } } = await serverSupabase.auth.getUser()
 
   // Fetch the flavor creation from DB
   const { data: fc, error: fcErr } = await supabase
@@ -82,6 +87,7 @@ export async function POST(req: NextRequest) {
     custom_flavor_name:  customizations.customFlavorName ?? '',
     personal_note:       (customizations.personalNote ?? '').slice(0, 490),
     enabled_mix_ins:     JSON.stringify(customizations.enabledMixIns).slice(0, 490),
+    user_id:             user?.id ?? '',
   }
 
   const session = await getStripe().checkout.sessions.create({

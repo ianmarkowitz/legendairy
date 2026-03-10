@@ -6,9 +6,12 @@ import type { FlavorCreation, FlavorCustomizations } from '@/types/flavor'
 import { PRICE_PER_QUART_CENTS, MIN_QUARTS, QUART_INCREMENT } from '@/lib/constants'
 import AllergenBadges from '@/components/AllergenBadges'
 
-interface Props { flavor: FlavorCreation }
+interface Props {
+  flavor:     FlavorCreation
+  userId?:    string | null   // present if user is logged in
+}
 
-export default function FlavorClient({ flavor }: Props) {
+export default function FlavorClient({ flavor, userId }: Props) {
   const router = useRouter()
 
   const [customizations, setCustomizations] = useState<FlavorCustomizations>({
@@ -22,6 +25,9 @@ export default function FlavorClient({ flavor }: Props) {
   const [editingName, setEditingName]       = useState(false)
   const [loading, setLoading]               = useState(false)
   const [error, setError]                   = useState<string | null>(null)
+  const [vaulted, setVaulted]               = useState(false)
+  const [vaultLoading, setVaultLoading]     = useState(false)
+  const [copied, setCopied]                 = useState(false)
 
   const displayName  = customizations.customFlavorName ?? flavor.flavorName
   const totalCents   = quantityQuarts * PRICE_PER_QUART_CENTS
@@ -62,6 +68,33 @@ export default function FlavorClient({ flavor }: Props) {
       setError('A network error occurred. Please try again.')
       setLoading(false)
     }
+  }
+
+  async function handleVaultToggle() {
+    if (!userId) return
+    setVaultLoading(true)
+    try {
+      const res = await fetch('/api/vault', {
+        method:  'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ flavorCreationId: flavor.id, is_vaulted: !vaulted }),
+      })
+      if (res.ok) {
+        const data = await res.json()
+        setVaulted(data.is_vaulted)
+      }
+    } catch {
+      // silent — non-critical
+    } finally {
+      setVaultLoading(false)
+    }
+  }
+
+  function handleShare() {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
   }
 
   // Soft color tint from AI suggestion (very light)
@@ -238,6 +271,39 @@ export default function FlavorClient({ flavor }: Props) {
             <AllergenBadges flags={flavor.allergenFlags} />
           </section>
         )}
+
+        {/* Share + Vault actions */}
+        <section className="flex gap-3">
+          <button
+            onClick={handleShare}
+            className="
+              flex-1 flex items-center justify-center gap-2
+              border-2 border-navy/20 rounded-xl px-4 py-3
+              text-navy text-sm font-medium
+              hover:border-navy/50 transition-colors
+            "
+          >
+            {copied ? '✓ Copied!' : '🔗 Share'}
+          </button>
+
+          {userId && (
+            <button
+              onClick={handleVaultToggle}
+              disabled={vaultLoading}
+              className={`
+                flex-1 flex items-center justify-center gap-2
+                border-2 rounded-xl px-4 py-3
+                text-sm font-medium transition-colors
+                ${vaulted
+                  ? 'border-forest bg-forest/10 text-forest'
+                  : 'border-navy/20 text-navy hover:border-navy/50'}
+                disabled:opacity-50 disabled:cursor-not-allowed
+              `}
+            >
+              {vaulted ? '♥ Vaulted' : '♡ Save to Vault'}
+            </button>
+          )}
+        </section>
 
         {/* Quantity + order */}
         <section className="border-t border-navy/10 pt-8">
