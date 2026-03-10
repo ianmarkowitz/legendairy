@@ -29,7 +29,15 @@ const FlavorSchema = z.object({
   makerNotes:       z.string(),
 })
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! })
+let _anthropic: Anthropic | null = null
+function getAnthropic(): Anthropic {
+  if (!_anthropic) {
+    const key = process.env.ANTHROPIC_API_KEY
+    if (!key) throw new Error('ANTHROPIC_API_KEY env var is not set.')
+    _anthropic = new Anthropic({ apiKey: key })
+  }
+  return _anthropic
+}
 
 // ── Route handler ─────────────────────────────────────────────────────────────
 
@@ -46,7 +54,7 @@ export async function POST(req: NextRequest) {
   let flavorData
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {
-      const message = await anthropic.messages.create({
+      const message = await getAnthropic().messages.create({
         model:      'claude-sonnet-4-5',
         max_tokens: 1024,
         system:     FLAVOR_SYSTEM_PROMPT,

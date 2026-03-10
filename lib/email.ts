@@ -3,7 +3,15 @@ import type { SpecSheet } from '@/types/flavor'
 import { formatCents, formatShipDate, calculateShipDate } from './utils'
 import { MAKER_EMAIL } from './constants'
 
-const resend = new Resend(process.env.RESEND_API_KEY!)
+let _resend: Resend | null = null
+function getResend(): Resend {
+  if (!_resend) {
+    const key = process.env.RESEND_API_KEY
+    if (!key) throw new Error('RESEND_API_KEY env var is not set.')
+    _resend = new Resend(key)
+  }
+  return _resend
+}
 
 // ── Maker new-order alert ─────────────────────────────────────────────────────
 
@@ -139,7 +147,7 @@ export async function sendMakerAlert(opts: {
 </body>
 </html>`
 
-  return resend.emails.send({
+  return getResend().emails.send({
     from:    'Legendairy Orders <orders@legendairyicecream.com>',
     to:      MAKER_EMAIL,
     subject: `[NEW ORDER] ${orderRef} — ${spec.flavorName} · ${spec.quantityQuarts} qt`,
@@ -226,7 +234,7 @@ export async function sendOrderConfirmation(opts: {
 </body>
 </html>`
 
-  return resend.emails.send({
+  return getResend().emails.send({
     from:    'Legendairy Ice Cream <orders@legendairyicecream.com>',
     to:      customerEmail,
     subject: `Your order is confirmed — ${spec.flavorName} 🍦`,
