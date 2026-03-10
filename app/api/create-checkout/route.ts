@@ -97,8 +97,8 @@ export async function POST(req: NextRequest) {
         },
       },
     }],
-    // Capture customer email — used in the webhook for guest orders
-    customer_email: undefined, // Stripe collects it during checkout
+    // Collect shipping address — saved to orders.delivery_address in webhook
+    shipping_address_collection: { allowed_countries: ['US'] },
     billing_address_collection: 'auto',
     // Attach metadata to the payment intent (source of truth per spec)
     payment_intent_data: { metadata: stripeMetadata },

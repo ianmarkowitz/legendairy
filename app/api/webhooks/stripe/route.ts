@@ -97,7 +97,6 @@ export async function POST(req: NextRequest) {
     }
 
     const orderDate  = new Date()
-    const batchCount = quantityQuarts / 2
     const totalCents = quantityQuarts * 100 * 19.99 // safety recalc
 
     // Generate sequential order ref for today
@@ -110,9 +109,21 @@ export async function POST(req: NextRequest) {
 
     const orderRef = buildOrderRef(today, (todayCount ?? 0) + 1)
 
-    // Extract customer details from Stripe session
-    const customerEmail = session.customer_details?.email ?? ''
-    const customerName  = session.customer_details?.name  ?? 'Valued Customer'
+    // Extract customer + shipping details from Stripe session
+    const customerEmail    = session.customer_details?.email ?? ''
+    const customerName     = session.customer_details?.name  ?? 'Valued Customer'
+    const shippingDetails  = session.shipping_details
+    const deliveryAddress  = shippingDetails?.address
+      ? {
+          name:        shippingDetails.name ?? customerName,
+          line1:       shippingDetails.address.line1  ?? '',
+          line2:       shippingDetails.address.line2  ?? null,
+          city:        shippingDetails.address.city   ?? '',
+          state:       shippingDetails.address.state  ?? '',
+          postal_code: shippingDetails.address.postal_code ?? '',
+          country:     shippingDetails.address.country ?? 'US',
+        }
+      : null
 
     const spec = buildSpecSheet(
       flavorCreationId,
@@ -123,13 +134,13 @@ export async function POST(req: NextRequest) {
     )
 
     // Save order to DB
+    // Note: batch_count is a GENERATED ALWAYS AS column — do NOT insert it.
     const { data: order, error: orderErr } = await supabase
       .from('orders')
       .insert({
         order_reference:          orderRef,
         flavor_creation_id:       flavorCreationId,
         quantity_quarts:          quantityQuarts,
-        batch_count:              batchCount,
         unit_price_cents:         1999,
         total_price_cents:        quantityQuarts * 1999,
         stripe_payment_intent_id: session.payment_intent as string,
@@ -137,7 +148,8 @@ export async function POST(req: NextRequest) {
         customer_name:            customerName,
         customer_email:           customerEmail,
         status:                   'paid',
-        delivery_type:            'pickup',
+        delivery_type:            deliveryAddress ? 'delivery' : 'pickup',
+        delivery_address:         deliveryAddress,
         spec_sheet_sent:          false,
       })
       .select('id')
@@ -156,10 +168,12 @@ export async function POST(req: NextRequest) {
       orderDate,
     }
 
-    await Promise.allSettled([
+    const [makerResult, confirmResult] = await Promise.allSettled([
       sendMakerAlert(emailOpts),
       sendOrderConfirmation(emailOpts),
     ])
+    if (makerResult.status   === 'rejected') console.error('Maker alert email failed:',        makerResult.reason)
+    if (confirmResult.status === 'rejected') console.error('Customer confirm email failed:', confirmResult.reason)
 
     // Mark spec sheet sent
     await supabase
