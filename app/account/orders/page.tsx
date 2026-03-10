@@ -65,7 +65,9 @@ export default async function OrdersPage() {
       ) : (
         <div className="space-y-3">
           {orders.map(order => {
-            const flavor = order.flavor_creations
+            // Supabase returns joined rows as an array; unwrap the first (and only) row
+            const flavorRaw = order.flavor_creations
+            const flavor = Array.isArray(flavorRaw) ? flavorRaw[0] : flavorRaw
             const statusStyle = STATUS_STYLES[order.status] ?? STATUS_STYLES.pending
             const statusLabel = STATUS_LABELS[order.status] ?? order.status
 
