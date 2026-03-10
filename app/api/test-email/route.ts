@@ -5,21 +5,20 @@ import type { SpecSheet } from '@/types/flavor'
 // ⚠️  TEMPORARY — remove before launch
 export async function GET() {
   const fakeSpec: SpecSheet = {
-    orderRef:               'LD-TEST-001',
-    flavorCreationId:       '00000000-0000-0000-0000-000000000000',
-    customerPrompt:         'Something with brown butter and sea salt',
-    flavorName:             'Brown Butter Sea Salt Caramel',
-    tagline:                'Salty, nutty, deeply caramelised.',
-    baseType:               'Whole Cream',
-    milkfatPercent:         14,
-    milkfatRationale:       'Rich base for caramel notes',
-    primaryFlavor:          'Brown butter caramel',
-    sweetnessLevel:         6,
-    sweetenerType:          'Cane sugar',
+    flavorCreationId:        '00000000-0000-0000-0000-000000000000',
+    customerPrompt:          'Something with brown butter and sea salt',
+    flavorName:              'Brown Butter Sea Salt Caramel',
+    tagline:                 'Salty, nutty, deeply caramelised.',
+    baseType:                'Whole Cream',
+    milkfatPercent:          14,
+    milkfatRationale:        'Rich base for caramel notes',
+    primaryFlavor:           'Brown butter caramel',
+    sweetnessLevel:          6,
+    sweetenerType:           'Cane sugar',
     sweetenerGramsPerQtBase: 140,
     mixIns: [
-      { name: 'Sea salt flakes', weightGrams: 8,  foldMethod: 'fold-frozen',       prepNote: null },
-      { name: 'Caramel ribbons', weightGrams: 60, foldMethod: 'swirl-softened',    prepNote: 'Heat to 180°F, cool before folding' },
+      { name: 'Sea salt flakes', weightGrams: 8,  foldMethod: 'fold-frozen',    prepNote: null },
+      { name: 'Caramel ribbons', weightGrams: 60, foldMethod: 'swirl-softened', prepNote: 'Heat to 180°F, cool before folding' },
     ],
     enabledMixIns:     ['Sea salt flakes', 'Caramel ribbons'],
     allergenFlags:     ['dairy'],
@@ -28,7 +27,7 @@ export async function GET() {
     quantityQuarts:    2,
     batchCount:        1,
     liquidBaseTotalQt: 1.5,
-    vegan:             false,
+    suggestedColor:    '#C4922A',
   }
 
   const opts = {
