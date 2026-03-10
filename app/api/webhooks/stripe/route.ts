@@ -6,10 +6,7 @@ import { sendMakerAlert, sendOrderConfirmation } from '@/lib/email'
 import { buildSpecSheet, buildOrderRef } from '@/lib/utils'
 import type { FlavorOutput, FlavorCustomizations } from '@/types/flavor'
 
-// Required: raw body for Stripe signature verification.
-// Next.js App Router provides the raw body via req.text() or req.arrayBuffer().
-export const config = { api: { bodyParser: false } }
-
+// Raw body is read via req.text() below — no config needed in App Router.
 export async function POST(req: NextRequest) {
   const rawBody = await req.text()
   const sig     = req.headers.get('stripe-signature')
