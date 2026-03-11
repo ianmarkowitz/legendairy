@@ -127,3 +127,12 @@ create trigger on_auth_user_created
 -- 3. Enable magic link / OTP in Supabase Dashboard:
 --    Auth → Providers → Email → enable "Magic links"
 --    Auth → URL Configuration → add https://www.legendairyicecream.com/auth/callback
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- REFINEMENTS MIGRATIONS — run in Supabase SQL editor
+-- ─────────────────────────────────────────────────────────────────────────────
+
+-- 4. Add 'shipped' status + tracking columns
+alter type order_status add value if not exists 'shipped';
+alter table orders add column if not exists tracking_number text;
+alter table orders add column if not exists shipped_at timestamptz;

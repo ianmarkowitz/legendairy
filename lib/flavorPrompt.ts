@@ -51,8 +51,8 @@ SWEETNESS:
 OUTPUT JSON SCHEMA (return this and nothing else):
 {
   "flavorName": string,
-  "tagline": string (punchy, max 10 words),
-  "description": string (2–3 sentences, poetic and vivid),
+  "tagline": string (punchy, max 10 words — wrap 1–2 key sensory adjectives in **double asterisks** e.g. "**velvety** chocolate meets **caramelised** sea salt"),
+  "description": string (2–3 sentences, poetic and vivid — wrap 3–5 of the most mouth-watering sensory adjectives in **double asterisks** to make them bold, e.g. "**silky**", "**sun-ripened**", "**toasty**"),
   "whyThisFlavor": string (1 sentence — personal, ties to their prompt),
   "milkfatPercent": 12 | 13 | 14,
   "milkfatRationale": string (1 sentence),

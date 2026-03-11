@@ -241,3 +241,74 @@ export async function sendOrderConfirmation(opts: {
     html,
   })
 }
+
+// ── Shipping notification ─────────────────────────────────────────────────────
+
+export async function sendShippingNotification(opts: {
+  orderRef:       string
+  customerName:   string
+  customerEmail:  string
+  flavorName:     string
+  trackingNumber: string
+  shippedAt:      Date
+}) {
+  const { orderRef, customerName, customerEmail, flavorName, trackingNumber, shippedAt } = opts
+
+  const shippedDate = shippedAt.toLocaleDateString('en-US', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+  })
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"/></head>
+<body style="font-family:Georgia,serif;max-width:600px;margin:0 auto;padding:24px;color:#1B1B2F;background:#F5F0E8">
+
+  <div style="background:#1B1B2F;color:#F5F0E8;padding:32px;border-radius:8px 8px 0 0;text-align:center">
+    <h1 style="margin:0;font-size:28px">🚚 Your ice cream is on its way!</h1>
+  </div>
+
+  <div style="background:#fff;padding:32px;border:1px solid #ddd">
+    <p style="margin:0 0 16px">Hi ${customerName},</p>
+    <p style="margin:0 0 24px">
+      Great news — your <strong>${flavorName}</strong> has shipped and is heading your way.
+      Keep it in the freezer as soon as it arrives!
+    </p>
+
+    <div style="background:#F5F0E8;border-left:4px solid #1B1B2F;padding:20px 24px;margin-bottom:24px;border-radius:0 6px 6px 0">
+      <p style="margin:0 0 6px;color:#666;font-size:13px;text-transform:uppercase;letter-spacing:0.05em">Tracking Number</p>
+      <p style="margin:0;font-size:22px;font-weight:700;letter-spacing:0.08em;color:#1B1B2F">${trackingNumber}</p>
+    </div>
+
+    <table style="width:100%;border-collapse:collapse;margin-bottom:24px">
+      <tr><td style="padding:6px 0;color:#666;width:160px">Order</td>
+          <td style="padding:6px 0;font-weight:600">${orderRef}</td></tr>
+      <tr><td style="padding:6px 0;color:#666">Flavor</td>
+          <td style="padding:6px 0">${flavorName}</td></tr>
+      <tr><td style="padding:6px 0;color:#666">Shipped</td>
+          <td style="padding:6px 0">${shippedDate}</td></tr>
+    </table>
+
+    <p style="margin:0 0 8px;color:#444;font-size:14px">
+      Use your tracking number to follow the shipment through the carrier's website.
+    </p>
+
+    <p style="margin:32px 0 0;color:#666;font-size:14px">
+      Questions? Just reply to this email — we're here to help.
+    </p>
+  </div>
+
+  <div style="background:#1B1B2F;color:#F5F0E8;padding:16px 32px;border-radius:0 0 8px 8px;font-size:12px;text-align:center;opacity:0.8">
+    Legendairy Ice Cream · legendairyicecream.com
+  </div>
+
+</body>
+</html>`
+
+  return getResend().emails.send({
+    from:    'Legendairy Ice Cream <orders@legendairyicecream.com>',
+    to:      customerEmail,
+    subject: `Your ${flavorName} has shipped! 🍦`,
+    html,
+  })
+}

@@ -7,6 +7,7 @@ export const revalidate = 0
 const STATUS_STYLES: Record<string, string> = {
   paid:          'bg-amber-100 text-amber-800',
   in_production: 'bg-blue-100 text-blue-800',
+  shipped:       'bg-purple-100 text-purple-800',
   fulfilled:     'bg-green-100 text-green-800',
   cancelled:     'bg-red-100 text-red-800',
   pending:       'bg-gray-100 text-gray-600',
@@ -15,6 +16,7 @@ const STATUS_STYLES: Record<string, string> = {
 const STATUS_LABELS: Record<string, string> = {
   paid:          'Paid',
   in_production: 'In Production',
+  shipped:       'Shipped',
   fulfilled:     'Fulfilled',
   cancelled:     'Cancelled',
   pending:       'Pending',

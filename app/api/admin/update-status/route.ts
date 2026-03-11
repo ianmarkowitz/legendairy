@@ -6,14 +6,15 @@ import { supabase as serviceClient } from '@/lib/supabase'
 const VALID_TRANSITIONS: Record<string, string[]> = {
   pending:       ['paid', 'cancelled'],
   paid:          ['in_production', 'cancelled'],
-  in_production: ['fulfilled', 'cancelled'],
-  fulfilled:     [],  // terminal
-  cancelled:     [],  // terminal
+  in_production: ['cancelled'],   // shipped is handled by /api/admin/mark-shipped (requires tracking number)
+  shipped:       [],              // terminal
+  fulfilled:     [],              // terminal (legacy)
+  cancelled:     [],              // terminal
 }
 
 const BodySchema = z.object({
   orderId:   z.string().uuid(),
-  newStatus: z.enum(['pending', 'paid', 'in_production', 'fulfilled', 'cancelled']),
+  newStatus: z.enum(['pending', 'paid', 'in_production', 'shipped', 'fulfilled', 'cancelled']),
 })
 
 export async function PATCH(req: NextRequest) {
