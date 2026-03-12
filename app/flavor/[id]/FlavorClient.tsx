@@ -117,10 +117,23 @@ export default function FlavorClient({ flavor, userId }: Props) {
         ? (sessionStorage.getItem('ld_session_id') ?? undefined)
         : undefined
 
+      const contextPrompt = [
+        `Existing flavor: "${flavor.flavorName}"`,
+        `Tagline: ${flavor.tagline}`,
+        `Description: ${flavor.description}`,
+        `Primary flavor: ${flavor.primaryFlavor}`,
+        `Sweetness: level ${flavor.sweetnessLevel}/10 using ${flavor.sweetenerType}`,
+        `Mix-ins: ${flavor.mixIns.map(m => m.name).join(', ')}`,
+        flavor.makerNotes ? `Maker notes: ${flavor.makerNotes}` : null,
+        `Original concept: ${flavor.customerPrompt}`,
+        ``,
+        `Customer tweak request: ${remixPrompt.trim()}`,
+      ].filter(Boolean).join('\n')
+
       const res = await fetch('/api/generate-flavor', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ prompt: remixPrompt.trim(), sessionId }),
+        body:    JSON.stringify({ prompt: contextPrompt, sessionId }),
       })
       const data = await res.json()
       if (!res.ok) { setRemixError(data.error ?? 'Could not generate. Try again.'); return }
@@ -208,7 +221,7 @@ export default function FlavorClient({ flavor, userId }: Props) {
         {remixOpen && (
           <div className="mt-4 max-w-lg mx-auto text-left">
             <p className="text-navy/40 text-xs mb-2 text-center">
-              Describe a new flavor from scratch
+              How can we make this flavor even better?
             </p>
             <textarea
               rows={3}
