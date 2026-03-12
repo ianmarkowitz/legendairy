@@ -3,6 +3,13 @@
 import { useState } from 'react'
 import Link from 'next/link'
 
+function renderBold(text: string) {
+  const parts = text.split(/\*\*(.+?)\*\*/)
+  return parts.map((part, i) =>
+    i % 2 === 1 ? <strong key={i}>{part}</strong> : part,
+  )
+}
+
 interface CreationCardProps {
   id:          string
   flavorName:  string
@@ -64,7 +71,7 @@ export default function CreationCard({
               {flavorName}
             </h3>
             <p className="text-sm text-[#1B1B2F]/60 italic leading-snug line-clamp-2 mt-0.5">
-              {tagline}
+              {renderBold(tagline)}
             </p>
           </div>
         </div>
