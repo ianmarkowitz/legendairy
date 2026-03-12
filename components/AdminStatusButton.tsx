@@ -4,13 +4,11 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 const NEXT_STATUS: Record<string, string> = {
-  paid:          'in_production',
-  in_production: 'fulfilled',
+  paid: 'in_production',
 }
 
 const BUTTON_LABELS: Record<string, string> = {
-  paid:          'Mark In Production',
-  in_production: 'Mark Fulfilled',
+  paid: 'Mark In Production',
 }
 
 interface Props {
