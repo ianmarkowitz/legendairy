@@ -32,22 +32,22 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className="font-sans bg-cream text-navy antialiased">
         {/* Global top bar */}
-        <div className="bg-[#0F0F1F] text-[#EDE5D5] border-b-2 border-[#D4A843]/40">
+        <div className="bg-black text-white border-b border-white/5">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14 text-sm">
             <Link href="/" className="flex items-center gap-2 group">
-              <span className="text-[#D4A843] text-sm animate-sparkle">✦</span>
-              <span className="font-serif text-lg italic tracking-wide group-hover:text-[#EDE5D5]/90 transition-colors">
+              <span className="text-[#C9A96E] text-xs">✦</span>
+              <span className="font-serif text-base italic tracking-wide text-white group-hover:text-white/80 transition-colors">
                 Legendairy
               </span>
             </Link>
             <div className="flex items-center gap-4">
               {user ? (
-                <Link href="/account" className="text-[#EDE5D5]/60 hover:text-[#D4A843] transition-colors text-xs uppercase tracking-widest">
+                <Link href="/account" className="text-white/40 hover:text-[#C9A96E] transition-colors text-[10px] uppercase tracking-[0.2em]">
                   My Account
                 </Link>
               ) : (
-                <Link href="/login" className="text-[#EDE5D5]/60 hover:text-[#D4A843] transition-colors text-xs uppercase tracking-widest">
-                  Sign in
+                <Link href="/login" className="text-white/40 hover:text-[#C9A96E] transition-colors text-[10px] uppercase tracking-[0.2em]">
+                  Sign In
                 </Link>
               )}
             </div>
