@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Playfair_Display } from 'next/font/google'
 import Link from 'next/link'
+import { Analytics } from '@vercel/analytics/next'
 import { createClient } from '@/lib/supabase-server'
 import './globals.css'
 
@@ -52,6 +53,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </div>
         </div>
         {children}
+        <Analytics />
       </body>
     </html>
   )
