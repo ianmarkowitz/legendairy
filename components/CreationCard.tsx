@@ -54,7 +54,7 @@ export default function CreationCard({
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-[#1B1B2F]/10 overflow-hidden hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-2xl border border-[#0F0F1F]/10 overflow-hidden hover:shadow-md transition-shadow">
 
       {/* Color band */}
       <div className="h-2" style={{ backgroundColor: color }} />
@@ -67,16 +67,16 @@ export default function CreationCard({
             style={{ backgroundColor: color }}
           />
           <div className="min-w-0">
-            <h3 className="font-serif text-[#1B1B2F] font-semibold leading-snug truncate">
+            <h3 className="font-serif text-[#0F0F1F] font-semibold leading-snug truncate">
               {flavorName}
             </h3>
-            <p className="text-sm text-[#1B1B2F]/60 italic leading-snug line-clamp-2 mt-0.5">
+            <p className="text-sm text-[#0F0F1F]/60 italic leading-snug line-clamp-2 mt-0.5">
               {renderBold(tagline)}
             </p>
           </div>
         </div>
 
-        <p className="text-xs text-[#1B1B2F]/40 mt-3">{date}</p>
+        <p className="text-xs text-[#0F0F1F]/40 mt-3">{date}</p>
 
         {/* Actions */}
         <div className="flex items-center gap-2 mt-4">
@@ -87,8 +87,8 @@ export default function CreationCard({
               title={vaulted ? 'Remove from Vault' : 'Save to Vault'}
               className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition-colors ${
                 vaulted
-                  ? 'bg-[#1B1B2F] text-[#F5F0E8] border-[#1B1B2F]'
-                  : 'bg-transparent text-[#1B1B2F]/50 border-[#1B1B2F]/20 hover:border-[#1B1B2F]/50'
+                  ? 'bg-[#0F0F1F] text-[#EDE5D5] border-[#0F0F1F]'
+                  : 'bg-transparent text-[#0F0F1F]/50 border-[#0F0F1F]/20 hover:border-[#0F0F1F]/50'
               }`}
             >
               {vaulted ? '♥ Vaulted' : '♡ Vault'}
@@ -97,14 +97,14 @@ export default function CreationCard({
 
           <Link
             href={`/flavor/${id}`}
-            className="flex-1 text-center text-xs px-3 py-1.5 rounded-lg border border-[#1B1B2F]/20 text-[#1B1B2F]/70 hover:border-[#1B1B2F]/50 hover:text-[#1B1B2F] transition-colors"
+            className="flex-1 text-center text-xs px-3 py-1.5 rounded-lg border border-[#0F0F1F]/20 text-[#0F0F1F]/70 hover:border-[#0F0F1F]/50 hover:text-[#0F0F1F] transition-colors"
           >
             View
           </Link>
 
           <Link
             href={`/flavor/${id}`}
-            className="flex-1 text-center text-xs px-3 py-1.5 rounded-lg bg-[#1B1B2F]/5 text-[#1B1B2F] font-medium hover:bg-[#1B1B2F]/10 transition-colors"
+            className="flex-1 text-center text-xs px-3 py-1.5 rounded-lg bg-[#0F0F1F]/5 text-[#0F0F1F] font-medium hover:bg-[#0F0F1F]/10 transition-colors"
           >
             Re-order →
           </Link>

@@ -49,16 +49,16 @@ export default function TrackingForm({ orderId }: Props) {
           required
           className="
             flex-1 border border-amber-300 rounded-lg px-3 py-2 text-sm
-            bg-white text-[#1B1B2F] placeholder:text-[#1B1B2F]/30
-            focus:outline-none focus:border-[#1B1B2F]
+            bg-white text-[#0F0F1F] placeholder:text-[#0F0F1F]/30
+            focus:outline-none focus:border-[#0F0F1F]
           "
         />
         <button
           type="submit"
           disabled={loading || !trackingNumber.trim()}
           className="
-            px-4 py-2 bg-[#1B1B2F] text-[#F5F0E8] text-sm font-medium rounded-lg
-            hover:bg-[#1B1B2F]/80 disabled:opacity-40 disabled:cursor-not-allowed
+            px-4 py-2 bg-[#0F0F1F] text-[#EDE5D5] text-sm font-medium rounded-lg
+            hover:bg-[#0F0F1F]/80 disabled:opacity-40 disabled:cursor-not-allowed
             transition-colors whitespace-nowrap
           "
         >

@@ -20,20 +20,20 @@ export default async function VaultPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-serif text-[#1B1B2F]">The Vault</h1>
-        <p className="text-sm text-[#1B1B2F]/50 mt-0.5">
+        <h1 className="text-2xl font-serif text-[#0F0F1F]">The Vault</h1>
+        <p className="text-sm text-[#0F0F1F]/50 mt-0.5">
           Your pinned favorites — kept forever
         </p>
       </div>
 
       {!vaulted || vaulted.length === 0 ? (
-        <div className="text-center py-20 text-[#1B1B2F]/40">
+        <div className="text-center py-20 text-[#0F0F1F]/40">
           <p className="text-4xl mb-4">♡</p>
           <p className="text-lg font-serif mb-2">Your vault is empty</p>
           <p className="text-sm mb-6">
             Tap the ♡ button on any creation to pin it here permanently.
           </p>
-          <Link href="/account/creations" className="text-[#1B1B2F] underline underline-offset-2 text-sm">
+          <Link href="/account/creations" className="text-[#0F0F1F] underline underline-offset-2 text-sm">
             Browse your creations →
           </Link>
         </div>

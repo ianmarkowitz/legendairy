@@ -8,11 +8,11 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        navy:    '#1B1B2F',
-        cream:   '#F5F0E8',
+        navy:    '#0F0F1F',
+        cream:   '#EDE5D5',
         parchment: '#EDE8DC',
         forest:  '#2E7D32',
-        gold:    '#B8952A',
+        gold:    '#D4A843',
         coral:   '#E07A5F',
       },
       fontFamily: {

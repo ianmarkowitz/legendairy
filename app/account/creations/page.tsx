@@ -20,25 +20,25 @@ export default async function CreationsPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-serif text-[#1B1B2F]">My Creations</h1>
-          <p className="text-sm text-[#1B1B2F]/50 mt-0.5">
+          <h1 className="text-2xl font-serif text-[#0F0F1F]">My Creations</h1>
+          <p className="text-sm text-[#0F0F1F]/50 mt-0.5">
             Every flavor you&apos;ve dreamed up
           </p>
         </div>
         <Link
           href="/"
-          className="text-sm px-4 py-2 bg-[#1B1B2F] text-[#F5F0E8] rounded-xl hover:bg-[#1B1B2F]/90 transition-colors"
+          className="text-sm px-4 py-2 bg-[#0F0F1F] text-[#EDE5D5] rounded-xl hover:bg-[#0F0F1F]/90 transition-colors"
         >
           + New flavor
         </Link>
       </div>
 
       {!creations || creations.length === 0 ? (
-        <div className="text-center py-20 text-[#1B1B2F]/40">
+        <div className="text-center py-20 text-[#0F0F1F]/40">
           <p className="text-4xl mb-4">🍦</p>
           <p className="text-lg font-serif mb-2">No creations yet</p>
           <p className="text-sm mb-6">Your AI-generated flavors will appear here.</p>
-          <Link href="/" className="text-[#1B1B2F] underline underline-offset-2 text-sm">
+          <Link href="/" className="text-[#0F0F1F] underline underline-offset-2 text-sm">
             Dream up your first flavor →
           </Link>
         </div>

@@ -51,16 +51,16 @@ export default async function OrdersPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-serif text-[#1B1B2F]">My Orders</h1>
-        <p className="text-sm text-[#1B1B2F]/50 mt-0.5">Your order history</p>
+        <h1 className="text-2xl font-serif text-[#0F0F1F]">My Orders</h1>
+        <p className="text-sm text-[#0F0F1F]/50 mt-0.5">Your order history</p>
       </div>
 
       {!orders || orders.length === 0 ? (
-        <div className="text-center py-20 text-[#1B1B2F]/40">
+        <div className="text-center py-20 text-[#0F0F1F]/40">
           <p className="text-4xl mb-4">📦</p>
           <p className="text-lg font-serif mb-2">No orders yet</p>
           <p className="text-sm mb-6">Your orders will appear here after checkout.</p>
-          <Link href="/" className="text-[#1B1B2F] underline underline-offset-2 text-sm">
+          <Link href="/" className="text-[#0F0F1F] underline underline-offset-2 text-sm">
             Create your first flavor →
           </Link>
         </div>
@@ -76,7 +76,7 @@ export default async function OrdersPage() {
             return (
               <div
                 key={order.id}
-                className="bg-white rounded-2xl border border-[#1B1B2F]/10 p-5"
+                className="bg-white rounded-2xl border border-[#0F0F1F]/10 p-5"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-center gap-3 min-w-0">
@@ -86,13 +86,13 @@ export default async function OrdersPage() {
                       style={{ backgroundColor: flavor?.suggested_color ?? '#C4922A' }}
                     />
                     <div className="min-w-0">
-                      <p className="font-serif font-semibold text-[#1B1B2F] truncate">
+                      <p className="font-serif font-semibold text-[#0F0F1F] truncate">
                         {flavor?.flavor_name ?? 'Custom Flavor'}
                       </p>
-                      <p className="text-xs text-[#1B1B2F]/50 mt-0.5">
+                      <p className="text-xs text-[#0F0F1F]/50 mt-0.5">
                         {order.order_reference} · {order.quantity_quarts} qt · {formatCents(order.total_price_cents)}
                       </p>
-                      <p className="text-xs text-[#1B1B2F]/40 mt-0.5">
+                      <p className="text-xs text-[#0F0F1F]/40 mt-0.5">
                         {formatDate(order.created_at)}
                       </p>
                     </div>
@@ -105,7 +105,7 @@ export default async function OrdersPage() {
                     {order.flavor_creation_id && (
                       <Link
                         href={`/flavor/${order.flavor_creation_id}`}
-                        className="text-xs text-[#1B1B2F]/50 hover:text-[#1B1B2F] underline underline-offset-2 transition-colors"
+                        className="text-xs text-[#0F0F1F]/50 hover:text-[#0F0F1F] underline underline-offset-2 transition-colors"
                       >
                         Re-order →
                       </Link>

@@ -59,8 +59,8 @@ export default function AdminStatusButton({ orderId, currentStatus, compact }: P
           disabled={loading}
           className="
             text-xs font-medium px-3 py-1.5 rounded-lg
-            bg-[#1B1B2F] text-[#F5F0E8]
-            hover:bg-[#1B1B2F]/80 disabled:opacity-40 disabled:cursor-not-allowed
+            bg-[#0F0F1F] text-[#EDE5D5]
+            hover:bg-[#0F0F1F]/80 disabled:opacity-40 disabled:cursor-not-allowed
             transition-colors
           "
         >
@@ -78,8 +78,8 @@ export default function AdminStatusButton({ orderId, currentStatus, compact }: P
         disabled={loading}
         className="
           px-5 py-2.5 rounded-xl font-medium text-sm
-          bg-[#1B1B2F] text-[#F5F0E8]
-          hover:bg-[#1B1B2F]/80 disabled:opacity-40 disabled:cursor-not-allowed
+          bg-[#0F0F1F] text-[#EDE5D5]
+          hover:bg-[#0F0F1F]/80 disabled:opacity-40 disabled:cursor-not-allowed
           transition-colors
         "
       >

@@ -26,15 +26,15 @@ export default function AccountNav({ email }: AccountNavProps) {
   }
 
   return (
-    <div className="border-b border-[#1B1B2F]/10 bg-white">
+    <div className="border-b border-[#0F0F1F]/10 bg-white">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
 
         {/* Top bar: email + sign out */}
-        <div className="flex items-center justify-between py-3 border-b border-[#1B1B2F]/5">
-          <span className="text-sm text-[#1B1B2F]/50 truncate">{email}</span>
+        <div className="flex items-center justify-between py-3 border-b border-[#0F0F1F]/5">
+          <span className="text-sm text-[#0F0F1F]/50 truncate">{email}</span>
           <button
             onClick={handleSignOut}
-            className="text-sm text-[#1B1B2F]/50 hover:text-[#1B1B2F] transition-colors"
+            className="text-sm text-[#0F0F1F]/50 hover:text-[#0F0F1F] transition-colors"
           >
             Sign out
           </button>
@@ -50,8 +50,8 @@ export default function AccountNav({ email }: AccountNavProps) {
                 href={tab.href}
                 className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
                   active
-                    ? 'border-[#1B1B2F] text-[#1B1B2F]'
-                    : 'border-transparent text-[#1B1B2F]/50 hover:text-[#1B1B2F]'
+                    ? 'border-[#0F0F1F] text-[#0F0F1F]'
+                    : 'border-transparent text-[#0F0F1F]/50 hover:text-[#0F0F1F]'
                 }`}
               >
                 {tab.label}

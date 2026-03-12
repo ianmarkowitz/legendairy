@@ -51,9 +51,9 @@ export async function sendMakerAlert(opts: {
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"/></head>
-<body style="font-family:Georgia,serif;max-width:700px;margin:0 auto;padding:24px;color:#1B1B2F;background:#F5F0E8">
+<body style="font-family:Georgia,serif;max-width:700px;margin:0 auto;padding:24px;color:#0F0F1F;background:#EDE5D5">
 
-  <div style="background:#1B1B2F;color:#F5F0E8;padding:24px 32px;border-radius:8px 8px 0 0">
+  <div style="background:#0F0F1F;color:#EDE5D5;padding:24px 32px;border-radius:8px 8px 0 0">
     <h1 style="margin:0;font-size:22px;letter-spacing:1px">🍦 LEGENDAIRY ICE CREAM</h1>
     <p style="margin:4px 0 0;font-size:14px;opacity:0.7">Production Spec Sheet</p>
   </div>
@@ -71,12 +71,12 @@ export async function sendMakerAlert(opts: {
           <td style="padding:6px 0">${formatCents(totalCents)}</td></tr>
     </table>
 
-    <hr style="border:none;border-top:2px solid #1B1B2F;margin:0 0 20px"/>
+    <hr style="border:none;border-top:2px solid #0F0F1F;margin:0 0 20px"/>
 
     <h2 style="font-size:24px;margin:0 0 4px">${spec.flavorName}</h2>
     <p style="color:#666;margin:0 0 16px;font-style:italic">${spec.tagline}</p>
 
-    <div style="background:#F5F0E8;padding:16px;border-radius:6px;margin-bottom:24px">
+    <div style="background:#EDE5D5;padding:16px;border-radius:6px;margin-bottom:24px">
       <p style="margin:0;font-style:italic;color:#444">"${spec.customerPrompt}"</p>
     </div>
 
@@ -113,7 +113,7 @@ export async function sendMakerAlert(opts: {
     <h3 style="margin:0 0 12px;font-size:16px">Mix-Ins (${enabledMixIns.length} active)</h3>
     <table style="width:100%;border-collapse:collapse;margin-bottom:24px">
       <thead>
-        <tr style="background:#1B1B2F;color:#F5F0E8">
+        <tr style="background:#0F0F1F;color:#EDE5D5">
           <th style="padding:8px 12px;text-align:left">Ingredient</th>
           <th style="padding:8px 12px;text-align:left">Per Quart</th>
           <th style="padding:8px 12px;text-align:left">Batch Total</th>
@@ -140,7 +140,7 @@ export async function sendMakerAlert(opts: {
 
   </div>
 
-  <div style="background:#1B1B2F;color:#F5F0E8;padding:16px 32px;border-radius:0 0 8px 8px;font-size:12px;opacity:0.8">
+  <div style="background:#0F0F1F;color:#EDE5D5;padding:16px 32px;border-radius:0 0 8px 8px;font-size:12px;opacity:0.8">
     Legendairy Ice Cream · legendairyicecream.com
   </div>
 
@@ -179,9 +179,9 @@ export async function sendOrderConfirmation(opts: {
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"/></head>
-<body style="font-family:Georgia,serif;max-width:600px;margin:0 auto;padding:24px;color:#1B1B2F;background:#F5F0E8">
+<body style="font-family:Georgia,serif;max-width:600px;margin:0 auto;padding:24px;color:#0F0F1F;background:#EDE5D5">
 
-  <div style="background:#1B1B2F;color:#F5F0E8;padding:32px;border-radius:8px 8px 0 0;text-align:center">
+  <div style="background:#0F0F1F;color:#EDE5D5;padding:32px;border-radius:8px 8px 0 0;text-align:center">
     <h1 style="margin:0;font-size:28px">🍦 Your dream is in the making.</h1>
   </div>
 
@@ -192,7 +192,7 @@ export async function sendOrderConfirmation(opts: {
       <strong>${spec.flavorName}</strong> perfect for you.
     </p>
 
-    <div style="background:#F5F0E8;border-left:4px solid #1B1B2F;padding:16px 20px;margin-bottom:24px">
+    <div style="background:#EDE5D5;border-left:4px solid #0F0F1F;padding:16px 20px;margin-bottom:24px">
       <h2 style="margin:0 0 4px;font-size:20px">${spec.flavorName}</h2>
       <p style="margin:0;color:#666;font-style:italic">${spec.tagline}</p>
     </div>
@@ -227,7 +227,7 @@ export async function sendOrderConfirmation(opts: {
     </p>
   </div>
 
-  <div style="background:#1B1B2F;color:#F5F0E8;padding:16px 32px;border-radius:0 0 8px 8px;font-size:12px;text-align:center;opacity:0.8">
+  <div style="background:#0F0F1F;color:#EDE5D5;padding:16px 32px;border-radius:0 0 8px 8px;font-size:12px;text-align:center;opacity:0.8">
     Legendairy Ice Cream · legendairyicecream.com
   </div>
 
@@ -262,9 +262,9 @@ export async function sendShippingNotification(opts: {
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"/></head>
-<body style="font-family:Georgia,serif;max-width:600px;margin:0 auto;padding:24px;color:#1B1B2F;background:#F5F0E8">
+<body style="font-family:Georgia,serif;max-width:600px;margin:0 auto;padding:24px;color:#0F0F1F;background:#EDE5D5">
 
-  <div style="background:#1B1B2F;color:#F5F0E8;padding:32px;border-radius:8px 8px 0 0;text-align:center">
+  <div style="background:#0F0F1F;color:#EDE5D5;padding:32px;border-radius:8px 8px 0 0;text-align:center">
     <h1 style="margin:0;font-size:28px">🚚 Your ice cream is on its way!</h1>
   </div>
 
@@ -275,9 +275,9 @@ export async function sendShippingNotification(opts: {
       Keep it in the freezer as soon as it arrives!
     </p>
 
-    <div style="background:#F5F0E8;border-left:4px solid #1B1B2F;padding:20px 24px;margin-bottom:24px;border-radius:0 6px 6px 0">
+    <div style="background:#EDE5D5;border-left:4px solid #0F0F1F;padding:20px 24px;margin-bottom:24px;border-radius:0 6px 6px 0">
       <p style="margin:0 0 6px;color:#666;font-size:13px;text-transform:uppercase;letter-spacing:0.05em">Tracking Number</p>
-      <p style="margin:0;font-size:22px;font-weight:700;letter-spacing:0.08em;color:#1B1B2F">${trackingNumber}</p>
+      <p style="margin:0;font-size:22px;font-weight:700;letter-spacing:0.08em;color:#0F0F1F">${trackingNumber}</p>
     </div>
 
     <table style="width:100%;border-collapse:collapse;margin-bottom:24px">
@@ -298,7 +298,7 @@ export async function sendShippingNotification(opts: {
     </p>
   </div>
 
-  <div style="background:#1B1B2F;color:#F5F0E8;padding:16px 32px;border-radius:0 0 8px 8px;font-size:12px;text-align:center;opacity:0.8">
+  <div style="background:#0F0F1F;color:#EDE5D5;padding:16px 32px;border-radius:0 0 8px 8px;font-size:12px;text-align:center;opacity:0.8">
     Legendairy Ice Cream · legendairyicecream.com
   </div>
 

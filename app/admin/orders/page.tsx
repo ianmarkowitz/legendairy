@@ -76,40 +76,40 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-serif text-[#1B1B2F]">Orders</h1>
-        <p className="text-sm text-[#1B1B2F]/50 mt-0.5">Manage and fulfill incoming ice cream orders</p>
+        <h1 className="text-2xl font-serif text-[#0F0F1F]">Orders</h1>
+        <p className="text-sm text-[#0F0F1F]/50 mt-0.5">Manage and fulfill incoming ice cream orders</p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white rounded-2xl border border-[#1B1B2F]/10 px-5 py-4">
-          <p className="text-xs text-[#1B1B2F]/50 uppercase tracking-wide mb-1">Total Orders</p>
-          <p className="font-serif text-3xl text-[#1B1B2F]">{totalOrders}</p>
+        <div className="bg-white rounded-2xl border border-[#0F0F1F]/10 px-5 py-4">
+          <p className="text-xs text-[#0F0F1F]/50 uppercase tracking-wide mb-1">Total Orders</p>
+          <p className="font-serif text-3xl text-[#0F0F1F]">{totalOrders}</p>
         </div>
-        <div className="bg-white rounded-2xl border border-[#1B1B2F]/10 px-5 py-4">
-          <p className="text-xs text-[#1B1B2F]/50 uppercase tracking-wide mb-1">Revenue</p>
-          <p className="font-serif text-3xl text-[#1B1B2F]">{formatCents(totalRevenue)}</p>
+        <div className="bg-white rounded-2xl border border-[#0F0F1F]/10 px-5 py-4">
+          <p className="text-xs text-[#0F0F1F]/50 uppercase tracking-wide mb-1">Revenue</p>
+          <p className="font-serif text-3xl text-[#0F0F1F]">{formatCents(totalRevenue)}</p>
         </div>
         <div className={`rounded-2xl border px-5 py-4 ${
           needsAction > 0
             ? 'bg-amber-50 border-amber-200'
-            : 'bg-white border-[#1B1B2F]/10'
+            : 'bg-white border-[#0F0F1F]/10'
         }`}>
-          <p className={`text-xs uppercase tracking-wide mb-1 ${needsAction > 0 ? 'text-amber-700' : 'text-[#1B1B2F]/50'}`}>
+          <p className={`text-xs uppercase tracking-wide mb-1 ${needsAction > 0 ? 'text-amber-700' : 'text-[#0F0F1F]/50'}`}>
             Needs Action
           </p>
-          <p className={`font-serif text-3xl ${needsAction > 0 ? 'text-amber-800' : 'text-[#1B1B2F]'}`}>
+          <p className={`font-serif text-3xl ${needsAction > 0 ? 'text-amber-800' : 'text-[#0F0F1F]'}`}>
             {needsAction}
           </p>
         </div>
-        <div className="bg-white rounded-2xl border border-[#1B1B2F]/10 px-5 py-4">
-          <p className="text-xs text-[#1B1B2F]/50 uppercase tracking-wide mb-1">Fulfilled</p>
-          <p className="font-serif text-3xl text-[#1B1B2F]">{fulfilledCount}</p>
+        <div className="bg-white rounded-2xl border border-[#0F0F1F]/10 px-5 py-4">
+          <p className="text-xs text-[#0F0F1F]/50 uppercase tracking-wide mb-1">Fulfilled</p>
+          <p className="font-serif text-3xl text-[#0F0F1F]">{fulfilledCount}</p>
         </div>
       </div>
 
       {/* Filter tabs */}
-      <div className="flex gap-1 mb-6 border-b border-[#1B1B2F]/10 pb-0">
+      <div className="flex gap-1 mb-6 border-b border-[#0F0F1F]/10 pb-0">
         {FILTER_TABS.map(tab => (
           <Link
             key={tab.value}
@@ -117,8 +117,8 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
             className={`
               px-4 py-2 text-sm font-medium rounded-t-lg border-b-2 -mb-px transition-colors
               ${statusFilter === tab.value
-                ? 'border-[#1B1B2F] text-[#1B1B2F]'
-                : 'border-transparent text-[#1B1B2F]/50 hover:text-[#1B1B2F]'}
+                ? 'border-[#0F0F1F] text-[#0F0F1F]'
+                : 'border-transparent text-[#0F0F1F]/50 hover:text-[#0F0F1F]'}
             `}
           >
             {tab.label}
@@ -128,7 +128,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
 
       {/* Order table */}
       {!orders || orders.length === 0 ? (
-        <div className="text-center py-20 text-[#1B1B2F]/40">
+        <div className="text-center py-20 text-[#0F0F1F]/40">
           <p className="text-4xl mb-3">📋</p>
           <p className="font-serif text-lg">No orders {statusFilter ? `with status "${STATUS_LABELS[statusFilter]}"` : 'yet'}</p>
         </div>
@@ -141,7 +141,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
             return (
               <div
                 key={order.id}
-                className="bg-white rounded-2xl border border-[#1B1B2F]/10 p-5"
+                className="bg-white rounded-2xl border border-[#0F0F1F]/10 p-5"
               >
                 <div className="flex items-start gap-4">
                   {/* Color swatch */}
@@ -154,20 +154,20 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-start gap-x-4 gap-y-1">
                       <div>
-                        <p className="font-serif font-semibold text-[#1B1B2F]">
+                        <p className="font-serif font-semibold text-[#0F0F1F]">
                           {flavor?.flavor_name ?? 'Custom Flavor'}
                         </p>
-                        <p className="text-xs text-[#1B1B2F]/50 mt-0.5">
+                        <p className="text-xs text-[#0F0F1F]/50 mt-0.5">
                           {order.order_reference} · {formatDate(order.created_at)}
                         </p>
                       </div>
-                      <div className="text-sm text-[#1B1B2F]/70">
+                      <div className="text-sm text-[#0F0F1F]/70">
                         <p>{order.customer_name}</p>
-                        <p className="text-[#1B1B2F]/40 text-xs">{order.customer_email}</p>
+                        <p className="text-[#0F0F1F]/40 text-xs">{order.customer_email}</p>
                       </div>
-                      <div className="text-sm text-[#1B1B2F]/70">
+                      <div className="text-sm text-[#0F0F1F]/70">
                         <p>{order.quantity_quarts} qt</p>
-                        <p className="text-[#1B1B2F]/40 text-xs">{formatCents(order.total_price_cents)}</p>
+                        <p className="text-[#0F0F1F]/40 text-xs">{formatCents(order.total_price_cents)}</p>
                       </div>
                     </div>
                   </div>
@@ -181,7 +181,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
                       <AdminStatusButton orderId={order.id} currentStatus={order.status} compact />
                       <Link
                         href={`/admin/orders/${order.id}`}
-                        className="text-xs text-[#1B1B2F]/50 hover:text-[#1B1B2F] underline underline-offset-2 transition-colors"
+                        className="text-xs text-[#0F0F1F]/50 hover:text-[#0F0F1F] underline underline-offset-2 transition-colors"
                       >
                         View Spec →
                       </Link>
