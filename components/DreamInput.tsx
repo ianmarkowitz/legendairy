@@ -67,7 +67,7 @@ export default function DreamInput() {
         <div className="flex items-center justify-center gap-5 mb-8">
           <div className="h-px w-20 bg-[#C9A96E]/50" />
           <span className="text-[#C9A96E] text-[10px] uppercase tracking-[0.3em] font-light">
-            Artisan Gelato
+            Artisan Ice Cream
           </span>
           <div className="h-px w-20 bg-[#C9A96E]/50" />
         </div>
