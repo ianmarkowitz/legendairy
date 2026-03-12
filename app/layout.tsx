@@ -30,7 +30,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-      <body className="font-sans bg-cream text-navy antialiased">
+      <body className="font-sans bg-black text-white antialiased">
         {/* Global top bar */}
         <div className="bg-black text-white border-b border-white/5">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14 text-sm">

@@ -11,14 +11,7 @@ export default async function AccountLayout({ children }: { children: React.Reac
   }
 
   return (
-    <div className="min-h-screen bg-[#EDE5D5]">
-      {/* Header */}
-      <header className="bg-[#0F0F1F] text-[#EDE5D5] py-4 px-4">
-        <div className="max-w-5xl mx-auto">
-          <a href="/" className="font-serif text-lg tracking-wide">🍦 Legendairy</a>
-        </div>
-      </header>
-
+    <div className="min-h-[calc(100vh-3.5rem)] bg-black">
       {/* Account nav tabs */}
       <AccountNav email={user.email ?? ''} />
 

@@ -54,10 +54,10 @@ export default function CreationCard({
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-[#0F0F1F]/10 overflow-hidden hover:shadow-md transition-shadow">
+    <div className="bg-[#0D0D0D] rounded-xl border border-white/8 overflow-hidden hover:border-white/15 transition-colors">
 
       {/* Color band */}
-      <div className="h-2" style={{ backgroundColor: color }} />
+      <div className="h-1.5" style={{ backgroundColor: color }} />
 
       <div className="p-5">
         {/* Swatch + name */}
@@ -67,16 +67,16 @@ export default function CreationCard({
             style={{ backgroundColor: color }}
           />
           <div className="min-w-0">
-            <h3 className="font-serif text-[#0F0F1F] font-semibold leading-snug truncate">
+            <h3 className="font-serif text-white font-semibold leading-snug truncate">
               {flavorName}
             </h3>
-            <p className="text-sm text-[#0F0F1F]/60 italic leading-snug line-clamp-2 mt-0.5">
+            <p className="text-sm text-white/40 italic leading-snug line-clamp-2 mt-0.5">
               {renderBold(tagline)}
             </p>
           </div>
         </div>
 
-        <p className="text-xs text-[#0F0F1F]/40 mt-3">{date}</p>
+        <p className="text-[10px] text-white/25 uppercase tracking-[0.2em] mt-3">{date}</p>
 
         {/* Actions */}
         <div className="flex items-center gap-2 mt-4">
@@ -87,8 +87,8 @@ export default function CreationCard({
               title={vaulted ? 'Remove from Vault' : 'Save to Vault'}
               className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition-colors ${
                 vaulted
-                  ? 'bg-[#0F0F1F] text-[#EDE5D5] border-[#0F0F1F]'
-                  : 'bg-transparent text-[#0F0F1F]/50 border-[#0F0F1F]/20 hover:border-[#0F0F1F]/50'
+                  ? 'bg-[#C9A96E]/10 text-[#C9A96E] border-[#C9A96E]/40'
+                  : 'bg-transparent text-white/40 border-white/10 hover:border-white/30 hover:text-white'
               }`}
             >
               {vaulted ? '♥ Vaulted' : '♡ Vault'}
@@ -97,14 +97,14 @@ export default function CreationCard({
 
           <Link
             href={`/flavor/${id}`}
-            className="flex-1 text-center text-xs px-3 py-1.5 rounded-lg border border-[#0F0F1F]/20 text-[#0F0F1F]/70 hover:border-[#0F0F1F]/50 hover:text-[#0F0F1F] transition-colors"
+            className="flex-1 text-center text-xs px-3 py-1.5 rounded-lg border border-white/10 text-white/40 hover:border-white/30 hover:text-white transition-colors"
           >
             View
           </Link>
 
           <Link
             href={`/flavor/${id}`}
-            className="flex-1 text-center text-xs px-3 py-1.5 rounded-lg bg-[#0F0F1F]/5 text-[#0F0F1F] font-medium hover:bg-[#0F0F1F]/10 transition-colors"
+            className="flex-1 text-center text-xs px-3 py-1.5 rounded-lg bg-[#C9A96E]/10 text-[#C9A96E] border border-[#C9A96E]/20 font-medium hover:bg-[#C9A96E]/20 transition-colors"
           >
             Re-order →
           </Link>

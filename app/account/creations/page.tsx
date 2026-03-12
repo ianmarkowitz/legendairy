@@ -20,25 +20,25 @@ export default async function CreationsPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-serif text-[#0F0F1F]">My Creations</h1>
-          <p className="text-sm text-[#0F0F1F]/50 mt-0.5">
+          <h1 className="font-serif text-2xl text-white">My Creations</h1>
+          <p className="text-[10px] text-white/40 uppercase tracking-[0.2em] mt-1">
             Every flavor you&apos;ve dreamed up
           </p>
         </div>
         <Link
           href="/"
-          className="text-sm px-4 py-2 bg-[#0F0F1F] text-[#EDE5D5] rounded-xl hover:bg-[#0F0F1F]/90 transition-colors"
+          className="text-xs px-4 py-2.5 bg-[#C9A96E] text-black font-medium uppercase tracking-[0.2em] rounded-lg hover:bg-[#D4B47A] transition-colors"
         >
-          + New flavor
+          + New Flavor
         </Link>
       </div>
 
       {!creations || creations.length === 0 ? (
-        <div className="text-center py-20 text-[#0F0F1F]/40">
+        <div className="text-center py-20 text-white/30">
           <p className="text-4xl mb-4">🍦</p>
-          <p className="text-lg font-serif mb-2">No creations yet</p>
+          <p className="text-lg font-serif text-white/50 mb-2">No creations yet</p>
           <p className="text-sm mb-6">Your AI-generated flavors will appear here.</p>
-          <Link href="/" className="text-[#0F0F1F] underline underline-offset-2 text-sm">
+          <Link href="/" className="text-[#C9A96E] hover:text-[#D4B47A] transition-colors text-sm">
             Dream up your first flavor →
           </Link>
         </div>
