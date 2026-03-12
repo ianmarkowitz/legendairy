@@ -25,7 +25,6 @@ export default function DreamInput() {
     setLoading(true)
     setError(null)
 
-    // Guest session ID — persisted in sessionStorage for pre-auth tracking
     let sessionId = sessionStorage.getItem('ld_session_id')
     if (!sessionId) {
       sessionId = crypto.randomUUID()
@@ -63,40 +62,51 @@ export default function DreamInput() {
 
   return (
     <div className="w-full max-w-2xl animate-fade-up">
+
       {/* Wordmark */}
-      <div className="text-center mb-12">
-        <h1 className="font-serif text-4xl md:text-5xl text-navy tracking-tight mb-2">
-          Legendairy
-        </h1>
-        <p className="text-navy/50 text-sm tracking-widest uppercase">
-          Ice Cream
+      <div className="text-center mb-10">
+        <div className="flex items-center justify-center gap-4 mb-1">
+          <span className="text-gold text-xl animate-sparkle select-none">✦</span>
+          <h1 className="font-serif text-5xl md:text-6xl text-navy tracking-tight">
+            Legendairy
+          </h1>
+          <span className="text-gold text-xl animate-sparkle select-none" style={{ animationDelay: '1.2s' }}>✦</span>
+        </div>
+        <p className="font-serif italic text-navy/50 text-base mt-1">
+          artisan ice cream, made just for you
         </p>
+        {/* Gold divider flourish */}
+        <div className="flex items-center justify-center gap-3 mt-4">
+          <div className="h-px w-16 bg-gradient-to-r from-transparent to-gold/50" />
+          <span className="text-gold/70 text-lg">🍦</span>
+          <div className="h-px w-16 bg-gradient-to-l from-transparent to-gold/50" />
+        </div>
       </div>
 
-      {/* Prompt area */}
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
+      {/* Prompt card */}
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-navy/10 shadow-sm p-6">
           <label
             htmlFor="dream-prompt"
-            className="block font-serif text-xl md:text-2xl text-navy mb-4 leading-relaxed"
+            className="block font-serif text-xl md:text-2xl text-navy mb-2 leading-relaxed"
           >
-            Tell us about your dream ice cream.
+            What&apos;s your dream ice cream?
           </label>
-          <p className="text-navy/60 text-sm mb-4 leading-relaxed">
-            A flavor you've never found anywhere. A memory you want to eat. A wild
-            combination you've always wondered about. We'll build it from scratch, just for you.
+          <p className="font-serif italic text-navy/50 text-sm mb-4 leading-relaxed">
+            A flavor you&apos;ve never found anywhere. A memory you want to eat.
+            A wild combination you&apos;ve always wondered about.
           </p>
           <textarea
             id="dream-prompt"
             ref={textareaRef}
             value={prompt}
             onChange={e => setPrompt(e.target.value)}
-            placeholder="Describe your dream flavor..."
-            rows={5}
+            placeholder="Describe your dream flavor…"
+            rows={4}
             className="
-              w-full bg-white border-2 border-navy/20 rounded-xl px-5 py-4
+              w-full bg-cream/80 border-2 border-navy/10 rounded-xl px-5 py-4
               font-sans text-base text-navy placeholder:text-navy/30
-              focus:outline-none focus:border-navy resize-none
+              focus:outline-none focus:border-gold/50 resize-none
               transition-colors duration-200
             "
             disabled={loading}
@@ -105,8 +115,8 @@ export default function DreamInput() {
 
         {/* Example chips */}
         <div>
-          <p className="text-navy/40 text-xs mb-3 uppercase tracking-wider">
-            Need a spark?
+          <p className="text-navy/40 text-xs mb-3 uppercase tracking-wider flex items-center gap-2">
+            <span className="text-gold/60">✦</span> Need a spark?
           </p>
           <div className="flex flex-wrap gap-2">
             {EXAMPLE_CHIPS.map((chip, i) => (
@@ -115,8 +125,8 @@ export default function DreamInput() {
                 type="button"
                 onClick={() => useChip(chip)}
                 className="
-                  text-xs bg-white border border-navy/20 rounded-full px-3 py-1.5
-                  text-navy/70 hover:border-navy hover:text-navy
+                  text-xs bg-white border border-gold/30 rounded-full px-3 py-1.5
+                  text-navy/60 hover:border-gold hover:text-navy hover:bg-gold/5
                   transition-colors duration-150 text-left
                 "
               >
@@ -136,17 +146,19 @@ export default function DreamInput() {
           type="submit"
           disabled={!prompt.trim() || loading}
           className="
-            w-full bg-navy text-cream font-serif text-lg py-4 rounded-xl
+            relative w-full bg-navy text-cream font-serif text-lg py-4 rounded-xl
             hover:bg-navy/90 disabled:opacity-40 disabled:cursor-not-allowed
-            transition-opacity duration-150
+            overflow-hidden btn-shimmer transition-colors duration-150
           "
         >
-          Build My Flavor →
+          Build My Flavor ✦
         </button>
       </form>
 
-      <p className="text-center text-navy/30 text-xs mt-8">
-        Every creation is unique. $19.99/qt · Minimum 2 quarts.
+      <p className="text-center text-navy/30 text-xs mt-8 flex items-center justify-center gap-2">
+        <span className="text-gold/40">✦</span>
+        Every creation is one of a kind · $19.99/qt · Minimum 2 quarts
+        <span className="text-gold/40">✦</span>
       </p>
     </div>
   )
@@ -154,26 +166,29 @@ export default function DreamInput() {
 
 function LoadingState() {
   return (
-    <div className="text-center space-y-6 animate-fade-up">
-      <div className="text-6xl animate-drip">🍦</div>
+    <div className="text-center space-y-6 animate-fade-up px-4">
+      <div className="text-7xl animate-float select-none">🍦</div>
       <div>
-        <h2 className="font-serif text-2xl text-navy mb-2">
-          Consulting the flavor gods...
+        <h2 className="font-serif text-3xl text-navy mb-2">
+          Consulting the flavor gods<span className="text-gold">…</span>
         </h2>
-        <p className="text-navy/50 text-sm">
+        <p className="font-serif italic text-navy/50 text-sm">
           Designing something extraordinary just for you.
         </p>
       </div>
-      {/* Animated dots */}
+      {/* Bouncing dots */}
       <div className="flex justify-center gap-2">
         {[0, 1, 2].map(i => (
           <div
             key={i}
-            className="w-2 h-2 rounded-full bg-navy/30"
-            style={{ animation: `drip 1.2s ease-in-out ${i * 0.2}s infinite` }}
+            className="w-2 h-2 rounded-full bg-gold/60"
+            style={{ animation: `bounceDot 1.2s ease-in-out ${i * 0.2}s infinite` }}
           />
         ))}
       </div>
+      <p className="text-navy/30 text-xs uppercase tracking-widest">
+        ✦ &nbsp; this may take a moment &nbsp; ✦
+      </p>
     </div>
   )
 }

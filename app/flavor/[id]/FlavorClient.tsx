@@ -145,19 +145,27 @@ export default function FlavorClient({ flavor, userId }: Props) {
     }
   }
 
-  // Soft color tint from AI suggestion (very light)
-  const tintStyle = { backgroundColor: flavor.suggestedColor + '18' }
+  // Richer color tint from AI suggestion
+  const tintStyle = {
+    background: `linear-gradient(160deg, ${flavor.suggestedColor}22 0%, ${flavor.suggestedColor}0a 100%)`,
+  }
 
   return (
     <div className="min-h-screen bg-cream">
 
       {/* Hero — flavor reveal */}
       <div
-        className="py-16 px-4 text-center border-b border-navy/10 animate-fade-up"
+        className="py-16 px-4 text-center border-b-2 border-navy/10 animate-fade-up relative overflow-hidden"
         style={tintStyle}
       >
-        <p className="text-navy/40 text-xs uppercase tracking-widest mb-4">
-          Your flavor is ready
+        {/* Decorative dot in top corners */}
+        <span className="absolute top-5 left-6 text-gold/30 text-2xl select-none animate-sparkle">✦</span>
+        <span className="absolute top-5 right-6 text-gold/30 text-2xl select-none animate-sparkle" style={{ animationDelay: '1.2s' }}>✦</span>
+
+        <p className="font-serif italic text-navy/40 text-xs tracking-widest mb-5 flex items-center justify-center gap-2">
+          <span className="text-gold/50">✦</span>
+          your flavor is ready
+          <span className="text-gold/50">✦</span>
         </p>
 
         {/* Flavor name — editable */}
@@ -173,30 +181,37 @@ export default function FlavorClient({ flavor, userId }: Props) {
             onKeyDown={e => e.key === 'Enter' && e.currentTarget.blur()}
             className="
               font-serif text-3xl md:text-5xl text-navy text-center bg-transparent
-              border-b-2 border-navy outline-none w-full max-w-xl mx-auto block
+              border-b-2 border-gold/50 outline-none w-full max-w-xl mx-auto block
             "
           />
         ) : (
           <button onClick={() => setEditingName(true)} title="Click to rename" className="group">
-            <h1 className="font-serif text-3xl md:text-5xl text-navy leading-tight">
+            <h1 className="font-serif text-4xl md:text-6xl text-navy leading-tight">
               {displayName}
-              <span className="text-navy/20 text-lg ml-2 group-hover:text-navy/50 transition-colors">✏️</span>
+              <span className="text-navy/20 text-xl ml-2 group-hover:text-gold/60 transition-colors">✏️</span>
             </h1>
           </button>
         )}
 
-        <p className="font-serif italic text-navy/60 mt-3 text-lg animate-fade-up-delay">
+        {/* Gold underline */}
+        <div className="flex items-center justify-center gap-3 mt-3 mb-4">
+          <div className="h-px w-20 bg-gradient-to-r from-transparent to-gold/40" />
+          <div className="w-1.5 h-1.5 rounded-full bg-gold/50" />
+          <div className="h-px w-20 bg-gradient-to-l from-transparent to-gold/40" />
+        </div>
+
+        <p className="font-serif italic text-navy/60 text-lg animate-fade-up-delay">
           {renderBold(flavor.tagline)}
         </p>
         <p className="text-navy/70 mt-4 max-w-lg mx-auto text-sm leading-relaxed animate-fade-up-delay-2">
           {renderBold(flavor.description)}
         </p>
-        <p className="text-forest mt-4 text-sm font-medium animate-fade-up-delay-2">
+        <p className="font-serif italic text-forest mt-4 text-sm animate-fade-up-delay-2">
           {flavor.whyThisFlavor}
         </p>
 
         {/* Remix / Start Over */}
-        <div className="flex items-center justify-center gap-3 mt-6">
+        <div className="flex items-center justify-center gap-3 mt-8">
           <button
             onClick={() => router.push('/')}
             className="
@@ -209,29 +224,29 @@ export default function FlavorClient({ flavor, userId }: Props) {
           <button
             onClick={() => { setRemixOpen(o => !o); setRemixError(null) }}
             className="
-              text-sm font-medium text-navy border-2 border-navy/30 hover:border-navy
-              px-4 py-2 rounded-xl transition-colors
+              text-sm font-medium text-navy border-2 border-gold/40 hover:border-gold
+              bg-white/60 hover:bg-gold/5 px-4 py-2 rounded-xl transition-colors
             "
           >
-            {remixOpen ? 'Cancel Remix' : '✦ Remix'}
+            {remixOpen ? 'Cancel' : '✦ Remix this flavor'}
           </button>
         </div>
 
         {/* Inline remix panel */}
         {remixOpen && (
-          <div className="mt-4 max-w-lg mx-auto text-left">
-            <p className="text-navy/40 text-xs mb-2 text-center">
+          <div className="mt-5 max-w-lg mx-auto text-left bg-white/70 rounded-2xl border border-gold/20 p-5 shadow-sm">
+            <p className="font-serif italic text-navy/50 text-sm mb-3 text-center">
               How can we make this flavor even better?
             </p>
             <textarea
-              rows={3}
+              rows={2}
               value={remixPrompt}
               onChange={e => setRemixPrompt(e.target.value)}
-              placeholder="e.g. 'a smoky caramel with espresso and sea salt'"
+              placeholder="e.g. 'make it extra spicy' or 'swap in dark chocolate'"
               className="
-                w-full bg-white border-2 border-navy/30 rounded-xl px-4 py-3
+                w-full bg-cream/80 border-2 border-navy/10 rounded-xl px-4 py-3
                 font-sans text-sm text-navy placeholder:text-navy/30
-                focus:outline-none focus:border-navy resize-none
+                focus:outline-none focus:border-gold/50 resize-none
               "
             />
             {remixError && (
@@ -241,12 +256,12 @@ export default function FlavorClient({ flavor, userId }: Props) {
               onClick={handleRemix}
               disabled={remixLoading || !remixPrompt.trim()}
               className="
-                mt-2 w-full bg-navy text-cream font-serif py-3 rounded-xl
-                hover:bg-navy/90 disabled:opacity-50 disabled:cursor-not-allowed
-                transition-opacity
+                mt-3 w-full bg-navy text-cream font-serif py-3 rounded-xl
+                hover:bg-navy/90 disabled:opacity-40 disabled:cursor-not-allowed
+                relative overflow-hidden btn-shimmer transition-colors
               "
             >
-              {remixLoading ? 'Generating…' : 'Remix this flavor →'}
+              {remixLoading ? 'Generating…' : 'Remix this flavor ✦'}
             </button>
           </div>
         )}
@@ -414,16 +429,18 @@ export default function FlavorClient({ flavor, userId }: Props) {
             onClick={handleCheckout}
             disabled={loading}
             className="
-              w-full bg-navy text-cream font-serif text-lg py-4 rounded-xl
-              hover:bg-navy/90 disabled:opacity-50 disabled:cursor-not-allowed
-              transition-opacity duration-150
+              relative w-full bg-navy text-cream font-serif text-lg py-4 rounded-xl
+              hover:bg-navy/90 disabled:opacity-40 disabled:cursor-not-allowed
+              overflow-hidden btn-shimmer transition-colors duration-150
             "
           >
-            {loading ? 'Preparing your order...' : `Order ${quantityQuarts} quarts — $${(totalCents / 100).toFixed(2)}`}
+            {loading ? 'Preparing your order…' : `Order ${quantityQuarts} quarts — $${(totalCents / 100).toFixed(2)}`}
           </button>
 
-          <p className="text-navy/30 text-xs text-center mt-4">
+          <p className="text-navy/30 text-xs text-center mt-4 flex items-center justify-center gap-2">
+            <span className="text-gold/30">✦</span>
             Secure payment via Stripe · Ships on the next qualifying Monday
+            <span className="text-gold/30">✦</span>
           </p>
         </section>
 

@@ -11,19 +11,14 @@ html {
   background-color: #F5F0E8;
 }
 
-/* Smooth transitions globally */
-* {
-  transition-property: background-color, border-color, opacity, transform;
-  transition-duration: 150ms;
-  transition-timing-function: ease;
+/* Subtle dot-grid texture on every page */
+body {
+  background-image: radial-gradient(circle, rgba(27,27,47,0.055) 1px, transparent 1px);
+  background-size: 22px 22px;
 }
 
-/* Remove transition on interactive state changes for snappiness */
-button, a, input, textarea {
-  transition: none;
-}
+/* ── Animations ───────────────────────────────────────── */
 
-/* Flavor reveal animation */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -32,23 +27,65 @@ button, a, input, textarea {
 .animate-fade-up {
   animation: fadeUp 0.7s ease-out forwards;
 }
-
 .animate-fade-up-delay {
   animation: fadeUp 0.7s ease-out 0.15s forwards;
   opacity: 0;
 }
-
 .animate-fade-up-delay-2 {
   animation: fadeUp 0.7s ease-out 0.3s forwards;
   opacity: 0;
 }
 
-/* Loading drip animation */
+/* Floating ice cream */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(-2deg); }
+  50%       { transform: translateY(-14px) rotate(2deg); }
+}
+.animate-float {
+  animation: float 2.8s ease-in-out infinite;
+}
+
+/* Old drip (kept for compat) */
 @keyframes drip {
   0%, 100% { transform: translateY(0) scale(1); }
   50%       { transform: translateY(12px) scale(0.95); }
 }
-
 .animate-drip {
   animation: drip 1.6s ease-in-out infinite;
+}
+
+/* Sparkle pulse on ✦ decorations */
+@keyframes sparklePulse {
+  0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  50%       { opacity: 0.6; transform: scale(1.25) rotate(20deg); }
+}
+.animate-sparkle {
+  animation: sparklePulse 2.4s ease-in-out infinite;
+}
+
+/* Gold shimmer on hover for CTA buttons */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.btn-shimmer:hover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(184,149,42,0.18) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 0.9s ease-in-out;
+  pointer-events: none;
+}
+
+/* Bounce dots */
+@keyframes bounceDot {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.3; }
+  40%            { transform: translateY(-8px); opacity: 1; }
 }
