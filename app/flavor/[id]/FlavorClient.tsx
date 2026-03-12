@@ -40,7 +40,7 @@ export default function FlavorClient({ flavor, userId }: Props) {
 
   // Remix state
   const [remixOpen, setRemixOpen]       = useState(false)
-  const [remixPrompt, setRemixPrompt]   = useState(flavor.customerPrompt)
+  const [remixPrompt, setRemixPrompt]   = useState('')
   const [remixLoading, setRemixLoading] = useState(false)
   const [remixError, setRemixError]     = useState<string | null>(null)
 
@@ -207,11 +207,14 @@ export default function FlavorClient({ flavor, userId }: Props) {
         {/* Inline remix panel */}
         {remixOpen && (
           <div className="mt-4 max-w-lg mx-auto text-left">
+            <p className="text-navy/40 text-xs mb-2 text-center">
+              Describe a new flavor from scratch
+            </p>
             <textarea
               rows={3}
               value={remixPrompt}
               onChange={e => setRemixPrompt(e.target.value)}
-              placeholder="Describe your dream flavor…"
+              placeholder="e.g. 'a smoky caramel with espresso and sea salt'"
               className="
                 w-full bg-white border-2 border-navy/30 rounded-xl px-4 py-3
                 font-sans text-sm text-navy placeholder:text-navy/30
@@ -230,7 +233,7 @@ export default function FlavorClient({ flavor, userId }: Props) {
                 transition-opacity
               "
             >
-              {remixLoading ? 'Generating…' : 'Generate new flavor →'}
+              {remixLoading ? 'Generating…' : 'Remix this flavor →'}
             </button>
           </div>
         )}
