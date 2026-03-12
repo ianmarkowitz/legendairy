@@ -166,10 +166,36 @@ export default async function AdminOrderDetailPage({ params }: Props) {
             {/* Tracking info — shown when shipped */}
             {order.status === 'shipped' && order.tracking_number && (
               <div className="col-span-2">
-                <dt className="text-[#0F0F1F]/40 text-xs uppercase tracking-wide mb-0.5">Tracking Number</dt>
-                <dd className="text-[#0F0F1F] font-mono font-semibold">{order.tracking_number}</dd>
+                <dt className="text-[#0F0F1F]/40 text-xs uppercase tracking-wide mb-1">Tracking</dt>
+                <dd className="flex items-center gap-3 flex-wrap">
+                  {order.tracking_carrier && (
+                    <span className="text-xs font-medium bg-[#0F0F1F]/5 text-[#0F0F1F]/70 px-2 py-0.5 rounded">
+                      {order.tracking_carrier}
+                    </span>
+                  )}
+                  <span className="text-[#0F0F1F] font-mono font-semibold">{order.tracking_number}</span>
+                  {order.tracking_carrier && order.tracking_carrier !== 'Other' && (() => {
+                    const n = encodeURIComponent(order.tracking_number)
+                    const urls: Record<string, string> = {
+                      UPS:   `https://www.ups.com/track?tracknum=${n}`,
+                      USPS:  `https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${n}`,
+                      FedEx: `https://www.fedex.com/apps/fedextrack/?tracknumbers=${n}`,
+                    }
+                    const url = urls[order.tracking_carrier]
+                    return url ? (
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-[#D4A843] hover:underline"
+                      >
+                        Track on {order.tracking_carrier} →
+                      </a>
+                    ) : null
+                  })()}
+                </dd>
                 {order.shipped_at && (
-                  <dd className="text-[#0F0F1F]/40 text-xs mt-0.5">
+                  <dd className="text-[#0F0F1F]/40 text-xs mt-1">
                     Shipped {new Date(order.shipped_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                   </dd>
                 )}

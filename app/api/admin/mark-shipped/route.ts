@@ -6,6 +6,7 @@ import { sendShippingNotification } from '@/lib/email'
 
 const BodySchema = z.object({
   orderId:        z.string().uuid(),
+  carrier:        z.enum(['UPS', 'USPS', 'FedEx', 'Other']),
   trackingNumber: z.string().min(1, 'Tracking number is required.'),
 })
 
@@ -38,7 +39,7 @@ export async function PATCH(req: NextRequest) {
     )
   }
 
-  const { orderId, trackingNumber } = parsed.data
+  const { orderId, carrier, trackingNumber } = parsed.data
 
   // 4. Fetch order and verify it's in_production
   const { data: order } = await serviceClient
@@ -66,7 +67,12 @@ export async function PATCH(req: NextRequest) {
   const now = new Date().toISOString()
   const { error: updateErr } = await serviceClient
     .from('orders')
-    .update({ status: 'shipped', tracking_number: trackingNumber, shipped_at: now })
+    .update({
+      status:           'shipped',
+      tracking_number:  trackingNumber,
+      tracking_carrier: carrier,
+      shipped_at:       now,
+    })
     .eq('id', orderId)
 
   if (updateErr) {
@@ -85,6 +91,7 @@ export async function PATCH(req: NextRequest) {
       customerName:   order.customer_name ?? 'Valued Customer',
       customerEmail:  order.customer_email ?? '',
       flavorName,
+      carrier,
       trackingNumber,
       shippedAt:      new Date(now),
     })
@@ -93,5 +100,5 @@ export async function PATCH(req: NextRequest) {
     console.error('Shipping notification email failed:', emailErr)
   }
 
-  return NextResponse.json({ status: 'shipped', trackingNumber })
+  return NextResponse.json({ status: 'shipped', carrier, trackingNumber })
 }

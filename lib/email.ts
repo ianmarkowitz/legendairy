@@ -244,19 +244,39 @@ export async function sendOrderConfirmation(opts: {
 
 // ── Shipping notification ─────────────────────────────────────────────────────
 
+function getTrackingUrl(carrier: string, trackingNumber: string): string | null {
+  const n = encodeURIComponent(trackingNumber)
+  switch (carrier) {
+    case 'UPS':   return `https://www.ups.com/track?tracknum=${n}`
+    case 'USPS':  return `https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${n}`
+    case 'FedEx': return `https://www.fedex.com/apps/fedextrack/?tracknumbers=${n}`
+    default:      return null
+  }
+}
+
 export async function sendShippingNotification(opts: {
   orderRef:       string
   customerName:   string
   customerEmail:  string
   flavorName:     string
+  carrier:        string
   trackingNumber: string
   shippedAt:      Date
 }) {
-  const { orderRef, customerName, customerEmail, flavorName, trackingNumber, shippedAt } = opts
+  const { orderRef, customerName, customerEmail, flavorName, carrier, trackingNumber, shippedAt } = opts
 
   const shippedDate = shippedAt.toLocaleDateString('en-US', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
   })
+
+  const trackingUrl = getTrackingUrl(carrier, trackingNumber)
+  const trackingLinkHtml = trackingUrl
+    ? `<a href="${trackingUrl}" style="display:inline-block;margin-top:14px;padding:12px 24px;background:#0F0F1F;color:#EDE5D5;text-decoration:none;border-radius:8px;font-size:15px;font-weight:600">
+        Track with ${carrier} →
+       </a>`
+    : `<p style="margin:12px 0 0;font-size:13px;color:#666">
+        Enter your tracking number on your carrier's website to follow the shipment.
+       </p>`
 
   const html = `
 <!DOCTYPE html>
@@ -275,9 +295,10 @@ export async function sendShippingNotification(opts: {
       Keep it in the freezer as soon as it arrives!
     </p>
 
-    <div style="background:#EDE5D5;border-left:4px solid #0F0F1F;padding:20px 24px;margin-bottom:24px;border-radius:0 6px 6px 0">
-      <p style="margin:0 0 6px;color:#666;font-size:13px;text-transform:uppercase;letter-spacing:0.05em">Tracking Number</p>
-      <p style="margin:0;font-size:22px;font-weight:700;letter-spacing:0.08em;color:#0F0F1F">${trackingNumber}</p>
+    <div style="background:#EDE5D5;border-left:4px solid #0F0F1F;padding:20px 24px;margin-bottom:24px;border-radius:0 6px 6px 0;text-align:center">
+      <p style="margin:0 0 4px;color:#666;font-size:12px;text-transform:uppercase;letter-spacing:0.08em">${carrier} Tracking Number</p>
+      <p style="margin:0;font-size:24px;font-weight:700;letter-spacing:0.08em;color:#0F0F1F;font-family:monospace">${trackingNumber}</p>
+      ${trackingLinkHtml}
     </div>
 
     <table style="width:100%;border-collapse:collapse;margin-bottom:24px">
@@ -285,13 +306,11 @@ export async function sendShippingNotification(opts: {
           <td style="padding:6px 0;font-weight:600">${orderRef}</td></tr>
       <tr><td style="padding:6px 0;color:#666">Flavor</td>
           <td style="padding:6px 0">${flavorName}</td></tr>
+      <tr><td style="padding:6px 0;color:#666">Carrier</td>
+          <td style="padding:6px 0">${carrier}</td></tr>
       <tr><td style="padding:6px 0;color:#666">Shipped</td>
           <td style="padding:6px 0">${shippedDate}</td></tr>
     </table>
-
-    <p style="margin:0 0 8px;color:#444;font-size:14px">
-      Use your tracking number to follow the shipment through the carrier's website.
-    </p>
 
     <p style="margin:32px 0 0;color:#666;font-size:14px">
       Questions? Just reply to this email — we're here to help.
