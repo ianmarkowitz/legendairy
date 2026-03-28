@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"systemMessage\": \"⚠️  Remember to update memory/handoff.md if code changes were made.\"}'"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -23,3 +23,6 @@
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# claude code — local overrides only (project settings.json is committed)
+.claude/settings.local.json
