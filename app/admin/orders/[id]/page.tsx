@@ -61,11 +61,15 @@ export default async function AdminOrderDetailPage({ params }: Props) {
     makerNotes:       fc.maker_notes ?? '',
   }
 
-  // For the spec sheet, use the stored sweetness level and all mix-ins as enabled
-  // (the "final" customizations are already baked into the DB at order time)
+  // Use enabled_mix_ins saved on the order (customer's selection at checkout).
+  // Fall back to all mix-ins for legacy orders created before this column existed.
+  const enabledMixInNames: string[] =
+    (order.enabled_mix_ins as string[] | null) ??
+    fc.mix_ins?.map((m: { name: string }) => m.name) ?? []
+
   const customizations: FlavorCustomizations = {
-    vegan:            order.delivery_type === 'pickup' ? false : false, // stored in order metadata
-    enabledMixIns:    fc.mix_ins?.map((m: { name: string }) => m.name) ?? [],
+    vegan:            false,
+    enabledMixIns:    enabledMixInNames,
     sweetnessLevel:   fc.sweetness_level,
     customFlavorName: fc.flavor_name !== flavor.flavorName ? fc.flavor_name : null,
     personalNote:     fc.personal_note ?? null,

@@ -152,6 +152,7 @@ export async function POST(req: NextRequest) {
         status:                   'paid',
         delivery_type:            deliveryAddress ? 'delivery' : 'pickup',
         delivery_address:         deliveryAddress,
+        enabled_mix_ins:          enabledMixIns,
         spec_sheet_sent:          false,
       })
       .select('id')
