@@ -47,7 +47,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className="font-serif antialiased" style={{ background: '#F1E1BC', color: '#2A1810' }}>
 
         {/* Announcement marquee */}
-        <div className="overflow-hidden bg-ac-ink text-ac-cream py-2.5" style={{ fontSize: 10, letterSpacing: '0.18em', fontFamily: 'var(--font-fraunces)', fontWeight: 600, textTransform: 'uppercase' }}>
+        <div className="overflow-hidden" style={{ background: '#2A1810', color: '#FBF3D9', paddingTop: 10, paddingBottom: 10, fontSize: 10, letterSpacing: '0.18em', fontFamily: 'var(--font-fraunces)', fontWeight: 600, textTransform: 'uppercase' }}>
           <div className="animate-marquee whitespace-nowrap flex gap-10">
             {marqueeFull.map((t, i) => (
               <span key={i} className="flex-shrink-0">{t}</span>
