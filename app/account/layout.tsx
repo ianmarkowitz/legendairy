@@ -6,17 +6,12 @@ export default async function AccountLayout({ children }: { children: React.Reac
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  if (!user) {
-    redirect('/login?next=/account')
-  }
+  if (!user) redirect('/login?next=/account')
 
   return (
-    <div className="min-h-[calc(100vh-3.5rem)] bg-black">
-      {/* Account nav tabs */}
+    <div style={{ minHeight: 'calc(100vh - 80px)', background: '#F1E1BC' }}>
       <AccountNav email={user.email ?? ''} />
-
-      {/* Page content */}
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 40px 80px' }}>
         {children}
       </main>
     </div>

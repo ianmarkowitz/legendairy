@@ -84,250 +84,855 @@ export default async function AdminOrderDetailPage({ params }: Props) {
     city: string; state: string; postal_code: string;
   } | null
 
+  // ─── palette ────────────────────────────────────────────────────────────────
+  const parchment = '#F1E1BC'
+  const cream     = '#FBF3D9'
+  const ink       = '#2A1810'
+  const rasp      = '#C83A4E'
+  const marigold  = '#E8A628'
+  const cherry    = '#8A1F2B'
+
   return (
-    <div className="max-w-3xl">
-      {/* Back + header */}
-      <div className="mb-6">
-        <Link
-          href="/admin/orders"
-          className="text-sm text-[#0F0F1F]/50 hover:text-[#0F0F1F] transition-colors"
+    <div
+      style={{
+        minHeight: '100vh',
+        backgroundColor: parchment,
+        backgroundImage: 'radial-gradient(ellipse at 20% 10%, rgba(42,24,16,0.08) 0%, transparent 55%), radial-gradient(ellipse at 80% 60%, rgba(42,24,16,0.06) 0%, transparent 50%)',
+        fontFamily: 'var(--font-fraunces), Georgia, serif',
+        color: ink,
+        padding: '0 0 64px 0',
+      }}
+    >
+
+      {/* ── Header bar ─────────────────────────────────────────────────────── */}
+      <header
+        style={{
+          borderBottom: `2px solid ${ink}`,
+          backgroundColor: parchment,
+          padding: '0 32px',
+          position: 'sticky',
+          top: 0,
+          zIndex: 10,
+          backgroundImage: 'radial-gradient(ellipse at 20% 10%, rgba(42,24,16,0.08) 0%, transparent 55%)',
+        }}
+      >
+        <div
+          style={{
+            maxWidth: 960,
+            margin: '0 auto',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 16,
+            height: 60,
+          }}
         >
-          ← All orders
-        </Link>
-      </div>
-
-      <div className="flex flex-wrap items-start justify-between gap-4 mb-8">
-        <div>
-          <div className="flex items-center gap-3 mb-1">
-            <div
-              className="w-8 h-8 rounded-lg flex-shrink-0"
-              style={{ backgroundColor: flavor.suggestedColor }}
-            />
-            <h1 className="font-serif text-2xl text-[#0F0F1F]">{spec.flavorName}</h1>
+          {/* Left: wordmark + nav */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+            <Link
+              href="/admin/orders"
+              style={{
+                fontFamily: 'var(--font-fraunces)',
+                fontStyle: 'italic',
+                fontWeight: 700,
+                fontSize: 16,
+                color: ink,
+                textDecoration: 'none',
+                letterSpacing: '-0.01em',
+              }}
+            >
+              Legendairy / Kitchen
+            </Link>
+            <nav style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
+              {[
+                { label: 'Queue',     href: '/admin/orders' },
+                { label: 'Spec sheet', href: '#', active: true },
+                { label: 'Revenue',   href: '/admin' },
+                { label: 'Customers', href: '/admin' },
+              ].map(({ label, href, active }) => (
+                <Link
+                  key={label}
+                  href={href}
+                  style={{
+                    fontFamily: 'var(--font-fraunces)',
+                    fontSize: 12,
+                    fontVariant: 'small-caps',
+                    letterSpacing: '0.06em',
+                    textDecoration: active ? 'none' : 'none',
+                    color: active ? rasp : `${ink}80`,
+                    borderBottom: active ? `2px solid ${rasp}` : '2px solid transparent',
+                    paddingBottom: 2,
+                    transition: 'color 0.15s',
+                  }}
+                >
+                  {label}
+                </Link>
+              ))}
+            </nav>
           </div>
-          <p className="font-serif italic text-[#0F0F1F]/50">{spec.tagline}</p>
-          <p className="text-sm text-[#0F0F1F]/50 mt-1">{order.order_reference}</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className={`text-sm font-medium px-3 py-1.5 rounded-full ${STATUS_STYLES[order.status] ?? STATUS_STYLES.pending}`}>
-            {STATUS_LABELS[order.status] ?? order.status}
-          </span>
-          <AdminStatusButton orderId={order.id} currentStatus={order.status} />
-        </div>
-      </div>
 
-      <div className="space-y-6">
+          {/* Right: action buttons + status */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <button
+              style={{
+                background: cream,
+                border: `1.5px solid ${ink}`,
+                color: ink,
+                fontFamily: 'var(--font-fraunces)',
+                fontSize: 12,
+                fontVariant: 'small-caps',
+                letterSpacing: '0.05em',
+                padding: '6px 14px',
+                cursor: 'pointer',
+              }}
+            >
+              Print PDF
+            </button>
+            <AdminStatusButton orderId={order.id} currentStatus={order.status} />
+          </div>
+        </div>
+      </header>
 
-        {/* Customer & delivery */}
-        <section className="bg-white rounded-2xl border border-[#0F0F1F]/10 p-6">
-          <h2 className="font-serif text-lg text-[#0F0F1F] mb-4">Customer</h2>
-          <dl className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
-            <div>
-              <dt className="text-[#0F0F1F]/40 text-xs uppercase tracking-wide mb-0.5">Name</dt>
-              <dd className="text-[#0F0F1F]">{order.customer_name || '—'}</dd>
-            </div>
-            <div>
-              <dt className="text-[#0F0F1F]/40 text-xs uppercase tracking-wide mb-0.5">Email</dt>
-              <dd className="text-[#0F0F1F]">{order.customer_email || '—'}</dd>
-            </div>
-            <div>
-              <dt className="text-[#0F0F1F]/40 text-xs uppercase tracking-wide mb-0.5">Order Date</dt>
-              <dd className="text-[#0F0F1F]">
-                {new Date(order.created_at).toLocaleDateString('en-US', {
-                  month: 'long', day: 'numeric', year: 'numeric',
-                })}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-[#0F0F1F]/40 text-xs uppercase tracking-wide mb-0.5">Ship Date</dt>
-              <dd className="text-[#0F0F1F] font-medium">{formatShipDate(shipDate)}</dd>
-            </div>
-            <div>
-              <dt className="text-[#0F0F1F]/40 text-xs uppercase tracking-wide mb-0.5">Quantity</dt>
-              <dd className="text-[#0F0F1F]">{order.quantity_quarts} qt ({spec.batchCount} batch{spec.batchCount > 1 ? 'es' : ''})</dd>
-            </div>
-            <div>
-              <dt className="text-[#0F0F1F]/40 text-xs uppercase tracking-wide mb-0.5">Total</dt>
-              <dd className="text-[#0F0F1F] font-medium">{formatCents(order.total_price_cents)}</dd>
-            </div>
-            {deliveryAddr ? (
-              <div className="col-span-2">
-                <dt className="text-[#0F0F1F]/40 text-xs uppercase tracking-wide mb-0.5">Delivery Address</dt>
-                <dd className="text-[#0F0F1F]">
-                  {deliveryAddr.name && <span className="block">{deliveryAddr.name}</span>}
-                  <span className="block">{deliveryAddr.line1}</span>
-                  {deliveryAddr.line2 && <span className="block">{deliveryAddr.line2}</span>}
-                  <span className="block">{deliveryAddr.city}, {deliveryAddr.state} {deliveryAddr.postal_code}</span>
-                </dd>
-              </div>
-            ) : (
-              <div>
-                <dt className="text-[#0F0F1F]/40 text-xs uppercase tracking-wide mb-0.5">Fulfillment</dt>
-                <dd className="text-[#0F0F1F]">Pickup</dd>
+      {/* ── Main content ───────────────────────────────────────────────────── */}
+      <main style={{ maxWidth: 960, margin: '0 auto', padding: '40px 32px 0' }}>
+
+        {/* ── Order title block (2-column) ─────────────────────────────────── */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 320px',
+            gap: 24,
+            marginBottom: 32,
+            alignItems: 'start',
+          }}
+        >
+          {/* Left column */}
+          <div>
+            <p
+              style={{
+                fontFamily: 'var(--font-fraunces)',
+                fontSize: 11,
+                fontVariant: 'small-caps',
+                letterSpacing: '0.12em',
+                opacity: 0.55,
+                margin: '0 0 6px 0',
+              }}
+            >
+              {order.order_reference}
+            </p>
+            <h1
+              style={{
+                fontFamily: 'var(--font-fraunces)',
+                fontStyle: 'italic',
+                fontWeight: 900,
+                fontSize: 72,
+                lineHeight: 0.9,
+                color: ink,
+                margin: '0 0 10px 0',
+                letterSpacing: '-0.03em',
+              }}
+            >
+              {spec.flavorName}
+            </h1>
+            <p
+              style={{
+                fontFamily: 'var(--font-fraunces)',
+                fontStyle: 'italic',
+                fontSize: 18,
+                color: `${ink}99`,
+                margin: '0 0 20px 0',
+              }}
+            >
+              {spec.tagline}
+            </p>
+
+            {/* Customer prompt box */}
+            {fc.customer_prompt && (
+              <div
+                style={{
+                  background: cream,
+                  border: `1.5px solid ${ink}`,
+                  boxShadow: `4px 4px 0 ${marigold}`,
+                  padding: '14px 18px',
+                  maxWidth: 460,
+                }}
+              >
+                <p
+                  style={{
+                    fontFamily: 'var(--font-fraunces)',
+                    fontSize: 9,
+                    fontVariant: 'small-caps',
+                    letterSpacing: '0.14em',
+                    color: `${ink}80`,
+                    margin: '0 0 6px 0',
+                  }}
+                >
+                  Customer&apos;s own words · verbatim
+                </p>
+                <p
+                  style={{
+                    fontFamily: 'var(--font-fraunces)',
+                    fontStyle: 'italic',
+                    fontSize: 15,
+                    color: ink,
+                    margin: 0,
+                    lineHeight: 1.5,
+                  }}
+                >
+                  &ldquo;{fc.customer_prompt}&rdquo;
+                </p>
               </div>
             )}
+          </div>
 
-            {/* Tracking info — shown when shipped */}
-            {order.status === 'shipped' && order.tracking_number && (
-              <div className="col-span-2">
-                <dt className="text-[#0F0F1F]/40 text-xs uppercase tracking-wide mb-1">Tracking</dt>
-                <dd className="flex items-center gap-3 flex-wrap">
-                  {order.tracking_carrier && (
-                    <span className="text-xs font-medium bg-[#0F0F1F]/5 text-[#0F0F1F]/70 px-2 py-0.5 rounded">
-                      {order.tracking_carrier}
-                    </span>
-                  )}
-                  <span className="text-[#0F0F1F] font-mono font-semibold">{order.tracking_number}</span>
-                  {order.tracking_carrier && order.tracking_carrier !== 'Other' && (() => {
-                    const n = encodeURIComponent(order.tracking_number)
-                    const urls: Record<string, string> = {
-                      UPS:   `https://www.ups.com/track?tracknum=${n}`,
-                      USPS:  `https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${n}`,
-                      FedEx: `https://www.fedex.com/apps/fedextrack/?tracknumbers=${n}`,
-                    }
-                    const url = urls[order.tracking_carrier]
-                    return url ? (
-                      <a
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-[#D4A843] hover:underline"
-                      >
-                        Track on {order.tracking_carrier} →
-                      </a>
-                    ) : null
-                  })()}
-                </dd>
-                {order.shipped_at && (
-                  <dd className="text-[#0F0F1F]/40 text-xs mt-1">
-                    Shipped {new Date(order.shipped_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                  </dd>
+          {/* Right column — ink info card */}
+          <div
+            style={{
+              background: ink,
+              color: cream,
+              padding: '24px 22px',
+              position: 'relative',
+            }}
+          >
+            {/* Wax seal badge */}
+            <div
+              style={{
+                position: 'absolute',
+                top: -14,
+                right: -14,
+                width: 64,
+                height: 64,
+                borderRadius: '50%',
+                background: rasp,
+                color: cream,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transform: 'rotate(12deg)',
+                fontSize: 9,
+                fontFamily: 'var(--font-fraunces)',
+                fontVariant: 'small-caps',
+                letterSpacing: '0.06em',
+                textAlign: 'center',
+                lineHeight: 1.2,
+                border: `2px solid ${cream}`,
+                padding: 6,
+              }}
+            >
+              {order.order_reference?.replace('ORD-', '#') ?? '#—'}
+            </div>
+
+            <p
+              style={{
+                fontFamily: 'var(--font-fraunces)',
+                fontStyle: 'italic',
+                fontWeight: 700,
+                fontSize: 20,
+                color: cream,
+                margin: '0 0 4px 0',
+              }}
+            >
+              {order.customer_name || '—'}
+            </p>
+            <p
+              style={{
+                fontFamily: 'var(--font-fraunces)',
+                fontSize: 12,
+                color: `${cream}99`,
+                margin: '0 0 2px 0',
+              }}
+            >
+              {order.customer_email || '—'}
+            </p>
+
+            {deliveryAddr && (
+              <p
+                style={{
+                  fontFamily: 'var(--font-fraunces)',
+                  fontSize: 12,
+                  color: `${cream}80`,
+                  margin: '0 0 16px 0',
+                  lineHeight: 1.5,
+                }}
+              >
+                {deliveryAddr.name && <>{deliveryAddr.name}<br /></>}
+                {deliveryAddr.line1}<br />
+                {deliveryAddr.line2 && <>{deliveryAddr.line2}<br /></>}
+                {deliveryAddr.city}, {deliveryAddr.state} {deliveryAddr.postal_code}
+              </p>
+            )}
+
+            {!deliveryAddr && (
+              <p
+                style={{
+                  fontFamily: 'var(--font-fraunces)',
+                  fontSize: 12,
+                  color: `${cream}80`,
+                  margin: '0 0 16px 0',
+                }}
+              >
+                Pickup
+              </p>
+            )}
+
+            <div
+              style={{
+                borderTop: `1px solid ${cream}30`,
+                paddingTop: 14,
+                marginTop: 8,
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: 'var(--font-fraunces)',
+                  fontSize: 10,
+                  fontVariant: 'small-caps',
+                  letterSpacing: '0.1em',
+                  color: `${cream}60`,
+                  margin: '0 0 2px 0',
+                }}
+              >
+                Order quantity
+              </p>
+              <p
+                style={{
+                  fontFamily: 'var(--font-fraunces)',
+                  fontStyle: 'italic',
+                  fontWeight: 700,
+                  fontSize: 32,
+                  color: cream,
+                  margin: '0 0 2px 0',
+                  lineHeight: 1,
+                }}
+              >
+                {order.quantity_quarts} qt
+                <span
+                  style={{
+                    fontFamily: 'var(--font-fraunces)',
+                    fontStyle: 'normal',
+                    fontWeight: 400,
+                    fontSize: 14,
+                    color: `${cream}80`,
+                    marginLeft: 8,
+                  }}
+                >
+                  = {spec.batchCount} batch{spec.batchCount > 1 ? 'es' : ''}
+                </span>
+              </p>
+              {spec.personalNote && (
+                <p
+                  style={{
+                    fontFamily: 'var(--font-caveat)',
+                    fontSize: 14,
+                    color: marigold,
+                    margin: '8px 0 0 0',
+                  }}
+                >
+                  {spec.personalNote}
+                </p>
+              )}
+            </div>
+
+            <div
+              style={{
+                borderTop: `1px solid ${cream}30`,
+                paddingTop: 12,
+                marginTop: 12,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <div>
+                <p
+                  style={{
+                    fontFamily: 'var(--font-fraunces)',
+                    fontSize: 10,
+                    fontVariant: 'small-caps',
+                    letterSpacing: '0.1em',
+                    color: `${cream}60`,
+                    margin: '0 0 2px 0',
+                  }}
+                >
+                  Ship by
+                </p>
+                <p
+                  style={{
+                    fontFamily: 'var(--font-fraunces)',
+                    fontWeight: 700,
+                    fontSize: 13,
+                    color: cream,
+                    margin: 0,
+                  }}
+                >
+                  {formatShipDate(shipDate)}
+                </p>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <p
+                  style={{
+                    fontFamily: 'var(--font-fraunces)',
+                    fontSize: 10,
+                    fontVariant: 'small-caps',
+                    letterSpacing: '0.1em',
+                    color: `${cream}60`,
+                    margin: '0 0 2px 0',
+                  }}
+                >
+                  Total
+                </p>
+                <p
+                  style={{
+                    fontFamily: 'var(--font-fraunces)',
+                    fontWeight: 700,
+                    fontSize: 16,
+                    color: marigold,
+                    margin: 0,
+                  }}
+                >
+                  {formatCents(order.total_price_cents)}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Allergen banner ───────────────────────────────────────────────── */}
+        {spec.allergenFlags.length > 0 && (
+          <div
+            style={{
+              background: cherry,
+              color: cream,
+              padding: '14px 24px',
+              marginBottom: 28,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 16,
+              flexWrap: 'wrap',
+            }}
+          >
+            <span style={{ fontSize: 20 }}>⚠</span>
+            <p
+              style={{
+                fontFamily: 'var(--font-fraunces)',
+                fontSize: 10,
+                fontVariant: 'small-caps',
+                letterSpacing: '0.14em',
+                color: `${cream}cc`,
+                margin: 0,
+                flexShrink: 0,
+              }}
+            >
+              Allergen flags
+            </p>
+            <p
+              style={{
+                fontFamily: 'var(--font-fraunces)',
+                fontStyle: 'italic',
+                fontWeight: 700,
+                fontSize: 22,
+                color: cream,
+                margin: 0,
+                letterSpacing: '-0.01em',
+              }}
+            >
+              {spec.allergenFlags.join(' · ')}
+            </p>
+          </div>
+        )}
+
+        {/* ── Base specs (3-col grid) ───────────────────────────────────────── */}
+        <section style={{ marginBottom: 32 }}>
+          <p
+            style={{
+              fontFamily: 'var(--font-fraunces)',
+              fontSize: 10,
+              fontVariant: 'small-caps',
+              letterSpacing: '0.14em',
+              color: `${ink}60`,
+              margin: '0 0 10px 0',
+            }}
+          >
+            Base specs
+          </p>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: 10,
+            }}
+          >
+            {[
+              {
+                label: 'Base type',
+                value: spec.baseType,
+                note: null,
+              },
+              {
+                label: 'Milkfat %',
+                value: spec.milkfatPercent ? `${spec.milkfatPercent}%` : 'N/A',
+                note: spec.milkfatRationale ?? null,
+              },
+              {
+                label: 'Liquid base qty',
+                value: `${spec.liquidBaseTotalQt} qt`,
+                note: `${spec.batchCount} batch${spec.batchCount > 1 ? 'es' : ''}`,
+              },
+            ].map(({ label, value, note }) => (
+              <div
+                key={label}
+                style={{
+                  background: cream,
+                  border: `1.5px solid ${ink}`,
+                  padding: '14px 16px',
+                }}
+              >
+                <p
+                  style={{
+                    fontFamily: 'var(--font-fraunces)',
+                    fontSize: 9,
+                    fontVariant: 'small-caps',
+                    letterSpacing: '0.14em',
+                    color: `${ink}70`,
+                    margin: '0 0 4px 0',
+                  }}
+                >
+                  {label}
+                </p>
+                <p
+                  style={{
+                    fontFamily: 'var(--font-fraunces)',
+                    fontStyle: 'italic',
+                    fontWeight: 700,
+                    fontSize: 22,
+                    color: ink,
+                    margin: 0,
+                    lineHeight: 1.1,
+                  }}
+                >
+                  {value}
+                </p>
+                {note && (
+                  <p
+                    style={{
+                      fontFamily: 'var(--font-fraunces)',
+                      fontStyle: 'italic',
+                      fontSize: 11,
+                      color: `${ink}60`,
+                      margin: '4px 0 0 0',
+                    }}
+                  >
+                    {note}
+                  </p>
                 )}
               </div>
-            )}
-          </dl>
+            ))}
+          </div>
+        </section>
 
-          {/* Mark as Shipped form — shown when in_production */}
-          {order.status === 'in_production' && (
-            <TrackingForm orderId={order.id} />
+        {/* ── Mix-ins table ────────────────────────────────────────────────── */}
+        <section style={{ marginBottom: 32 }}>
+          <p
+            style={{
+              fontFamily: 'var(--font-fraunces)',
+              fontSize: 10,
+              fontVariant: 'small-caps',
+              letterSpacing: '0.14em',
+              color: `${ink}60`,
+              margin: '0 0 10px 0',
+            }}
+          >
+            Mix-ins
+          </p>
+          <div style={{ border: `1.5px solid ${ink}`, overflow: 'hidden' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ background: ink }}>
+                  {['Ingredient', 'g / qt', 'Batch total', 'Fold method', 'Prep note'].map(col => (
+                    <th
+                      key={col}
+                      style={{
+                        fontFamily: 'var(--font-fraunces)',
+                        fontSize: 9,
+                        fontVariant: 'small-caps',
+                        letterSpacing: '0.12em',
+                        color: cream,
+                        fontWeight: 500,
+                        textAlign: 'left',
+                        padding: '10px 14px',
+                      }}
+                    >
+                      {col}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {spec.mixIns
+                  .filter(m => spec.enabledMixIns.includes(m.name))
+                  .map((mixIn, i, arr) => (
+                    <tr
+                      key={mixIn.name}
+                      style={{
+                        background: cream,
+                        borderBottom: i < arr.length - 1 ? `1px dashed ${ink}60` : 'none',
+                      }}
+                    >
+                      <td
+                        style={{
+                          fontFamily: 'var(--font-fraunces)',
+                          fontStyle: 'italic',
+                          fontWeight: 700,
+                          fontSize: 14,
+                          color: ink,
+                          padding: '10px 14px',
+                        }}
+                      >
+                        {mixIn.name}
+                      </td>
+                      <td
+                        style={{
+                          fontFamily: 'var(--font-fraunces)',
+                          fontSize: 13,
+                          color: `${ink}90`,
+                          padding: '10px 14px',
+                        }}
+                      >
+                        {mixIn.weightGrams}g
+                      </td>
+                      <td
+                        style={{
+                          fontFamily: 'var(--font-fraunces)',
+                          fontSize: 13,
+                          color: `${ink}90`,
+                          padding: '10px 14px',
+                        }}
+                      >
+                        {(mixIn.weightGrams * spec.batchCount * 2).toFixed(0)}g
+                      </td>
+                      <td
+                        style={{
+                          fontFamily: 'monospace',
+                          fontSize: 12,
+                          color: `${ink}80`,
+                          padding: '10px 14px',
+                        }}
+                      >
+                        {mixIn.foldMethod.replace(/-/g, ' ')}
+                      </td>
+                      <td
+                        style={{
+                          fontFamily: 'var(--font-fraunces)',
+                          fontStyle: 'italic',
+                          fontSize: 12,
+                          color: `${ink}60`,
+                          padding: '10px 14px',
+                        }}
+                      >
+                        {mixIn.prepNote ?? '—'}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+          {spec.mixIns.filter(m => !spec.enabledMixIns.includes(m.name)).length > 0 && (
+            <p
+              style={{
+                fontFamily: 'var(--font-fraunces)',
+                fontStyle: 'italic',
+                fontSize: 11,
+                color: `${ink}40`,
+                margin: '8px 0 0 0',
+              }}
+            >
+              Excluded: {spec.mixIns.filter(m => !spec.enabledMixIns.includes(m.name)).map(m => m.name).join(', ')}
+            </p>
           )}
         </section>
 
-        {/* Spec sheet */}
-        <section className="bg-white rounded-2xl border border-[#0F0F1F]/10 p-6">
-          <h2 className="font-serif text-lg text-[#0F0F1F] mb-1">Production Spec</h2>
-          <p className="text-xs text-[#0F0F1F]/40 mb-6 italic">"{fc.customer_prompt}"</p>
-
-          {/* Base */}
-          <div className="mb-5">
-            <h3 className="text-xs text-[#0F0F1F]/40 uppercase tracking-wide mb-3">Base</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {[
-                { label: 'Type',          value: spec.baseType },
-                { label: 'Milkfat',       value: spec.milkfatPercent ? `${spec.milkfatPercent}%` : 'N/A' },
-                { label: 'Primary Flavor',value: spec.primaryFlavor },
-                { label: 'Sweetener',     value: spec.sweetenerType },
-                { label: 'Sweetness',     value: `Level ${spec.sweetnessLevel} / 10` },
-                { label: 'Sugar / qt base', value: `${sugarGrams}g` },
-              ].map(({ label, value }) => (
-                <div key={label} className="bg-[#EDE5D5] rounded-xl px-3 py-2.5">
-                  <p className="text-xs text-[#0F0F1F]/50 mb-0.5">{label}</p>
-                  <p className="text-sm font-medium text-[#0F0F1F]">{value}</p>
-                </div>
-              ))}
-            </div>
-            {spec.milkfatRationale && (
-              <p className="text-xs text-[#0F0F1F]/40 mt-2 italic">{spec.milkfatRationale}</p>
-            )}
-          </div>
-
-          {/* Production quantities */}
-          <div className="mb-5">
-            <h3 className="text-xs text-[#0F0F1F]/40 uppercase tracking-wide mb-3">Production</h3>
-            <div className="grid grid-cols-3 gap-3">
-              {[
-                { label: 'Quarts',       value: `${spec.quantityQuarts} qt` },
-                { label: 'Batches',      value: `${spec.batchCount}` },
-                { label: 'Liquid Base',  value: `${spec.liquidBaseTotalQt} qt` },
-              ].map(({ label, value }) => (
-                <div key={label} className="bg-[#EDE5D5] rounded-xl px-3 py-2.5 text-center">
-                  <p className="font-serif text-2xl text-[#0F0F1F]">{value}</p>
-                  <p className="text-xs text-[#0F0F1F]/50 mt-0.5">{label}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Mix-ins */}
-          <div className="mb-5">
-            <h3 className="text-xs text-[#0F0F1F]/40 uppercase tracking-wide mb-3">Mix-Ins</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="text-left text-xs text-[#0F0F1F]/40 border-b border-[#0F0F1F]/10">
-                    <th className="pb-2 pr-4 font-medium">Ingredient</th>
-                    <th className="pb-2 pr-4 font-medium">g / qt</th>
-                    <th className="pb-2 pr-4 font-medium">Batch total</th>
-                    <th className="pb-2 pr-4 font-medium">Method</th>
-                    <th className="pb-2 font-medium">Prep Note</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {spec.mixIns
-                    .filter(m => spec.enabledMixIns.includes(m.name))
-                    .map(mixIn => (
-                      <tr key={mixIn.name} className="border-b border-[#0F0F1F]/5 last:border-0">
-                        <td className="py-2.5 pr-4 font-medium text-[#0F0F1F]">{mixIn.name}</td>
-                        <td className="py-2.5 pr-4 text-[#0F0F1F]/70">{mixIn.weightGrams}g</td>
-                        <td className="py-2.5 pr-4 text-[#0F0F1F]/70">
-                          {(mixIn.weightGrams * spec.batchCount * 2).toFixed(0)}g
-                        </td>
-                        <td className="py-2.5 pr-4 text-[#0F0F1F]/70">
-                          {mixIn.foldMethod.replace(/-/g, ' ')}
-                        </td>
-                        <td className="py-2.5 text-[#0F0F1F]/50 text-xs italic">
-                          {mixIn.prepNote ?? '—'}
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
-            {spec.mixIns.filter(m => !spec.enabledMixIns.includes(m.name)).length > 0 && (
-              <p className="text-xs text-[#0F0F1F]/30 mt-2 italic">
-                Excluded: {spec.mixIns.filter(m => !spec.enabledMixIns.includes(m.name)).map(m => m.name).join(', ')}
+        {/* ── Maker notes ──────────────────────────────────────────────────── */}
+        {spec.makerNotes && (
+          <section style={{ marginBottom: 32 }}>
+            <div
+              style={{
+                background: cream,
+                border: `1.5px dashed ${ink}`,
+                padding: '18px 22px',
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: 'var(--font-fraunces)',
+                  fontSize: 9,
+                  fontVariant: 'small-caps',
+                  letterSpacing: '0.14em',
+                  color: `${ink}60`,
+                  margin: '0 0 8px 0',
+                }}
+              >
+                Maker notes · from the architect
               </p>
-            )}
-          </div>
-
-          {/* Allergens */}
-          {spec.allergenFlags.length > 0 && (
-            <div className="mb-5">
-              <AllergenBadges flags={spec.allergenFlags} />
-            </div>
-          )}
-
-          {/* Maker notes */}
-          {spec.makerNotes && (
-            <div className="mb-5">
-              <h3 className="text-xs text-[#0F0F1F]/40 uppercase tracking-wide mb-2">Maker Notes</h3>
-              <p className="text-sm text-[#0F0F1F]/70 bg-[#EDE5D5] rounded-xl px-4 py-3 italic">
+              <p
+                style={{
+                  fontFamily: 'var(--font-fraunces)',
+                  fontStyle: 'italic',
+                  fontSize: 16,
+                  color: ink,
+                  margin: 0,
+                  lineHeight: 1.6,
+                }}
+              >
                 {spec.makerNotes}
               </p>
             </div>
-          )}
+          </section>
+        )}
 
-          {/* Label dedication */}
-          {spec.personalNote && (
-            <div>
-              <h3 className="text-xs text-[#0F0F1F]/40 uppercase tracking-wide mb-2">Label Dedication</h3>
-              <p className="text-sm text-[#0F0F1F]/70 bg-[#EDE5D5] rounded-xl px-4 py-3 italic">
-                "{spec.personalNote}"
+        {/* ── Label dedication ─────────────────────────────────────────────── */}
+        {spec.personalNote && (
+          <section style={{ marginBottom: 32 }}>
+            <div
+              style={{
+                background: cream,
+                border: `1.5px dashed ${ink}`,
+                padding: '18px 22px',
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: 'var(--font-fraunces)',
+                  fontSize: 9,
+                  fontVariant: 'small-caps',
+                  letterSpacing: '0.14em',
+                  color: `${ink}60`,
+                  margin: '0 0 8px 0',
+                }}
+              >
+                Label dedication
+              </p>
+              <p
+                style={{
+                  fontFamily: 'var(--font-caveat)',
+                  fontSize: 22,
+                  color: ink,
+                  margin: 0,
+                  lineHeight: 1.5,
+                }}
+              >
+                &ldquo;{spec.personalNote}&rdquo;
               </p>
             </div>
-          )}
-        </section>
-      </div>
+          </section>
+        )}
+
+        {/* ── Tracking info (when shipped) ─────────────────────────────────── */}
+        {order.status === 'shipped' && order.tracking_number && (
+          <section style={{ marginBottom: 32 }}>
+            <p
+              style={{
+                fontFamily: 'var(--font-fraunces)',
+                fontSize: 10,
+                fontVariant: 'small-caps',
+                letterSpacing: '0.14em',
+                color: `${ink}60`,
+                margin: '0 0 10px 0',
+              }}
+            >
+              Shipping / tracking
+            </p>
+            <div
+              style={{
+                background: cream,
+                border: `1.5px solid ${ink}`,
+                padding: '16px 20px',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                {order.tracking_carrier && (
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-fraunces)',
+                      fontSize: 10,
+                      fontVariant: 'small-caps',
+                      letterSpacing: '0.08em',
+                      background: `${ink}12`,
+                      color: `${ink}90`,
+                      padding: '3px 8px',
+                    }}
+                  >
+                    {order.tracking_carrier}
+                  </span>
+                )}
+                <span
+                  style={{
+                    fontFamily: 'monospace',
+                    fontWeight: 700,
+                    fontSize: 14,
+                    color: ink,
+                    letterSpacing: '0.05em',
+                  }}
+                >
+                  {order.tracking_number}
+                </span>
+                {order.tracking_carrier && order.tracking_carrier !== 'Other' && (() => {
+                  const n = encodeURIComponent(order.tracking_number)
+                  const urls: Record<string, string> = {
+                    UPS:   `https://www.ups.com/track?tracknum=${n}`,
+                    USPS:  `https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${n}`,
+                    FedEx: `https://www.fedex.com/apps/fedextrack/?tracknumbers=${n}`,
+                  }
+                  const url = urls[order.tracking_carrier]
+                  return url ? (
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        fontFamily: 'var(--font-fraunces)',
+                        fontSize: 12,
+                        color: marigold,
+                        textDecoration: 'underline',
+                      }}
+                    >
+                      Track on {order.tracking_carrier} →
+                    </a>
+                  ) : null
+                })()}
+              </div>
+              {order.shipped_at && (
+                <p
+                  style={{
+                    fontFamily: 'var(--font-fraunces)',
+                    fontSize: 11,
+                    color: `${ink}50`,
+                    margin: '8px 0 0 0',
+                    fontStyle: 'italic',
+                  }}
+                >
+                  Shipped {new Date(order.shipped_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </p>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* ── Tracking form (when in_production) ───────────────────────────── */}
+        {order.status === 'in_production' && (
+          <section style={{ marginBottom: 32 }}>
+            <div
+              style={{
+                background: cream,
+                border: `1.5px solid ${ink}`,
+                padding: '20px 22px',
+              }}
+            >
+              <TrackingForm orderId={order.id} />
+            </div>
+          </section>
+        )}
+
+      </main>
     </div>
   )
 }
