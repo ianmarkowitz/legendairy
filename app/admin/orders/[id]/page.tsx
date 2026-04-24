@@ -145,10 +145,10 @@ export default async function AdminOrderDetailPage({ params }: Props) {
             </Link>
             <nav style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
               {[
-                { label: 'Queue',     href: '/admin/orders' },
+                { label: 'Queue',      href: '/admin/orders' },
                 { label: 'Spec sheet', href: '#', active: true },
-                { label: 'Revenue',   href: '/admin' },
-                { label: 'Customers', href: '/admin' },
+                { label: 'Revenue',    href: '/admin' },
+                { label: 'Customers',  href: '/admin' },
               ].map(({ label, href, active }) => (
                 <Link
                   key={label}
@@ -158,7 +158,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
                     fontSize: 12,
                     fontVariant: 'small-caps',
                     letterSpacing: '0.06em',
-                    textDecoration: active ? 'none' : 'none',
+                    textDecoration: 'none',
                     color: active ? rasp : `${ink}80`,
                     borderBottom: active ? `2px solid ${rasp}` : '2px solid transparent',
                     paddingBottom: 2,
@@ -375,6 +375,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
               </p>
             )}
 
+            {/* Quantity */}
             <div
               style={{
                 borderTop: `1px solid ${cream}30`,
@@ -433,6 +434,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
               )}
             </div>
 
+            {/* Ship date + total */}
             <div
               style={{
                 borderTop: `1px solid ${cream}30`,
