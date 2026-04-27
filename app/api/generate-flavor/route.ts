@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {
       const message = await getAnthropic().messages.create({
-        model:      'claude-sonnet-4-5',
+        model:      'claude-sonnet-4-6',
         max_tokens: 1024,
         system:     FLAVOR_SYSTEM_PROMPT,
         messages:   [{ role: 'user', content: prompt }],
