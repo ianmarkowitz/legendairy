@@ -4,6 +4,11 @@ import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase-browser'
 import Link from 'next/link'
+import {
+  AC, WaxSeal, Stamp, ScoopDoodle, paperGrain, acSmall,
+} from '@/components/ac-primitives'
+
+const FF = { serif: 'var(--font-fraunces)', hand: 'var(--font-caveat)' }
 
 export default function LoginPage() {
   const [email,    setEmail]    = useState('')
@@ -18,7 +23,6 @@ export default function LoginPage() {
     setLoading(true)
     setErrorMsg(null)
 
-    // Grab guest session_id to pass through magic link
     const sessionId = typeof window !== 'undefined'
       ? sessionStorage.getItem('ld_session_id') ?? ''
       : ''
@@ -32,94 +36,89 @@ export default function LoginPage() {
     })
 
     setLoading(false)
-
-    if (error) {
-      setErrorMsg(error.message)
-    } else {
-      setSent(true)
-    }
+    if (error) { setErrorMsg(error.message) } else { setSent(true) }
   }
 
   return (
-    <div className="min-h-[calc(100vh-3.5rem)] bg-black flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
+    <div style={{ minHeight: 'calc(100vh - 56px)', background: AC.parchment, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px', ...paperGrain }}>
+      <div style={{ width: '100%', maxWidth: 460 }}>
 
-        {/* Wordmark */}
-        <div className="text-center mb-10">
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="h-px w-16 bg-[#C9A96E]/30" />
-            <span className="text-[#C9A96E] text-[10px] uppercase tracking-[0.3em]">Legendairy</span>
-            <div className="h-px w-16 bg-[#C9A96E]/30" />
-          </div>
-          <p className="text-white/30 text-sm font-serif italic">Your flavors, saved forever.</p>
+        {/* Header */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, marginBottom: 32 }}>
+          <WaxSeal size={72} color={AC.rasp} rotate={-6}>
+            <span style={{ ...acSmall, color: AC.cream, fontSize: 9, lineHeight: 1.4 }}>THE<br />VAULT</span>
+          </WaxSeal>
+          <h1 style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 'clamp(36px, 6vw, 52px)', color: AC.ink, margin: 0, lineHeight: 1 }}>
+            The Vault
+          </h1>
+          <p style={{ fontFamily: FF.hand, fontSize: 20, color: AC.rasp, margin: 0 }}>
+            your flavors, saved forever.
+          </p>
         </div>
 
-        <div className="bg-[#0D0D0D] rounded-xl border border-white/8 p-8">
+        {/* Card */}
+        <div style={{ background: AC.cream, border: `2px solid ${AC.ink}`, borderRadius: 6, padding: '32px 32px 24px', boxShadow: `6px 6px 0 ${AC.ink}`, ...paperGrain }}>
 
           {!sent ? (
             <>
-              <h1 className="font-serif text-2xl text-white mb-2">Sign in</h1>
-              <p className="text-white/40 text-sm mb-6">
-                Enter your email and we&apos;ll send you a magic link — no password needed.
-              </p>
+              <div style={{ marginBottom: 20 }}>
+                <Stamp color={AC.ink} rotate={-1} style={{ fontSize: 10, opacity: 0.5 }}>— sign in —</Stamp>
+              </div>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label htmlFor="email" className="block text-[10px] font-medium text-white/40 uppercase tracking-[0.2em] mb-2">
-                    Email address
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    required
-                    autoFocus
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    placeholder="you@example.com"
-                    className="
-                      w-full px-4 py-3 rounded-lg border border-white/8 bg-black/50
-                      text-white placeholder:text-white/20
-                      focus:outline-none focus:border-[#C9A96E]/30 transition-colors
-                    "
-                  />
-                </div>
+              <label style={{ fontFamily: FF.hand, fontSize: 22, display: 'block', marginBottom: 18, color: AC.ink }}>
+                Dear Legendairy,
+              </label>
+
+              <form onSubmit={handleSubmit}>
+                <p style={{ fontFamily: FF.hand, fontSize: 16, color: `${AC.ink}88`, marginBottom: 14, lineHeight: 1.5 }}>
+                  Enter your email and we&apos;ll send you a magic link — no password needed.
+                </p>
+
+                <input
+                  id="email"
+                  type="email"
+                  required
+                  autoFocus
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  style={{ fontFamily: FF.hand, fontSize: 20, width: '100%', boxSizing: 'border-box', background: 'transparent', border: 'none', borderBottom: `1.5px solid ${AC.ink}`, outline: 'none', color: AC.ink, padding: '4px 0 8px', marginBottom: 8 }}
+                />
 
                 {errorMsg && (
-                  <p className="text-red-400 text-sm bg-red-950/40 border border-red-800/30 rounded-lg px-3 py-2">
-                    {errorMsg}
-                  </p>
+                  <p style={{ fontFamily: FF.hand, fontSize: 14, color: AC.rasp, marginTop: 10, marginBottom: 4 }}>{errorMsg}</p>
                 )}
 
                 <button
                   type="submit"
                   disabled={loading || !email}
-                  className="
-                    w-full py-4 bg-[#C9A96E] text-black text-xs font-medium
-                    uppercase tracking-[0.25em] rounded-lg
-                    hover:bg-[#D4B47A] disabled:opacity-40 disabled:cursor-not-allowed transition-colors
-                  "
+                  style={{ marginTop: 20, width: '100%', background: AC.rasp, color: AC.cream, fontFamily: FF.serif, fontWeight: 700, fontStyle: 'italic', fontSize: 16, letterSpacing: '0.06em', padding: '14px 0', border: `2px solid ${AC.ink}`, borderRadius: 4, boxShadow: `4px 4px 0 ${AC.ink}`, cursor: (loading || !email) ? 'default' : 'pointer', opacity: (loading || !email) ? 0.5 : 1 }}
                 >
                   {loading ? 'Sending…' : 'Send magic link ✦'}
                 </button>
               </form>
 
-              <p className="mt-6 text-center text-sm text-white/30">
+              <p style={{ fontFamily: FF.hand, fontSize: 15, color: `${AC.ink}55`, textAlign: 'center', marginTop: 20 }}>
                 Just browsing?{' '}
-                <Link href="/" className="text-[#C9A96E] hover:text-[#D4B47A] transition-colors">
+                <Link href="/" style={{ color: AC.rasp, textDecoration: 'none' }}>
                   Continue without an account
                 </Link>
               </p>
             </>
           ) : (
-            <div className="text-center py-4">
-              <div className="text-4xl mb-4">✉️</div>
-              <h2 className="font-serif text-xl text-white mb-2">Check your inbox</h2>
-              <p className="text-white/40 text-sm mb-6">
-                We sent a magic link to <strong className="text-white">{email}</strong>. Click it to sign in.
+            <div style={{ textAlign: 'center', padding: '8px 0' }}>
+              <ScoopDoodle size={72} fill={AC.marigold} color={AC.ink} />
+              <h2 style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 28, color: AC.ink, margin: '20px 0 10px' }}>
+                Check your inbox
+              </h2>
+              <p style={{ fontFamily: FF.hand, fontSize: 18, color: `${AC.ink}88`, lineHeight: 1.5, marginBottom: 24 }}>
+                We sent a magic link to{' '}
+                <strong style={{ color: AC.ink }}>{email}</strong>.
+                <br />Click it to sign in.
               </p>
               <button
                 onClick={() => { setSent(false); setEmail('') }}
-                className="text-sm text-white/30 hover:text-[#C9A96E] transition-colors"
+                style={{ fontFamily: FF.hand, fontSize: 15, color: `${AC.ink}55`, background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}
               >
                 Use a different email
               </button>
