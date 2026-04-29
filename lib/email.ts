@@ -83,9 +83,8 @@ export async function sendMakerAlert(opts: {
     <table style="width:100%;border-collapse:collapse;margin-bottom:24px">
       <tr><td style="padding:6px 0;color:#666;width:200px">Base Type</td>
           <td style="padding:6px 0;font-weight:600">${spec.baseType}</td></tr>
-      ${!spec.baseType.includes('Coconut') ? `
       <tr><td style="padding:6px 0;color:#666">Milkfat</td>
-          <td style="padding:6px 0">${spec.milkfatPercent}% — ${spec.milkfatRationale}</td></tr>` : ''}
+          <td style="padding:6px 0">${spec.milkfatPercent}% — ${spec.milkfatRationale}</td></tr>
       <tr><td style="padding:6px 0;color:#666">Primary Flavor</td>
           <td style="padding:6px 0">${spec.primaryFlavor}</td></tr>
       <tr><td style="padding:6px 0;color:#666">Sweetener</td>

@@ -29,17 +29,11 @@ const mixBtn = (active: boolean): React.CSSProperties => ({
   color: active ? AC.cream : `${AC.cream}55`,
   ...ital(13, active ? AC.cream : `${AC.cream}55`),
 })
-const baseBtn = (active: boolean): React.CSSProperties => ({
-  padding: '10px 22px', cursor: 'pointer', borderRadius: 4,
-  background: active ? AC.marigold : 'transparent',
-  border: `2px solid ${active ? AC.marigold : `${AC.cream}44`}`,
-  ...ital(15, active ? AC.ink : `${AC.cream}77`, active ? 700 : 400),
-})
 
 export default function FlavorClient({ flavor, userId }: Props) {
   const router = useRouter()
   const [customizations, setCustomizations] = useState<FlavorCustomizations>({
-    vegan: false, enabledMixIns: flavor.mixIns.map(m => m.name),
+    enabledMixIns: flavor.mixIns.map(m => m.name),
     sweetnessLevel: flavor.sweetnessLevel, customFlavorName: null, personalNote: null,
   })
   const [quantityQuarts, setQuantityQuarts] = useState(MIN_QUARTS)
@@ -220,13 +214,8 @@ export default function FlavorClient({ flavor, userId }: Props) {
           <p style={{ fontFamily: FF.hand, fontSize: 21, color: `${AC.cream}80`, marginBottom: 44 }}>— the architect is unbothered —</p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48 }}>
 
-            {/* Base + mix-ins */}
+            {/* Mix-ins */}
             <div>
-              <p style={{ fontFamily: FF.hand, fontSize: 17, color: `${AC.cream}70`, marginBottom: 12 }}>Base</p>
-              <div style={{ display: 'flex', gap: 12, marginBottom: 36 }}>
-                <button onClick={() => setCustomizations(p => ({ ...p, vegan: false }))} style={baseBtn(!customizations.vegan)}>Whole-milk</button>
-                <button onClick={() => setCustomizations(p => ({ ...p, vegan: true }))}  style={baseBtn(customizations.vegan)}>Coconut (vegan)</button>
-              </div>
               <p style={{ fontFamily: FF.hand, fontSize: 17, color: `${AC.cream}70`, marginBottom: 12 }}>Mix-ins</p>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                 {flavor.mixIns.map(m => {

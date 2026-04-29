@@ -69,11 +69,9 @@ export function buildSpecSheet(
     customerPrompt,
     flavorName:      customizations.customFlavorName ?? flavor.flavorName,
     tagline:         flavor.tagline,
-    baseType:        customizations.vegan ? 'Coconut Cream (Vegan)' : `Whole-Milk Cream`,
-    milkfatPercent:  customizations.vegan ? 0 : flavor.milkfatPercent,
-    milkfatRationale: customizations.vegan
-      ? 'Coconut cream base selected by customer (vegan).'
-      : flavor.milkfatRationale,
+    baseType:         'Whole-Milk Cream',
+    milkfatPercent:   flavor.milkfatPercent,
+    milkfatRationale: flavor.milkfatRationale,
     primaryFlavor:   flavor.primaryFlavor,
     sweetenerType:   flavor.sweetenerType,
     sweetenerGramsPerQtBase: sugarGrams,

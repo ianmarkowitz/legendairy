@@ -43,7 +43,6 @@ export async function POST(req: NextRequest) {
     const meta = session.metadata ?? {}
     const flavorCreationId = meta.flavor_creation_id
     const quantityQuarts   = parseInt(meta.quantity_quarts ?? '2', 10)
-    const vegan            = meta.vegan === 'true'
     const sweetnessLevel   = parseInt(meta.sweetness_level ?? '5', 10)
     const customFlavorName = meta.custom_flavor_name || null
     const personalNote     = meta.personal_note || null
@@ -94,7 +93,7 @@ export async function POST(req: NextRequest) {
     }
 
     const customizations: FlavorCustomizations = {
-      vegan, enabledMixIns, sweetnessLevel, customFlavorName, personalNote,
+      enabledMixIns, sweetnessLevel, customFlavorName, personalNote,
     }
 
     const orderDate  = new Date()

@@ -34,7 +34,6 @@ export const DEFAULT_SWEETNESS_LEVEL = 5
 
 // ── Base Types ────────────────────────────────────────────────────────────────
 export const BASE_WHOLE_CREAM  = 'whole-cream'    // 12–14% butterfat, AI selects
-export const BASE_COCONUT      = 'coconut-cream'  // vegan option
 
 // ── Operations ───────────────────────────────────────────────────────────────
 export const MAKER_EMAIL = 'ian@ianmarkowitz.com'

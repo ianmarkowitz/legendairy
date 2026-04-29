@@ -10,11 +10,11 @@ import {
 const FF = { serif: 'var(--font-fraunces)', hand: 'var(--font-caveat)' }
 
 const CHIPS = [
-  'Apple pie filling folded into ice cream',
-  'A bonfire on a beach',
-  'Miso caramel, black sesame, a whisper of heat',
-  "Grandma's snickerdoodles",
-  'Tropical chaos — max crunch',
+  { text: 'Apple pie filling folded into ice cream', icon: '🍎', grad: ['#E8A628', '#C83A4E'] },
+  { text: 'A bonfire on a beach',                   icon: '🔥', grad: ['#E26B2E', '#8A1F2B'] },
+  { text: 'Miso caramel, black sesame, a whisper of heat', icon: '✦', grad: ['#2A1810', '#6B3A78'] },
+  { text: "Grandma's snickerdoodles",               icon: '✿', grad: ['#6B8E3D', '#4A6B2A'] },
+  { text: 'Tropical chaos — max crunch',            icon: '🌴', grad: ['#7FA8C9', '#6B3A78'] },
 ]
 
 function LoadingState() {
@@ -114,16 +114,16 @@ export default function DreamInput() {
           </div>
 
           {/* Prompt chips */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 20 }}>
-            {CHIPS.map((chip, i) => (
-              <button key={i} type="button" onClick={() => useChip(chip)}
-                style={{ fontFamily: FF.hand, fontSize: 15, background: 'transparent', border: `1.5px solid ${AC.ink}`, borderRadius: 20, padding: '5px 14px', cursor: 'pointer', color: AC.ink, transform: `rotate(${[-1.5, 1, -0.8, 1.5, -1][i]}deg)` }}>
-                {chip}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 24 }}>
+            {CHIPS.map(({ text, icon, grad }, i) => (
+              <button key={i} type="button" onClick={() => useChip(text)}
+                style={{ background: `linear-gradient(135deg, ${grad[0]}, ${grad[1]})`, border: `2px solid ${AC.ink}`, borderRadius: 6, padding: '12px 14px', cursor: 'pointer', color: AC.cream, fontFamily: FF.hand, fontSize: 13, transform: `rotate(${[-1.5, 1.2, -0.8, 1.8, -1.2][i]}deg)`, boxShadow: `3px 3px 0 ${AC.ink}`, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6, maxWidth: 148, textAlign: 'left', lineHeight: 1.3, flexShrink: 0 }}>
+                <span style={{ fontSize: 22, lineHeight: 1 }}>{icon}</span>
+                <span>{text}</span>
               </button>
             ))}
           </div>
           {error && <p style={{ color: AC.rasp, fontFamily: FF.hand, fontSize: 16, marginTop: 12 }}>{error}</p>}
-          <p style={{ fontFamily: FF.hand, fontSize: 17, color: AC.ink, opacity: 0.55, marginTop: 16 }}>~ 14s · no account needed</p>
         </div>
 
         {/* Right col — decorative flavor card */}
@@ -145,9 +145,7 @@ export default function DreamInput() {
             </div>
             {/* WaxSeal bottom-left */}
             <div style={{ position: 'absolute', bottom: -16, left: -20, zIndex: 2 }}>
-              <WaxSeal size={72} color={AC.rasp} rotate={-8}>
-                <span style={{ ...acSmall, color: AC.cream, fontSize: 9 }}>ATELIER<br />CARNIVAL</span>
-              </WaxSeal>
+              <WaxSeal size={72} color={AC.rasp} rotate={-8} />
             </div>
           </div>
         </div>
@@ -267,9 +265,8 @@ export default function DreamInput() {
           {[
             { n: '01', q: 'Is every flavor really one-of-one?', a: 'Yes. Each recipe is generated specifically for your prompt and never reused.' },
             { n: '02', q: 'How does pricing work?',             a: '$19.99/qt with a two-quart minimum order. No hidden fees, ever.' },
-            { n: '03', q: 'Vegan options?',                    a: "Absolutely — just mention it in your prompt and we'll craft a coconut or oat-milk base." },
-            { n: '04', q: 'How long from order to doorstep?',  a: 'Typically 5–7 business days from confirmation to your front door, shipped on dry ice.' },
-            { n: '05', q: 'Can I save and re-order a flavor?', a: 'Yes — every flavor gets a permanent page. Bookmark it and reorder anytime.' },
+            { n: '03', q: 'How long from order to doorstep?',  a: 'Typically 5–7 business days from confirmation to your front door, shipped on dry ice.' },
+            { n: '04', q: 'Can I save and re-order a flavor?', a: 'Yes — every flavor gets a permanent page. Bookmark it and reorder anytime.' },
           ].map(({ n, q, a }) => (
             <div key={n} style={{ display: 'grid', gridTemplateColumns: '100px 1fr 1fr', gap: '0 32px', alignItems: 'start', borderTop: `1px dashed ${AC.parchment}55`, padding: '28px 0' }}>
               <span style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 80, color: AC.marigold, lineHeight: 0.85, opacity: 0.65 }}>{n}</span>

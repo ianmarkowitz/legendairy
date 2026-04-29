@@ -28,7 +28,6 @@ export interface FlavorOutput {
 
 /** Customer's runtime customizations (client-side state) */
 export interface FlavorCustomizations {
-  vegan:           boolean
   enabledMixIns:   string[]          // names of mix-ins that are ON
   sweetnessLevel:  number
   customFlavorName: string | null

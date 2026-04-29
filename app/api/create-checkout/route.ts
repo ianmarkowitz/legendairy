@@ -14,7 +14,6 @@ const BodySchema = z.object({
     { message: `Quantity must be a multiple of ${QUART_INCREMENT}` },
   ),
   customizations: z.object({
-    vegan:            z.boolean(),
     enabledMixIns:    z.array(z.string()).min(1, 'At least one mix-in must be selected'),
     sweetnessLevel:   z.number().int().min(1).max(10),
     customFlavorName: z.string().nullable(),
@@ -82,7 +81,6 @@ export async function POST(req: NextRequest) {
   const stripeMetadata: Record<string, string> = {
     flavor_creation_id:  flavorCreationId,
     quantity_quarts:     String(quantityQuarts),
-    vegan:               String(customizations.vegan),
     sweetness_level:     String(customizations.sweetnessLevel),
     custom_flavor_name:  customizations.customFlavorName ?? '',
     personal_note:       (customizations.personalNote ?? '').slice(0, 490),

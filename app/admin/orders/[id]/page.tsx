@@ -68,7 +68,6 @@ export default async function AdminOrderDetailPage({ params }: Props) {
     fc.mix_ins?.map((m: { name: string }) => m.name) ?? []
 
   const customizations: FlavorCustomizations = {
-    vegan:            false,
     enabledMixIns:    enabledMixInNames,
     sweetnessLevel:   fc.sweetness_level,
     customFlavorName: fc.flavor_name !== flavor.flavorName ? fc.flavor_name : null,
