@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
     try {
       const message = await getAnthropic().messages.create({
         model:      'claude-sonnet-4-6',
-        max_tokens: 1024,
+        max_tokens: 2048,
         system:     FLAVOR_SYSTEM_PROMPT,
         messages:   [{ role: 'user', content: prompt }],
       })
@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
       break
     } catch (err) {
       if (attempt === 2) {
-        console.error('Claude flavor generation failed after 2 attempts:', JSON.stringify(err, null, 2))
+        console.error('Claude flavor generation failed after 2 attempts:', err)
         return NextResponse.json(
           { error: "We couldn't generate your flavor right now. Please try again." },
           { status: 502 },

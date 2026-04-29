@@ -153,7 +153,7 @@ export default function DreamInput() {
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section style={{ background: AC.parchment, padding: 'clamp(48px, 7vw, 88px) clamp(24px, 6vw, 80px)', ...paperGrain }}>
+      <section id="how-it-works" style={{ background: AC.parchment, padding: 'clamp(48px, 7vw, 88px) clamp(24px, 6vw, 80px)', ...paperGrain }}>
         <p style={{ fontFamily: FF.hand, fontSize: 26, color: AC.rasp, margin: '0 0 16px' }}>↓ how the magic happens ↓</p>
         <h2 style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 'clamp(48px, 8vw, 96px)', color: AC.ink, margin: '0 0 56px', lineHeight: 1 }}>Three acts, one pint.</h2>
         <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
@@ -177,7 +177,7 @@ export default function DreamInput() {
       </section>
 
       {/* ── GIFTED CONJURINGS ── */}
-      <section style={{ background: AC.ink, padding: 'clamp(48px, 7vw, 88px) clamp(24px, 6vw, 80px)' }}>
+      <section id="examples" style={{ background: AC.ink, padding: 'clamp(48px, 7vw, 88px) clamp(24px, 6vw, 80px)' }}>
         <h2 style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 'clamp(48px, 7vw, 84px)', color: AC.parchment, margin: '0 0 56px', lineHeight: 1.05 }}>Gifted conjurings.</h2>
         <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap', justifyContent: 'center' }}>
           {[

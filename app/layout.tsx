@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 const MARQUEE_ITEMS = [
   '✦ ONE-OF-ONE FLAVORS',
   '✦ CHURNED TO ORDER',
-  '✦ EST. 2025 BROOKLYN',
+  '✦ EST. 2025 BOSTON',
   '✦ NO TWO PINTS ALIKE',
   '✦ DELIVERED ON DRY ICE',
   '✦ DREAMT BY YOU',
