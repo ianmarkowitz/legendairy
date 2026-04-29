@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import type { FlavorCreation, FlavorCustomizations } from '@/types/flavor'
 import { PRICE_PER_QUART_CENTS, MIN_QUARTS, QUART_INCREMENT } from '@/lib/constants'
@@ -47,6 +47,17 @@ export default function FlavorClient({ flavor, userId }: Props) {
   const [remixPrompt, setRemixPrompt]       = useState('')
   const [remixLoading, setRemixLoading]     = useState(false)
   const [remixError, setRemixError]         = useState<string | null>(null)
+  const [remixProgress, setRemixProgress]   = useState(0)
+
+  useEffect(() => {
+    if (!remixLoading) { setRemixProgress(0); return }
+    const start = Date.now()
+    const id = setInterval(() => {
+      const secs = (Date.now() - start) / 1000
+      setRemixProgress(Math.min(85 * (1 - Math.exp(-secs / 5)), 85))
+    }, 200)
+    return () => clearInterval(id)
+  }, [remixLoading])
 
   const displayName = customizations.customFlavorName ?? flavor.flavorName
   const totalCents  = quantityQuarts * PRICE_PER_QUART_CENTS
@@ -164,15 +175,32 @@ export default function FlavorClient({ flavor, userId }: Props) {
 
             {remixOpen && (
               <div style={{ marginTop: 18, background: AC.parchment, border: `2px solid ${AC.ink}`, padding: '22px 22px 18px', boxShadow: `4px 4px 0 ${AC.ink}`, ...paperGrain }}>
-                <p style={{ fontFamily: FF.hand, fontSize: 18, color: `${AC.ink}88`, marginBottom: 14 }}>How can we make this even better?</p>
-                <textarea rows={2} value={remixPrompt} onChange={e => setRemixPrompt(e.target.value)}
-                  placeholder="e.g. 'make it extra spicy' or 'swap in dark chocolate'"
-                  style={{ width: '100%', background: AC.cream, border: `1.5px solid ${AC.ink}66`, padding: '10px 14px', fontFamily: FF.hand, fontSize: 16, color: AC.ink, resize: 'none', outline: 'none', boxSizing: 'border-box', lineHeight: 1.5 }} />
-                {remixError && <p style={{ color: AC.rasp, fontFamily: FF.hand, fontSize: 13, marginTop: 6 }}>{remixError}</p>}
-                <button onClick={handleRemix} disabled={remixLoading || !remixPrompt.trim()}
-                  style={{ marginTop: 12, width: '100%', background: AC.ink, color: AC.cream, border: 'none', padding: '13px 0', cursor: (remixLoading || !remixPrompt.trim()) ? 'default' : 'pointer', ...ital(15, AC.cream), opacity: (remixLoading || !remixPrompt.trim()) ? 0.45 : 1 }}>
-                  {remixLoading ? 'Generating…' : 'Remix this flavor ✦'}
-                </button>
+                {remixLoading ? (
+                  <div style={{ textAlign: 'center', padding: '8px 0 4px' }}>
+                    <ScoopDoodle size={56} fill={AC.rasp} color={AC.ink} />
+                    <p style={{ fontFamily: FF.hand, fontSize: 22, color: AC.ink, margin: '14px 0 22px', lineHeight: 1.2 }}>
+                      Conjuring your remix…
+                    </p>
+                    <div style={{ background: `${AC.ink}18`, borderRadius: 6, height: 10, overflow: 'hidden', marginBottom: 10 }}>
+                      <div style={{ width: `${remixProgress}%`, height: '100%', background: `linear-gradient(90deg, ${AC.rasp}, ${AC.marigold})`, borderRadius: 6, transition: 'width 0.3s ease-out' }} />
+                    </div>
+                    <p style={{ fontFamily: FF.hand, fontSize: 13, color: `${AC.ink}55`, marginTop: 8 }}>
+                      ~ 14 seconds · crafting something extraordinary
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <p style={{ fontFamily: FF.hand, fontSize: 18, color: `${AC.ink}88`, marginBottom: 14 }}>How can we make this even better?</p>
+                    <textarea rows={2} value={remixPrompt} onChange={e => setRemixPrompt(e.target.value)}
+                      placeholder="e.g. 'make it extra spicy' or 'swap in dark chocolate'"
+                      style={{ width: '100%', background: AC.cream, border: `1.5px solid ${AC.ink}66`, padding: '10px 14px', fontFamily: FF.hand, fontSize: 16, color: AC.ink, resize: 'none', outline: 'none', boxSizing: 'border-box', lineHeight: 1.5 }} />
+                    {remixError && <p style={{ color: AC.rasp, fontFamily: FF.hand, fontSize: 13, marginTop: 6 }}>{remixError}</p>}
+                    <button onClick={handleRemix} disabled={!remixPrompt.trim()}
+                      style={{ marginTop: 12, width: '100%', background: AC.ink, color: AC.cream, border: 'none', padding: '13px 0', cursor: !remixPrompt.trim() ? 'default' : 'pointer', ...ital(15, AC.cream), opacity: !remixPrompt.trim() ? 0.45 : 1 }}>
+                      Remix this flavor ✦
+                    </button>
+                  </>
+                )}
               </div>
             )}
           </div>
