@@ -2,11 +2,14 @@
 
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import {
+  AC, ScoopDoodle, Scribble, Starburst, WaxSeal,
+  Stamp, TicketStub, paperGrain, acSerif, acHand, acSmall,
+} from './ac-primitives'
 
-const C = { parchment: '#F1E1BC', cream: '#FBF3D9', ink: '#2A1810', rasp: '#C83A4E', pist: '#6B8E3D', marigold: '#E8A628', cherry: '#8A1F2B' }
-const FF = { fraunces: 'var(--font-fraunces)', caveat: 'var(--font-caveat)' }
+const FF = { serif: 'var(--font-fraunces)', hand: 'var(--font-caveat)' }
 
-const EXAMPLE_CHIPS = [
+const CHIPS = [
   'Apple pie filling folded into ice cream',
   'A bonfire on a beach',
   'Miso caramel, black sesame, a whisper of heat',
@@ -14,41 +17,16 @@ const EXAMPLE_CHIPS = [
   'Tropical chaos — max crunch',
 ]
 
-function ScoopDoodle({ size = 80, fill = C.parchment, color = C.ink }: { size?: number; fill?: string; color?: string }) {
-  return (
-    <svg viewBox="0 0 100 120" width={size} height={size * 1.2}>
-      <path d="M50 10 C 28 10, 18 30, 22 45 C 12 44, 8 58, 18 62 C 14 72, 28 78, 36 72 C 40 80, 56 82, 62 74 C 72 78, 84 70, 80 58 C 90 54, 88 38, 78 36 C 80 20, 66 8, 50 10 Z" fill={fill} stroke={color} strokeWidth="2" strokeLinejoin="round" />
-      <path d="M28 66 L 72 66 L 56 112 L 44 112 Z" fill="none" stroke={color} strokeWidth="2" strokeLinejoin="round" />
-      <line x1="34" y1="78" x2="64" y2="78" stroke={color} strokeWidth="1.3" />
-      <line x1="36" y1="88" x2="62" y2="88" stroke={color} strokeWidth="1.3" />
-    </svg>
-  )
-}
-
-function Starburst({ label, size = 64, bg = C.rasp, fg = C.cream }: { label: string; size?: number; bg?: string; fg?: string }) {
-  const pts = Array.from({ length: 16 }, (_, i) => {
-    const a = (i * Math.PI) / 8
-    const r = i % 2 === 0 ? size / 2 : size / 2 - 10
-    return `${50 + r * Math.cos(a - Math.PI / 2)},${50 + r * Math.sin(a - Math.PI / 2)}`
-  }).join(' ')
-  return (
-    <svg viewBox="0 0 100 100" width={size} height={size} style={{ flexShrink: 0 }}>
-      <polygon points={pts} fill={bg} />
-      <text x="50" y="56" textAnchor="middle" fontSize="22" fontWeight="bold" fill={fg} fontFamily={FF.fraunces}>{label}</text>
-    </svg>
-  )
-}
-
 function LoadingState() {
   return (
-    <div style={{ minHeight: '100vh', background: C.rasp, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 32, padding: '0 24px' }}>
-      <ScoopDoodle size={110} fill={C.cream} color={C.ink} />
-      <h2 style={{ fontFamily: FF.fraunces, fontStyle: 'italic', fontSize: 'clamp(2rem, 6vw, 3.5rem)', color: C.cream, margin: 0, textAlign: 'center' }}>
+    <div style={{ minHeight: '100vh', background: AC.rasp, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 32, padding: '0 24px' }}>
+      <ScoopDoodle size={110} fill={AC.cream} color={AC.ink} />
+      <h2 style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 'clamp(2rem, 6vw, 3.5rem)', color: AC.cream, margin: 0, textAlign: 'center' }}>
         Churning something extraordinary.
       </h2>
       <div style={{ display: 'flex', gap: 10 }}>
         {[0, 1, 2].map(i => (
-          <div key={i} style={{ width: 10, height: 10, borderRadius: '50%', background: C.cream, opacity: 0.7, animation: `bounceDot 1.2s ease-in-out ${i * 0.2}s infinite` }} />
+          <div key={i} style={{ width: 10, height: 10, borderRadius: '50%', background: AC.cream, opacity: 0.7, animation: `bounceDot 1.2s ease-in-out ${i * 0.2}s infinite` }} />
         ))}
       </div>
     </div>
@@ -61,6 +39,7 @@ export default function DreamInput() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const formRef = useRef<HTMLDivElement>(null)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -82,166 +61,240 @@ export default function DreamInput() {
   if (loading) return <LoadingState />
 
   return (
-    <div style={{ background: C.cream, color: C.ink, fontFamily: FF.fraunces }}>
+    <div style={{ background: AC.cream, color: AC.ink, fontFamily: FF.serif, ...paperGrain }}>
 
       {/* ── HERO ── */}
-      <section style={{ minHeight: '100vh', padding: 'clamp(48px, 8vw, 96px) clamp(24px, 6vw, 80px)', display: 'flex', alignItems: 'flex-start', gap: 48, flexWrap: 'wrap', position: 'relative' }}>
-        <div style={{ flex: '1 1 520px', maxWidth: 720 }}>
-          <p style={{ fontFamily: FF.caveat, fontSize: 18, color: C.rasp, marginBottom: 16, letterSpacing: '0.05em' }}>Atelier Carnival · Artisan Ice Cream</p>
-          <h1 style={{ fontFamily: FF.fraunces, fontStyle: 'italic', fontSize: 'clamp(52px, 8vw, 100px)', lineHeight: 1.05, margin: '0 0 40px', color: C.ink }}>
-            A flavor, conjured<br />just for you.
-          </h1>
+      <section style={{ minHeight: '100vh', padding: 'clamp(48px, 8vw, 96px) clamp(24px, 6vw, 80px)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'start', position: 'relative' }}>
 
-          {/* Letter form */}
-          <form onSubmit={handleSubmit} style={{ background: C.parchment, border: `2px solid ${C.ink}`, borderRadius: 8, padding: '32px 32px 24px', boxShadow: `6px 6px 0 ${C.ink}` }}>
-            <label style={{ fontFamily: FF.caveat, fontSize: 22, display: 'block', marginBottom: 12, color: C.ink }}>Dear flavor architect —</label>
-            <textarea
-              ref={textareaRef}
-              value={prompt}
-              onChange={e => setPrompt(e.target.value)}
-              rows={5}
-              disabled={loading}
-              placeholder="I'm dreaming of something that tastes like…"
-              style={{ fontFamily: FF.caveat, fontSize: 20, width: '100%', boxSizing: 'border-box', background: 'transparent', border: 'none', borderBottom: `1.5px solid ${C.ink}`, outline: 'none', resize: 'none', color: C.ink, lineHeight: 1.7, paddingBottom: 8 }}
-            />
-            <button
-              type="submit"
-              disabled={!prompt.trim() || loading}
-              style={{ marginTop: 20, background: C.rasp, color: C.cream, fontFamily: FF.fraunces, fontWeight: 700, fontSize: 15, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '14px 36px', border: `2px solid ${C.ink}`, borderRadius: 4, boxShadow: `4px 4px 0 ${C.ink}`, cursor: 'pointer', opacity: !prompt.trim() ? 0.5 : 1 }}
-            >
-              Conjure This Flavor →
-            </button>
-          </form>
+        {/* Left col */}
+        <div style={{ maxWidth: 600 }}>
+          <Stamp color={AC.rasp} rotate={-1.5} style={{ marginBottom: 24, fontSize: 11 }}>Vol. I · Est. 2025</Stamp>
 
-          {/* Chips */}
+          {/* H1 block */}
+          <div style={{ marginBottom: 32 }}>
+            <h1 style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 'clamp(52px, 7vw, 96px)', lineHeight: 1.05, margin: '0 0 2px', color: AC.ink }}>
+              A flavor,
+            </h1>
+            <div style={{ display: 'inline-block', marginBottom: 6 }}>
+              <span style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 'clamp(52px, 7vw, 96px)', color: AC.rasp, lineHeight: 1.05, display: 'block' }}>conjured</span>
+              <div style={{ marginTop: -4 }}><Scribble color={AC.marigold} width={300} h={16} /></div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 6 }}>
+              <span style={{ fontFamily: FF.hand, fontSize: 'clamp(52px, 7vw, 96px)', color: AC.marigold, transform: 'rotate(-4deg)', display: 'inline-block', lineHeight: 1 }}>just</span>
+              <span style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 'clamp(52px, 7vw, 96px)', color: AC.ink, lineHeight: 1.05 }}>for you.</span>
+            </div>
+            <span style={{ fontFamily: FF.hand, fontSize: 30, color: AC.pist, display: 'block' }}>( yes, really! )</span>
+          </div>
+
+          <p style={{ fontFamily: FF.serif, fontSize: 17, lineHeight: 1.7, color: AC.ink, opacity: 0.8, margin: '0 0 32px', maxWidth: 460 }}>
+            Describe a feeling, a memory, a craving. We turn your words into a one-of-one artisan ice cream recipe — then churn and ship it to your door.
+          </p>
+
+          {/* Letter-style form */}
+          <div ref={formRef}>
+            <form onSubmit={handleSubmit} style={{ background: AC.parchment, border: `2px solid ${AC.ink}`, borderRadius: 6, padding: '32px 32px 24px', boxShadow: `6px 6px 0 ${AC.ink}`, ...paperGrain }}>
+              <label style={{ fontFamily: FF.hand, fontSize: 22, display: 'block', marginBottom: 14, color: AC.ink }}>Dear flavor architect —</label>
+              <textarea
+                ref={textareaRef}
+                value={prompt}
+                onChange={e => setPrompt(e.target.value)}
+                rows={5}
+                disabled={loading}
+                placeholder="I'm dreaming of something that tastes like…"
+                style={{ fontFamily: FF.hand, fontSize: 20, width: '100%', boxSizing: 'border-box', background: 'transparent', border: 'none', borderBottom: `1.5px solid ${AC.ink}`, outline: 'none', resize: 'none', color: AC.ink, lineHeight: 1.7, paddingBottom: 8 }}
+              />
+              <button
+                type="submit"
+                disabled={!prompt.trim() || loading}
+                style={{ marginTop: 20, background: AC.rasp, color: AC.cream, fontFamily: FF.serif, fontWeight: 700, fontSize: 15, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '14px 36px', border: `2px solid ${AC.ink}`, borderRadius: 4, boxShadow: `4px 4px 0 ${AC.ink}`, cursor: !prompt.trim() ? 'default' : 'pointer', opacity: !prompt.trim() ? 0.5 : 1 }}
+              >
+                Conjure This Flavor →
+              </button>
+            </form>
+          </div>
+
+          {/* Prompt chips */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 20 }}>
-            {EXAMPLE_CHIPS.map((chip, i) => (
+            {CHIPS.map((chip, i) => (
               <button key={i} type="button" onClick={() => useChip(chip)}
-                style={{ fontFamily: FF.caveat, fontSize: 15, background: 'transparent', border: `1.5px solid ${C.ink}`, borderRadius: 20, padding: '5px 14px', cursor: 'pointer', color: C.ink, transform: `rotate(${[-1.5, 1, -0.8, 1.5, -1][i % 5]}deg)`, transition: 'background 0.15s' }}>
+                style={{ fontFamily: FF.hand, fontSize: 15, background: 'transparent', border: `1.5px solid ${AC.ink}`, borderRadius: 20, padding: '5px 14px', cursor: 'pointer', color: AC.ink, transform: `rotate(${[-1.5, 1, -0.8, 1.5, -1][i]}deg)` }}>
                 {chip}
               </button>
             ))}
           </div>
-          {error && <p style={{ color: C.rasp, fontFamily: FF.caveat, fontSize: 16, marginTop: 12 }}>{error}</p>}
-          <p style={{ fontFamily: FF.caveat, fontSize: 17, color: C.ink, opacity: 0.6, marginTop: 16 }}>~ 14s · no account needed</p>
+          {error && <p style={{ color: AC.rasp, fontFamily: FF.hand, fontSize: 16, marginTop: 12 }}>{error}</p>}
+          <p style={{ fontFamily: FF.hand, fontSize: 17, color: AC.ink, opacity: 0.55, marginTop: 16 }}>~ 14s · no account needed</p>
         </div>
 
-        {/* Wax seal badge */}
-        <div style={{ position: 'relative', width: 160, height: 160, flexShrink: 0, marginTop: 80 }}>
-          <svg viewBox="0 0 160 160" width={160} height={160}>
-            <circle cx="80" cy="80" r="72" fill={C.rasp} />
-            <circle cx="80" cy="80" r="64" fill="none" stroke={C.parchment} strokeWidth="1.5" strokeDasharray="4 3" />
-            <text x="80" y="68" textAnchor="middle" fontSize="11" fill={C.parchment} fontFamily={FF.fraunces} letterSpacing="3">ATELIER</text>
-            <text x="80" y="88" textAnchor="middle" fontSize="11" fill={C.parchment} fontFamily={FF.fraunces} letterSpacing="3">CARNIVAL</text>
-            <text x="80" y="108" textAnchor="middle" fontSize="9" fill={C.parchment} fontFamily={FF.caveat} opacity="0.8">est. MMXXIV</text>
-          </svg>
+        {/* Right col — decorative flavor card */}
+        <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 40, position: 'relative' }}>
+          <div style={{ position: 'relative', width: '100%', maxWidth: 340 }}>
+            {/* Flavor card */}
+            <div style={{ background: `linear-gradient(150deg, ${AC.rasp}, ${AC.cherry})`, border: `2px solid ${AC.ink}`, borderRadius: 12, padding: '48px 32px 56px', transform: 'rotate(2.5deg)', boxShadow: `12px 12px 0 ${AC.ink}`, position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.12) 0%, transparent 60%)', pointerEvents: 'none' }} />
+              <p style={{ ...acSmall, color: `${AC.cream}88`, margin: '0 0 24px' }}>ONE · OF · ONE</p>
+              <ScoopDoodle size={96} fill={`${AC.parchment}30`} color={`${AC.parchment}70`} />
+              <p style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 24, color: AC.cream, margin: '24px 0 10px', lineHeight: 1.25 }}>Your flavor,<br />your story.</p>
+              <p style={{ fontFamily: FF.hand, fontSize: 16, color: `${AC.cream}90`, margin: 0 }}>conjured just for you</p>
+            </div>
+            {/* Starburst top-right */}
+            <div style={{ position: 'absolute', top: 16, right: -20, zIndex: 2 }}>
+              <Starburst size={88} fill={AC.marigold} stroke={AC.ink} rotate={8}>
+                <span style={{ fontFamily: FF.hand, fontSize: 13, color: AC.ink, fontWeight: 700, textAlign: 'center', lineHeight: 1.2 }}>churned<br />fresh!</span>
+              </Starburst>
+            </div>
+            {/* WaxSeal bottom-left */}
+            <div style={{ position: 'absolute', bottom: -16, left: -20, zIndex: 2 }}>
+              <WaxSeal size={72} color={AC.rasp} rotate={-8}>
+                <span style={{ ...acSmall, color: AC.cream, fontSize: 9 }}>ATELIER<br />CARNIVAL</span>
+              </WaxSeal>
+            </div>
+          </div>
         </div>
+
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section style={{ background: C.parchment, padding: 'clamp(48px, 7vw, 88px) clamp(24px, 6vw, 80px)' }}>
-        <h2 style={{ fontFamily: FF.fraunces, fontStyle: 'italic', fontSize: 'clamp(36px, 5vw, 60px)', marginBottom: 48, color: C.ink }}>Three acts, one pint.</h2>
-        <div style={{ display: 'flex', gap: 28, flexWrap: 'wrap' }}>
+      <section style={{ background: AC.parchment, padding: 'clamp(48px, 7vw, 88px) clamp(24px, 6vw, 80px)', ...paperGrain }}>
+        <p style={{ fontFamily: FF.hand, fontSize: 26, color: AC.rasp, margin: '0 0 16px' }}>↓ how the magic happens ↓</p>
+        <h2 style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 'clamp(48px, 8vw, 96px)', color: AC.ink, margin: '0 0 56px', lineHeight: 1 }}>Three acts, one pint.</h2>
+        <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
           {[
-            { num: 'I', act: 'You describe', desc: 'A feeling, a memory, a craving. Anything goes — the more vivid, the better.' },
-            { num: 'II', act: 'We architect', desc: 'Our flavor engine translates your vision into a precise artisan recipe.' },
-            { num: 'III', act: 'We churn', desc: 'Small-batch, hand-packed, labeled with your story. Shipped cold to your door.' },
-          ].map(({ num, act, desc }, i) => (
-            <div key={i} style={{ flex: '1 1 220px', background: C.cream, border: `2px solid ${C.ink}`, borderRadius: 6, padding: '32px 24px 24px', position: 'relative', transform: `rotate(${[-1.2, 0.8, -0.6][i]}deg)`, boxShadow: `4px 4px 0 ${C.ink}` }}>
-              <div style={{ position: 'absolute', top: -20, right: 16 }}><Starburst label={num} size={52} bg={C.marigold} fg={C.ink} /></div>
-              <p style={{ fontFamily: FF.caveat, fontSize: 13, color: C.rasp, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 8 }}>Act {num}</p>
-              <h3 style={{ fontFamily: FF.fraunces, fontSize: 28, fontStyle: 'italic', margin: '0 0 12px', color: C.ink }}>{act}</h3>
-              <p style={{ fontFamily: FF.fraunces, fontSize: 15, lineHeight: 1.6, color: C.ink, opacity: 0.75, margin: 0 }}>{desc}</p>
+            { num: 'I',   icon: '✍︎', act: 'You describe', desc: 'A feeling, a memory, a craving. Anything goes — the more vivid, the better.' },
+            { num: 'II',  icon: '✦',  act: 'We architect', desc: 'Our flavor engine translates your vision into a precise artisan recipe.' },
+            { num: 'III', icon: '✿',  act: 'We churn',     desc: 'Small-batch, hand-packed, labeled with your story. Shipped cold to your door.' },
+          ].map(({ num, icon, act, desc }, i) => (
+            <div key={i} style={{ flex: '1 1 240px', background: AC.cream, border: `2px solid ${AC.ink}`, borderRadius: 8, padding: '40px 28px 32px', position: 'relative', transform: `rotate(${[-1.5, 1, -0.8][i]}deg)`, boxShadow: `5px 5px 0 ${AC.ink}` }}>
+              <div style={{ position: 'absolute', top: -24, right: -24, zIndex: 2 }}>
+                <Starburst size={64} fill={AC.marigold} stroke={AC.ink} rotate={0}>
+                  <span style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 18, color: AC.ink, fontWeight: 700 }}>{num}</span>
+                </Starburst>
+              </div>
+              <div style={{ fontSize: 34, marginBottom: 16 }}>{icon}</div>
+              <h3 style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 40, margin: '0 0 12px', color: AC.ink, lineHeight: 1.05 }}>{act}</h3>
+              <p style={{ fontFamily: FF.serif, fontSize: 15, lineHeight: 1.65, color: AC.ink, opacity: 0.75, margin: 0 }}>{desc}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* ── GIFTED CONJURINGS ── */}
-      <section style={{ background: C.ink, padding: 'clamp(48px, 7vw, 88px) clamp(24px, 6vw, 80px)' }}>
-        <h2 style={{ fontFamily: FF.fraunces, fontStyle: 'italic', fontSize: 'clamp(36px, 5vw, 60px)', color: C.parchment, marginBottom: 48 }}>Gifted conjurings.</h2>
+      <section style={{ background: AC.ink, padding: 'clamp(48px, 7vw, 88px) clamp(24px, 6vw, 80px)' }}>
+        <h2 style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 'clamp(48px, 7vw, 84px)', color: AC.parchment, margin: '0 0 56px', lineHeight: 1.05 }}>Gifted conjurings.</h2>
         <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap', justifyContent: 'center' }}>
           {[
-            { bg: ['#E2A24A', '#C83A4E'], tag: 'For Mara', from: 'Sam', title: 'Bonfire on the Boardwalk', story: 'Smoked caramel, toasted marshmallow, a ghost of sea salt — the night we stayed until the fire went out.', occasion: '30th Birthday' },
-            { bg: ['#6B3A78', '#2A1810'], tag: 'For Theo', from: 'Noah', title: 'Midnight in Kyoto', story: 'Black sesame, yuzu blossom, matcha ribbon — every alley we wandered that first night together.', occasion: 'First Anniversary' },
-            { bg: ['#8A1F2B', '#E2A24A'], tag: 'For the in-laws', from: 'Priya', title: 'Orchard Heist', story: 'Brown butter apple, cinnamon crack, caramel drizzle — a Thanksgiving that earned us seconds.', occasion: 'Thanksgiving' },
-          ].map(({ bg, tag, from, title, story, occasion }, i) => (
-            <div key={i} style={{ flex: '1 1 240px', maxWidth: 300, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
-              {/* Gift tag */}
-              <div style={{ background: C.parchment, border: `1.5px solid ${C.ink}`, borderRadius: '4px 4px 0 0', padding: '6px 20px', fontFamily: FF.caveat, fontSize: 15, color: C.ink, position: 'relative' }}>
-                {tag} <span style={{ opacity: 0.6 }}>· from {from}</span>
-                <div style={{ position: 'absolute', top: '50%', right: -18, transform: 'translateY(-50%)', width: 8, height: 8, borderRadius: '50%', background: C.ink, border: `1.5px solid ${C.ink}` }} />
+            { bg: [AC.marigold, AC.rasp],    icon: '🎂', to: 'Mara',        from: 'Sam',   title: 'Bonfire on the Boardwalk', story: 'Smoked caramel, toasted marshmallow, a ghost of sea salt — the night we stayed until the fire went out.',  occasion: '30th Birthday'    },
+            { bg: [AC.grape,    AC.ink],      icon: '🌙', to: 'Theo',        from: 'Noah',  title: 'Midnight in Kyoto',        story: 'Black sesame, yuzu blossom, matcha ribbon — every alley we wandered that first night together.',               occasion: 'First Anniversary' },
+            { bg: [AC.cherry,   AC.tangerine],icon: '🍎', to: 'the in-laws', from: 'Priya', title: 'Orchard Heist',            story: 'Brown butter apple, cinnamon crack, caramel drizzle — a Thanksgiving that earned us seconds.',                 occasion: 'Thanksgiving'     },
+          ].map(({ bg, icon, to, from, title, story, occasion }, i) => (
+            <div key={i} style={{ flex: '1 1 260px', maxWidth: 320, display: 'flex', flexDirection: 'column' }}>
+              {/* Gift tag — clipped arrow shape */}
+              <div style={{ alignSelf: 'flex-start', background: AC.parchment, border: `1.5px solid ${AC.cream}40`, padding: '8px 30px 8px 16px', position: 'relative', clipPath: 'polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%)', marginBottom: -1, zIndex: 1 }}>
+                <div style={{ position: 'absolute', right: 22, top: '50%', transform: 'translateY(-50%)', width: 7, height: 7, borderRadius: '50%', background: AC.ink, opacity: 0.25 }} />
+                <span style={{ fontFamily: FF.hand, fontSize: 15, color: AC.ink }}>To: {to} </span>
+                <span style={{ fontFamily: FF.hand, fontSize: 13, color: AC.ink, opacity: 0.6 }}>from {from}</span>
               </div>
-              {/* Pint */}
-              <div style={{ width: '100%', height: 200, borderRadius: 8, background: `linear-gradient(160deg, ${bg[0]}, ${bg[1]})`, border: `2px solid ${C.parchment}40`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <ScoopDoodle size={72} fill={`${C.parchment}30`} color={`${C.parchment}80`} />
+              {/* Gradient card — 3:4 aspect */}
+              <div style={{ width: '100%', aspectRatio: '3/4', background: `linear-gradient(160deg, ${bg[0]}, ${bg[1]})`, border: `2px solid ${AC.parchment}25`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'radial-gradient(ellipse at 25% 15%, rgba(255,255,255,0.1) 0%, transparent 55%)', pointerEvents: 'none' }} />
+                <div style={{ width: 80, height: 80, borderRadius: '50%', background: `${AC.parchment}18`, border: `2px solid ${AC.parchment}45`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36 }}>
+                  {icon}
+                </div>
               </div>
               {/* Story card */}
-              <div style={{ background: C.cream, border: `2px solid ${C.ink}`, borderTop: 'none', borderRadius: '0 0 6px 6px', padding: '16px 18px', width: '100%', boxSizing: 'border-box' }}>
-                <p style={{ fontFamily: FF.caveat, fontSize: 13, color: C.rasp, letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 4px' }}>{occasion}</p>
-                <h4 style={{ fontFamily: FF.fraunces, fontStyle: 'italic', fontSize: 18, margin: '0 0 8px', color: C.ink }}>{title}</h4>
-                <p style={{ fontFamily: FF.fraunces, fontSize: 13, lineHeight: 1.6, color: C.ink, opacity: 0.7, margin: 0 }}>{story}</p>
+              <div style={{ background: AC.cream, border: `2px solid ${AC.ink}`, borderTop: 'none', borderRadius: '0 0 8px 8px', padding: '18px 20px', boxSizing: 'border-box' }}>
+                <p style={{ fontFamily: FF.hand, fontSize: 13, color: AC.rasp, letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 6px' }}>{occasion}</p>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'baseline', marginBottom: 8, flexWrap: 'wrap' }}>
+                  <span style={{ fontFamily: FF.hand, fontSize: 15, color: AC.ink, opacity: 0.7 }}>To {to} · from {from}</span>
+                </div>
+                <h4 style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 20, margin: '0 0 10px', color: AC.ink, lineHeight: 1.2 }}>{title}</h4>
+                <p style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 14, lineHeight: 1.65, color: AC.ink, opacity: 0.72, margin: 0 }}>{story}</p>
               </div>
             </div>
           ))}
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 32, marginTop: 48, flexWrap: 'wrap' }}>
-          {['dedication', 'custom label', 'story card', 'dry-ice'].map(s => (
-            <span key={s} style={{ fontFamily: FF.caveat, fontSize: 16, color: C.parchment, opacity: 0.7, border: `1px solid ${C.parchment}40`, borderRadius: 4, padding: '4px 14px' }}>✦ {s}</span>
+        {/* Stamp row */}
+        <div style={{ display: 'flex', gap: 24, marginTop: 56, flexWrap: 'wrap', justifyContent: 'center' }}>
+          {(['dedication', 'custom label', 'story card', 'dry-ice packed'] as const).map((s, i) => (
+            <Stamp key={s} color={AC.parchment} rotate={[-2, 1.5, -1, 2][i]} style={{ fontSize: 12, opacity: 0.8 }}>✦ {s}</Stamp>
           ))}
         </div>
       </section>
 
       {/* ── PRICING ── */}
-      <section style={{ background: C.parchment, padding: 'clamp(48px, 7vw, 88px) clamp(24px, 6vw, 80px)', textAlign: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 32, flexWrap: 'wrap' }}>
-          <div>
-            <p style={{ fontFamily: FF.fraunces, fontStyle: 'italic', fontSize: 'clamp(72px, 14vw, 120px)', color: C.ink, margin: 0, lineHeight: 1 }}>$19.99</p>
-            <p style={{ fontFamily: FF.caveat, fontSize: 20, color: C.ink, opacity: 0.6, margin: '8px 0 32px' }}>per quart · two-quart minimum</p>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 20, flexWrap: 'wrap' }}>
-              {['One-of-one recipe', 'Custom printed label', 'Handwritten story card', 'Ships cold, arrives intact'].map(item => (
-                <span key={item} style={{ fontFamily: FF.fraunces, fontSize: 14, color: C.ink, border: `2px solid ${C.ink}`, borderRadius: 4, padding: '6px 16px', display: 'inline-block' }}>✦ {item}</span>
-              ))}
-            </div>
-          </div>
-          <div style={{ flexShrink: 0 }}>
-            <Starburst label="no charge for big ideas!" size={120} bg={C.rasp} fg={C.cream} />
-          </div>
+      <section style={{ background: AC.parchment, padding: 'clamp(64px, 8vw, 112px) clamp(24px, 6vw, 80px)', textAlign: 'center', position: 'relative', overflow: 'hidden', ...paperGrain }}>
+        {/* Starburst top-left */}
+        <div style={{ position: 'absolute', top: -20, left: -20 }}>
+          <Starburst size={200} fill={AC.rasp} stroke={AC.ink} rotate={-12}>
+            <span style={{ fontFamily: FF.hand, fontSize: 18, color: AC.cream, fontWeight: 700, lineHeight: 1.3, textAlign: 'center' }}>no charge<br />for big<br />ideas!</span>
+          </Starburst>
+        </div>
+        {/* TicketStub top-right */}
+        <div style={{ position: 'absolute', top: 36, right: 36, transform: 'rotate(3deg)' }}>
+          <TicketStub bg={AC.marigold} border={AC.ink} style={{ padding: '14px 28px' }}>
+            <p style={{ ...acSmall, color: AC.ink, margin: 0, lineHeight: 2, fontSize: 12 }}>ADMIT ONE<br />YOUR PINT<br />good forever</p>
+          </TicketStub>
+        </div>
+
+        {/* Price */}
+        <div style={{ paddingTop: 80 }}>
+          <p style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 'clamp(120px, 18vw, 260px)', color: AC.ink, margin: 0, lineHeight: 0.9, letterSpacing: '-0.02em' }}>
+            $19<span style={{ color: AC.rasp }}>.99</span>
+          </p>
+          <p style={{ fontFamily: FF.hand, fontSize: 22, color: AC.ink, opacity: 0.6, margin: '20px 0 52px' }}>per quart · two-quart minimum</p>
+        </div>
+
+        {/* 4 Stamps */}
+        <div style={{ display: 'flex', gap: 20, justifyContent: 'center', flexWrap: 'wrap' }}>
+          {[
+            { label: 'One-of-one recipe',       rot: -2   },
+            { label: 'Custom printed label',    rot:  1.5 },
+            { label: 'Handwritten story card',  rot: -1   },
+            { label: 'Ships cold, arrives intact', rot: 2 },
+          ].map(({ label, rot }) => (
+            <Stamp key={label} color={AC.ink} rotate={rot} style={{ fontSize: 12 }}>{label}</Stamp>
+          ))}
         </div>
       </section>
 
       {/* ── FAQ ── */}
-      <section style={{ background: C.rasp, padding: 'clamp(48px, 7vw, 88px) clamp(24px, 6vw, 80px)' }}>
-        <h2 style={{ fontFamily: FF.fraunces, fontStyle: 'italic', fontSize: 'clamp(36px, 5vw, 56px)', color: C.cream, marginBottom: 48 }}>Gentle questions.</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 24 }}>
+      <section style={{ background: AC.rasp, padding: 'clamp(48px, 7vw, 88px) clamp(24px, 6vw, 80px)' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 20, flexWrap: 'wrap', marginBottom: 56 }}>
+          <h2 style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 'clamp(36px, 5vw, 64px)', color: AC.cream, margin: 0 }}>Gentle questions.</h2>
+          <span style={{ fontFamily: FF.hand, fontSize: 26, color: AC.parchment, opacity: 0.8 }}>(we've heard them all!)</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
           {[
             { n: '01', q: 'Is every flavor really one-of-one?', a: 'Yes. Each recipe is generated specifically for your prompt and never reused.' },
-            { n: '02', q: 'How does pricing work?', a: '$19.99/qt with a two-quart minimum order. No hidden fees, ever.' },
-            { n: '03', q: 'Vegan options?', a: 'Absolutely — just mention it in your prompt and we\'ll craft a coconut or oat-milk base.' },
-            { n: '04', q: 'How long from order to doorstep?', a: 'Typically 5–7 business days from confirmation to your front door, shipped on dry ice.' },
+            { n: '02', q: 'How does pricing work?',             a: '$19.99/qt with a two-quart minimum order. No hidden fees, ever.' },
+            { n: '03', q: 'Vegan options?',                    a: "Absolutely — just mention it in your prompt and we'll craft a coconut or oat-milk base." },
+            { n: '04', q: 'How long from order to doorstep?',  a: 'Typically 5–7 business days from confirmation to your front door, shipped on dry ice.' },
             { n: '05', q: 'Can I save and re-order a flavor?', a: 'Yes — every flavor gets a permanent page. Bookmark it and reorder anytime.' },
           ].map(({ n, q, a }) => (
-            <div key={n} style={{ background: `${C.cherry}80`, border: `1.5px solid ${C.parchment}40`, borderRadius: 6, padding: '20px 22px' }}>
-              <p style={{ fontFamily: FF.caveat, fontSize: 13, color: C.parchment, opacity: 0.7, margin: '0 0 8px', letterSpacing: '0.1em' }}>{n}</p>
-              <h4 style={{ fontFamily: FF.fraunces, fontStyle: 'italic', fontSize: 18, color: C.cream, margin: '0 0 10px' }}>{q}</h4>
-              <p style={{ fontFamily: FF.fraunces, fontSize: 14, color: C.parchment, opacity: 0.85, lineHeight: 1.65, margin: 0 }}>{a}</p>
+            <div key={n} style={{ display: 'grid', gridTemplateColumns: '100px 1fr 1fr', gap: '0 32px', alignItems: 'start', borderTop: `1px dashed ${AC.parchment}55`, padding: '28px 0' }}>
+              <span style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 80, color: AC.marigold, lineHeight: 0.85, opacity: 0.65 }}>{n}</span>
+              <h4 style={{ fontFamily: FF.serif, fontSize: 30, color: AC.cream, margin: 0, lineHeight: 1.2 }}>{q}</h4>
+              <p style={{ fontFamily: FF.serif, fontSize: 16, lineHeight: 1.7, color: AC.parchment, opacity: 0.85, margin: 0 }}>{a}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* ── FOOTER CTA ── */}
-      <section style={{ background: C.ink, padding: 'clamp(64px, 9vw, 112px) clamp(24px, 6vw, 80px)', textAlign: 'center' }}>
-        <h2 style={{ fontFamily: FF.fraunces, fontStyle: 'italic', fontSize: 'clamp(48px, 9vw, 96px)', color: C.parchment, margin: '0 0 32px' }}>Dream a flavor.</h2>
+      <section style={{ background: AC.ink, padding: 'clamp(64px, 9vw, 112px) clamp(24px, 6vw, 80px)', textAlign: 'center' }}>
+        <p style={{ fontFamily: FF.hand, fontSize: 72, color: AC.marigold, margin: '0 0 8px', lineHeight: 1 }}>your turn —</p>
+        <h2 style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 'clamp(72px, 14vw, 220px)', color: AC.parchment, margin: '0 0 56px', lineHeight: 0.92, letterSpacing: '-0.02em' }}>Dream a flavor.</h2>
         <button
-          onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }); textareaRef.current?.focus() }}
-          style={{ background: C.marigold, color: C.ink, fontFamily: FF.fraunces, fontWeight: 700, fontSize: 16, letterSpacing: '0.06em', padding: '18px 48px', border: `2px solid ${C.ink}`, borderRadius: 4, boxShadow: `4px 4px 0 ${C.parchment}60`, cursor: 'pointer' }}>
-          Start Conjuring →
+          onClick={() => { formRef.current?.scrollIntoView({ behavior: 'smooth' }); textareaRef.current?.focus() }}
+          style={{ background: AC.marigold, color: AC.ink, fontFamily: FF.serif, fontWeight: 700, fontSize: 18, letterSpacing: '0.06em', padding: '18px 52px', border: `2px solid ${AC.ink}`, borderRadius: 4, boxShadow: `5px 5px 0 ${AC.rasp}`, cursor: 'pointer' }}>
+          Begin → (it&apos;s fun)
         </button>
-        <p style={{ fontFamily: FF.caveat, fontSize: 16, color: C.parchment, opacity: 0.4, marginTop: 56 }}>
+        <p style={{ fontFamily: FF.hand, fontSize: 16, color: AC.parchment, opacity: 0.35, marginTop: 64 }}>
           Atelier Carnival · Artisan Ice Cream · All flavors one-of-one
         </p>
       </section>
+
+
     </div>
   )
 }
