@@ -287,7 +287,7 @@ export default function DreamInput() {
           Begin → (it&apos;s fun)
         </button>
         <p style={{ fontFamily: FF.hand, fontSize: 16, color: AC.parchment, opacity: 0.35, marginTop: 64 }}>
-          Atelier Carnival · Artisan Ice Cream · All flavors one-of-one
+          Legendairy · Artisan Ice Cream · All flavors one-of-one
         </p>
       </section>
 
