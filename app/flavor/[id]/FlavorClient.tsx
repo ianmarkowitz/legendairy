@@ -11,7 +11,7 @@ import {
   Stamp, paperGrain, acSmall,
 } from '@/components/ac-primitives'
 
-interface Props { flavor: FlavorCreation; userId?: string | null }
+interface Props { flavor: FlavorCreation; userId?: string | null; autoVault?: boolean }
 
 function renderBold(text: string) {
   return text.split(/\*\*(.+?)\*\*/).map((p, i) => i % 2 === 1 ? <strong key={i}>{p}</strong> : p)
@@ -30,7 +30,7 @@ const mixBtn = (active: boolean): React.CSSProperties => ({
   ...ital(13, active ? AC.cream : `${AC.cream}55`),
 })
 
-export default function FlavorClient({ flavor, userId }: Props) {
+export default function FlavorClient({ flavor, userId, autoVault }: Props) {
   const router = useRouter()
   const [customizations, setCustomizations] = useState<FlavorCustomizations>({
     enabledMixIns: flavor.mixIns.map(m => m.name),
@@ -48,6 +48,15 @@ export default function FlavorClient({ flavor, userId }: Props) {
   const [remixLoading, setRemixLoading]     = useState(false)
   const [remixError, setRemixError]         = useState<string | null>(null)
   const [remixProgress, setRemixProgress]   = useState(0)
+
+  // Auto-vault after returning from login with ?vault=1
+  useEffect(() => {
+    if (autoVault && userId && !vaulted) {
+      handleVaultToggle()
+      router.replace(`/flavor/${flavor.id}`, { scroll: false })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     if (!remixLoading) { setRemixProgress(0); return }
@@ -129,7 +138,7 @@ export default function FlavorClient({ flavor, userId }: Props) {
         <Stamp color={AC.rasp} rotate={-1.5} style={{ fontSize: 11 }}>§ Act II · Your Flavor</Stamp>
         {userId
           ? <button onClick={handleVaultToggle} disabled={vaultLoading} style={{ fontFamily: FF.hand, fontSize: 18, color: vaulted ? AC.rasp : AC.ink, background: 'none', border: 'none', cursor: 'pointer', opacity: vaultLoading ? 0.5 : 1 }}>{vaulted ? '♥ Saved' : '♡ Save to Vault'}</button>
-          : <span style={{ fontFamily: FF.hand, fontSize: 18, color: `${AC.ink}44` }}>♡ Save to Vault</span>
+          : <button onClick={() => router.push(`/login?next=${encodeURIComponent('/flavor/' + flavor.id + '?vault=1')}`)} style={{ fontFamily: FF.hand, fontSize: 18, color: `${AC.ink}77`, background: 'none', border: 'none', cursor: 'pointer' }}>♡ Save to Vault</button>
         }
       </header>
 

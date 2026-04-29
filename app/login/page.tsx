@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase-browser'
 import Link from 'next/link'
 
@@ -9,6 +10,8 @@ export default function LoginPage() {
   const [sent,     setSent]     = useState(false)
   const [loading,  setLoading]  = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const searchParams = useSearchParams()
+  const next = searchParams.get('next') ?? '/account'
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -20,7 +23,7 @@ export default function LoginPage() {
       ? sessionStorage.getItem('ld_session_id') ?? ''
       : ''
 
-    const redirectTo = `${window.location.origin}/auth/callback?session_id=${encodeURIComponent(sessionId)}&next=/account`
+    const redirectTo = `${window.location.origin}/auth/callback?session_id=${encodeURIComponent(sessionId)}&next=${encodeURIComponent(next)}`
 
     const supabase = createClient()
     const { error } = await supabase.auth.signInWithOtp({

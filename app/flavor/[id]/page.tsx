@@ -4,9 +4,9 @@ import { createClient } from '@/lib/supabase-server'
 import FlavorClient from './FlavorClient'
 import type { FlavorCreation } from '@/types/flavor'
 
-interface Props { params: { id: string } }
+interface Props { params: { id: string }; searchParams: { vault?: string } }
 
-export default async function FlavorPage({ params }: Props) {
+export default async function FlavorPage({ params, searchParams }: Props) {
   // Read auth session (null for guests)
   const serverSupabase = await createClient()
   const { data: { user } } = await serverSupabase.auth.getUser()
@@ -41,5 +41,5 @@ export default async function FlavorPage({ params }: Props) {
     createdAt:        data.created_at,
   }
 
-  return <FlavorClient flavor={flavor} userId={user?.id ?? null} />
+  return <FlavorClient flavor={flavor} userId={user?.id ?? null} autoVault={searchParams.vault === '1'} />
 }
