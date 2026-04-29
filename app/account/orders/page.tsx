@@ -1,16 +1,19 @@
 import { createClient } from '@/lib/supabase-server'
 import { supabase as serviceClient } from '@/lib/supabase'
 import Link from 'next/link'
+import { AC, paperGrain, Stamp, ScoopDoodle } from '@/components/ac-primitives'
 
 export const revalidate = 0
 
-const STATUS_STYLES: Record<string, string> = {
-  paid:          'bg-amber-500/10 text-amber-400 border border-amber-500/20',
-  in_production: 'bg-blue-500/10 text-blue-400 border border-blue-500/20',
-  shipped:       'bg-purple-500/10 text-purple-400 border border-purple-500/20',
-  fulfilled:     'bg-green-500/10 text-green-400 border border-green-500/20',
-  cancelled:     'bg-red-500/10 text-red-400 border border-red-500/20',
-  pending:       'bg-white/5 text-white/40 border border-white/10',
+const FF = { serif: 'var(--font-fraunces)', hand: 'var(--font-caveat)' }
+
+const STATUS_COLORS: Record<string, { bg: string; color: string }> = {
+  paid:          { bg: AC.marigold,  color: AC.ink   },
+  in_production: { bg: AC.sky,       color: AC.ink   },
+  shipped:       { bg: AC.pist,      color: AC.cream },
+  fulfilled:     { bg: AC.pist,      color: AC.cream },
+  cancelled:     { bg: AC.cherry,    color: AC.cream },
+  pending:       { bg: `${AC.ink}22`, color: AC.ink  },
 }
 
 const STATUS_LABELS: Record<string, string> = {
@@ -22,14 +25,9 @@ const STATUS_LABELS: Record<string, string> = {
   pending:       'Pending',
 }
 
-function formatCents(cents: number) {
-  return `$${(cents / 100).toFixed(2)}`
-}
-
+function formatCents(cents: number) { return `$${(cents / 100).toFixed(2)}` }
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('en-US', {
-    month: 'short', day: 'numeric', year: 'numeric',
-  })
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
 export default async function OrdersPage() {
@@ -37,7 +35,6 @@ export default async function OrdersPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
 
-  // Match orders by email (covers pre-auth orders) and by user_id
   const { data: orders } = await serviceClient
     .from('orders')
     .select(`
@@ -49,69 +46,72 @@ export default async function OrdersPage() {
     .order('created_at', { ascending: false })
 
   return (
-    <div>
-      <div className="mb-6">
-        <h1 className="font-serif text-2xl text-white">My Orders</h1>
-        <p className="text-[10px] text-white/40 uppercase tracking-[0.2em] mt-1">Your order history</p>
+    <div style={{ ...paperGrain }}>
+
+      {/* Header */}
+      <div style={{ marginBottom: 40 }}>
+        <span style={{ fontFamily: FF.hand, fontSize: 20, color: AC.rasp, display: 'block', transform: 'rotate(-1deg)', marginBottom: 4 }}>
+          — every pint you&apos;ve ordered —
+        </span>
+        <h1 style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 'clamp(40px, 6vw, 64px)', color: AC.ink, margin: 0, lineHeight: 0.95, letterSpacing: '-0.02em' }}>
+          My Orders
+        </h1>
       </div>
 
       {!orders || orders.length === 0 ? (
-        <div className="text-center py-20 text-white/30">
-          <p className="text-4xl mb-4">📦</p>
-          <p className="text-lg font-serif text-white/50 mb-2">No orders yet</p>
-          <p className="text-sm mb-6">Your orders will appear here after checkout.</p>
-          <Link href="/" className="text-[#C9A96E] hover:text-[#D4B47A] transition-colors text-sm">
-            Create your first flavor →
-          </Link>
+        <div style={{ textAlign: 'center', padding: '80px 24px' }}>
+          <ScoopDoodle size={80} fill={AC.parchment} color={`${AC.ink}44`} />
+          <h2 style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 28, color: AC.ink, margin: '20px 0 10px' }}>
+            No orders yet
+          </h2>
+          <p style={{ fontFamily: FF.hand, fontSize: 20, color: AC.rasp, margin: '0 0 28px', transform: 'rotate(-1deg)', display: 'inline-block' }}>
+            Your orders will appear here after checkout.
+          </p>
+          <div>
+            <Link href="/" style={{ fontFamily: FF.serif, fontSize: 14, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: AC.ink, textDecoration: 'none', borderBottom: `2px solid ${AC.marigold}`, paddingBottom: 2 }}>
+              Create your first flavor →
+            </Link>
+          </div>
         </div>
       ) : (
-        <div className="space-y-3">
-          {orders.map(order => {
-            // Supabase returns joined rows as an array; unwrap the first (and only) row
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {orders.map((order, i) => {
             const flavorRaw = order.flavor_creations
             const flavor = Array.isArray(flavorRaw) ? flavorRaw[0] : flavorRaw
-            const statusStyle = STATUS_STYLES[order.status] ?? STATUS_STYLES.pending
-            const statusLabel = STATUS_LABELS[order.status] ?? order.status
+            const sc = STATUS_COLORS[order.status] ?? STATUS_COLORS.pending
+            const label = STATUS_LABELS[order.status] ?? order.status
 
             return (
-              <div
-                key={order.id}
-                className="bg-[#0D0D0D] rounded-xl border border-white/8 p-5"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-center gap-3 min-w-0">
-                    {/* Color swatch */}
-                    <div
-                      className="w-10 h-10 rounded-xl flex-shrink-0"
-                      style={{ backgroundColor: flavor?.suggested_color ?? '#C4922A' }}
-                    />
-                    <div className="min-w-0">
-                      <p className="font-serif font-semibold text-white truncate">
-                        {flavor?.flavor_name ?? 'Custom Flavor'}
-                      </p>
-                      <p className="text-xs text-white/40 mt-0.5">
-                        {order.order_reference} · {order.quantity_quarts} qt · {formatCents(order.total_price_cents)}
-                      </p>
-                      <p className="text-xs text-white/25 mt-0.5">
-                        {formatDate(order.created_at)}
-                      </p>
-                    </div>
-                  </div>
+              <div key={order.id} style={{ background: AC.cream, border: `2px solid ${AC.ink}`, padding: '20px 24px', boxShadow: `4px 4px 0 ${AC.ink}`, transform: `rotate(${['-0.4deg', '0.3deg', '-0.2deg'][i % 3]})`, display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
 
-                  <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                    <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusStyle}`}>
-                      {statusLabel}
-                    </span>
-                    {order.flavor_creation_id && (
-                      <Link
-                        href={`/flavor/${order.flavor_creation_id}`}
-                        className="text-xs text-[#C9A96E]/60 hover:text-[#C9A96E] transition-colors"
-                      >
-                        Re-order →
-                      </Link>
-                    )}
-                  </div>
+                {/* Color swatch */}
+                <div style={{ width: 48, height: 48, flexShrink: 0, borderRadius: 4, border: `2px solid ${AC.ink}`, background: flavor?.suggested_color ?? AC.marigold }} />
+
+                {/* Info */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 18, fontWeight: 700, color: AC.ink, margin: '0 0 4px', lineHeight: 1.1 }}>
+                    {flavor?.flavor_name ?? 'Custom Flavor'}
+                  </p>
+                  <p style={{ fontFamily: FF.hand, fontSize: 14, color: `${AC.ink}77`, margin: 0 }}>
+                    {order.order_reference} · {order.quantity_quarts} qt · {formatCents(order.total_price_cents)}
+                  </p>
+                  <p style={{ fontFamily: FF.hand, fontSize: 13, color: `${AC.ink}55`, margin: '2px 0 0' }}>
+                    {formatDate(order.created_at)}
+                  </p>
                 </div>
+
+                {/* Status + re-order */}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, flexShrink: 0 }}>
+                  <Stamp color={sc.color === AC.ink ? AC.ink : sc.bg} rotate={[-1.5, 1, -0.8][i % 3]} style={{ fontSize: 10, background: sc.bg, color: sc.color, borderColor: AC.ink }}>
+                    {label}
+                  </Stamp>
+                  {order.flavor_creation_id && (
+                    <Link href={`/flavor/${order.flavor_creation_id}`} style={{ fontFamily: FF.hand, fontSize: 14, color: AC.rasp, textDecoration: 'none' }}>
+                      Re-order →
+                    </Link>
+                  )}
+                </div>
+
               </div>
             )
           })}

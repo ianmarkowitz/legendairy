@@ -154,65 +154,23 @@ export default function OrderConfirmed() {
 
             {/* Action buttons */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 52 }}>
-
-              {/* Primary — ink fill */}
-              <Link href="/" style={{
-                display:        'inline-flex',
-                alignItems:     'center',
-                justifyContent: 'center',
-                gap:            8,
-                padding:        '14px 28px',
-                background:     C.ink,
-                color:          C.cream,
-                fontFamily:     fraunces,
-                fontSize:       15,
-                fontWeight:     700,
-                letterSpacing:  '0.04em',
-                textDecoration: 'none',
-                border:         `2px solid ${C.ink}`,
-                textTransform:  'uppercase' as const,
+              <Link href="/account/vault" style={{
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                padding: '14px 28px', background: C.ink, color: C.cream,
+                fontFamily: fraunces, fontSize: 15, fontWeight: 700, letterSpacing: '0.04em',
+                textDecoration: 'none', border: `2px solid ${C.ink}`, boxShadow: `4px 4px 0 ${C.marigold}`,
+                textTransform: 'uppercase' as const,
               }}>
-                Add to Vault ♥
+                View the Vault ♥
               </Link>
-
-              {/* Outlined */}
-              <button style={{
-                display:        'inline-flex',
-                alignItems:     'center',
-                justifyContent: 'center',
-                padding:        '13px 28px',
-                background:     'transparent',
-                color:          C.ink,
-                fontFamily:     fraunces,
-                fontSize:       15,
-                fontWeight:     600,
-                letterSpacing:  '0.03em',
-                border:         `2px solid ${C.ink}`,
-                cursor:         'pointer',
-                opacity:        0.70,
-                textTransform:  'uppercase' as const,
-              }}>
-                Share this flavor
-              </button>
-
-              {/* Outlined */}
               <Link href="/" style={{
-                display:        'inline-flex',
-                alignItems:     'center',
-                justifyContent: 'center',
-                padding:        '13px 28px',
-                background:     'transparent',
-                color:          C.ink,
-                fontFamily:     fraunces,
-                fontSize:       15,
-                fontWeight:     600,
-                letterSpacing:  '0.03em',
-                textDecoration: 'none',
-                border:         `2px solid ${C.ink}`,
-                opacity:        0.70,
-                textTransform:  'uppercase' as const,
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                padding: '13px 28px', background: 'transparent', color: C.ink,
+                fontFamily: fraunces, fontSize: 15, fontWeight: 600, letterSpacing: '0.03em',
+                textDecoration: 'none', border: `2px solid ${C.ink}`, opacity: 0.70,
+                textTransform: 'uppercase' as const,
               }}>
-                Create account
+                Dream another flavor →
               </Link>
             </div>
 
@@ -418,7 +376,7 @@ export default function OrderConfirmed() {
                   color:         C.ink,
                   opacity:       0.36,
                 }}>
-                  ✦ Atelier
+                  ✦ Legendairy
                 </span>
               </div>
 

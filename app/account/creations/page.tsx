@@ -2,8 +2,11 @@ import { createClient } from '@/lib/supabase-server'
 import { supabase as serviceClient } from '@/lib/supabase'
 import CreationCard from '@/components/CreationCard'
 import Link from 'next/link'
+import { AC, paperGrain, Stamp, ScoopDoodle } from '@/components/ac-primitives'
 
 export const revalidate = 0
+
+const FF = { serif: 'var(--font-fraunces)', hand: 'var(--font-caveat)' }
 
 export default async function CreationsPage() {
   const supabase = await createClient()
@@ -16,44 +19,54 @@ export default async function CreationsPage() {
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
+  const CARD_ROTATIONS = ['-1.2deg', '1.1deg', '-0.8deg', '1.3deg', '-1.0deg', '0.9deg']
+
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
+    <div style={{ ...paperGrain }}>
+
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 40, flexWrap: 'wrap', gap: 16 }}>
         <div>
-          <h1 className="font-serif text-2xl text-white">My Creations</h1>
-          <p className="text-[10px] text-white/40 uppercase tracking-[0.2em] mt-1">
-            Every flavor you&apos;ve dreamed up
-          </p>
+          <span style={{ fontFamily: FF.hand, fontSize: 20, color: AC.rasp, display: 'block', transform: 'rotate(-1deg)', marginBottom: 4 }}>
+            — every flavor you&apos;ve dreamed up —
+          </span>
+          <h1 style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 'clamp(40px, 6vw, 64px)', color: AC.ink, margin: 0, lineHeight: 0.95, letterSpacing: '-0.02em' }}>
+            My Creations
+          </h1>
         </div>
-        <Link
-          href="/"
-          className="text-xs px-4 py-2.5 bg-[#C9A96E] text-black font-medium uppercase tracking-[0.2em] rounded-lg hover:bg-[#D4B47A] transition-colors"
-        >
-          + New Flavor
+        <Link href="/" style={{ textDecoration: 'none', alignSelf: 'flex-end', marginBottom: 8 }}>
+          <Stamp color={AC.rasp} rotate={-1.5} style={{ fontSize: 11, cursor: 'pointer' }}>+ New Flavor</Stamp>
         </Link>
       </div>
 
       {!creations || creations.length === 0 ? (
-        <div className="text-center py-20 text-white/30">
-          <p className="text-4xl mb-4">🍦</p>
-          <p className="text-lg font-serif text-white/50 mb-2">No creations yet</p>
-          <p className="text-sm mb-6">Your AI-generated flavors will appear here.</p>
-          <Link href="/" className="text-[#C9A96E] hover:text-[#D4B47A] transition-colors text-sm">
-            Dream up your first flavor →
-          </Link>
+        <div style={{ textAlign: 'center', padding: '80px 24px' }}>
+          <ScoopDoodle size={80} fill={AC.parchment} color={`${AC.ink}44`} />
+          <h2 style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 28, color: AC.ink, margin: '20px 0 10px' }}>
+            No creations yet
+          </h2>
+          <p style={{ fontFamily: FF.hand, fontSize: 20, color: AC.rasp, margin: '0 0 28px', transform: 'rotate(-1deg)', display: 'inline-block' }}>
+            Your AI-generated flavors will appear here.
+          </p>
+          <div>
+            <Link href="/" style={{ fontFamily: FF.serif, fontSize: 14, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: AC.ink, textDecoration: 'none', borderBottom: `2px solid ${AC.marigold}`, paddingBottom: 2 }}>
+              Dream up your first flavor →
+            </Link>
+          </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {creations.map(c => (
-            <CreationCard
-              key={c.id}
-              id={c.id}
-              flavorName={c.flavor_name}
-              tagline={c.tagline}
-              color={c.suggested_color ?? '#C4922A'}
-              createdAt={c.created_at}
-              isVaulted={c.is_vaulted ?? false}
-            />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 28, alignItems: 'start' }}>
+          {creations.map((c, i) => (
+            <div key={c.id} style={{ transform: `rotate(${CARD_ROTATIONS[i % CARD_ROTATIONS.length]})`, transformOrigin: 'center top' }}>
+              <CreationCard
+                id={c.id}
+                flavorName={c.flavor_name}
+                tagline={c.tagline}
+                color={c.suggested_color ?? '#C4922A'}
+                createdAt={c.created_at}
+                isVaulted={c.is_vaulted ?? false}
+              />
+            </div>
           ))}
         </div>
       )}
