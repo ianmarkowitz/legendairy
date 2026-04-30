@@ -31,7 +31,7 @@ export default function AccountNav({ email }: AccountNavProps) {
 
   return (
     <div style={{ background: parchment, borderBottom: `2px solid ${ink}` }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 40px' }}>
+      <div className="ac-account-inner" style={{ maxWidth: 1200, margin: '0 auto' }}>
 
         {/* Email + sign out */}
         <div style={{
@@ -42,6 +42,7 @@ export default function AccountNav({ email }: AccountNavProps) {
             fontFamily: 'var(--font-fraunces)', fontWeight: 600,
             textTransform: 'uppercase', letterSpacing: '0.18em',
             fontSize: 10, color: ink, opacity: 0.5,
+            overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '50vw',
           }}>
             {email}
           </span>

@@ -135,7 +135,9 @@ export default function FlavorClient({ flavor, userId, autoVault }: Props) {
       {/* ── HEADER ── */}
       <header style={{ background: AC.parchment, borderBottom: `2px solid ${AC.ink}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 28px', ...paperGrain }}>
         <span style={{ ...ital(28, AC.ink, 700) }}>Legendairy</span>
-        <Stamp color={AC.rasp} rotate={-1.5} style={{ fontSize: 11 }}>§ Act II · Your Flavor</Stamp>
+        <div className="ac-header-stamp">
+          <Stamp color={AC.rasp} rotate={-1.5} style={{ fontSize: 11 }}>§ Act II · Your Flavor</Stamp>
+        </div>
         {userId
           ? <button onClick={handleVaultToggle} disabled={vaultLoading} style={{ fontFamily: FF.hand, fontSize: 18, color: vaulted ? AC.rasp : AC.ink, background: 'none', border: 'none', cursor: 'pointer', opacity: vaultLoading ? 0.5 : 1 }}>{vaulted ? '♥ Saved' : '♡ Save to Vault'}</button>
           : <button onClick={() => router.push(`/login?next=${encodeURIComponent('/flavor/' + flavor.id + '?vault=1')}`)} style={{ fontFamily: FF.hand, fontSize: 18, color: `${AC.ink}77`, background: 'none', border: 'none', cursor: 'pointer' }}>♡ Save to Vault</button>
@@ -144,7 +146,7 @@ export default function FlavorClient({ flavor, userId, autoVault }: Props) {
 
       {/* ── HERO ── */}
       <section style={{ maxWidth: 1140, margin: '0 auto', padding: 'clamp(40px, 6vw, 72px) 28px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '60fr 40fr', gap: 48, alignItems: 'start' }}>
+        <div className="ac-flavor-hero-grid">
 
           {/* Left col */}
           <div>
@@ -249,7 +251,7 @@ export default function FlavorClient({ flavor, userId, autoVault }: Props) {
         <div style={{ maxWidth: 1140, margin: '0 auto' }}>
           <h2 style={{ ...ital(48, AC.cream, 700), margin: '0 0 4px', lineHeight: 1 }}>Tweak it, if you must.</h2>
           <p style={{ fontFamily: FF.hand, fontSize: 21, color: `${AC.cream}80`, marginBottom: 44 }}>— the architect is unbothered —</p>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48 }}>
+          <div className="ac-customize-grid">
 
             {/* Mix-ins */}
             <div>

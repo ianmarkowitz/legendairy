@@ -11,7 +11,7 @@ export default async function AccountLayout({ children }: { children: React.Reac
   return (
     <div style={{ minHeight: 'calc(100vh - 80px)', background: '#F1E1BC' }}>
       <AccountNav email={user.email ?? ''} />
-      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 40px 80px' }}>
+      <main className="ac-account-main" style={{ maxWidth: 1200, margin: '0 auto' }}>
         {children}
       </main>
     </div>

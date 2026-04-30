@@ -127,12 +127,7 @@ export default function OrderConfirmed() {
         </p>
 
         {/* ── Two-column body ── */}
-        <div style={{
-          display:             'grid',
-          gridTemplateColumns: '60fr 40fr',
-          gap:                 52,
-          alignItems:          'start',
-        }}>
+        <div className="ac-order-grid">
 
           {/* ── LEFT ── */}
           <div>
@@ -234,12 +229,7 @@ export default function OrderConfirmed() {
           </div>
 
           {/* ── RIGHT — label preview card ── */}
-          <div style={{
-            position:       'sticky',
-            top:            48,
-            display:        'flex',
-            justifyContent: 'center',
-          }}>
+          <div className="ac-order-sticky">
             <div style={{
               position:  'relative',
               width:     '100%',

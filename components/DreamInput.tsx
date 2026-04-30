@@ -64,7 +64,7 @@ export default function DreamInput() {
     <div style={{ background: AC.cream, color: AC.ink, fontFamily: FF.serif, ...paperGrain }}>
 
       {/* ── HERO ── */}
-      <section style={{ minHeight: '100vh', padding: 'clamp(48px, 8vw, 96px) clamp(24px, 6vw, 80px)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'start', position: 'relative' }}>
+      <section className="ac-hero-grid" style={{ minHeight: '100vh', padding: 'clamp(48px, 8vw, 96px) clamp(24px, 6vw, 80px)', position: 'relative' }}>
 
         {/* Left col */}
         <div style={{ maxWidth: 600 }}>
@@ -127,6 +127,7 @@ export default function DreamInput() {
         </div>
 
         {/* Right col — decorative flavor card */}
+        <div className="ac-hero-deco">
         <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 40, position: 'relative' }}>
           <div style={{ position: 'relative', width: '100%', maxWidth: 340 }}>
             {/* Flavor card */}
@@ -148,6 +149,7 @@ export default function DreamInput() {
               <WaxSeal size={72} color={AC.rasp} rotate={-8} />
             </div>
           </div>
+        </div>
         </div>
 
       </section>
@@ -222,20 +224,20 @@ export default function DreamInput() {
       {/* ── PRICING ── */}
       <section style={{ background: AC.parchment, padding: 'clamp(64px, 8vw, 112px) clamp(24px, 6vw, 80px)', textAlign: 'center', position: 'relative', overflow: 'hidden', ...paperGrain }}>
         {/* Starburst top-left */}
-        <div style={{ position: 'absolute', top: -20, left: -20 }}>
+        <div className="ac-pricing-starburst" style={{ position: 'absolute', top: -20, left: -20 }}>
           <Starburst size={200} fill={AC.rasp} stroke={AC.ink} rotate={-12}>
             <span style={{ fontFamily: FF.hand, fontSize: 18, color: AC.cream, fontWeight: 700, lineHeight: 1.3, textAlign: 'center' }}>no charge<br />for big<br />ideas!</span>
           </Starburst>
         </div>
         {/* TicketStub top-right */}
-        <div style={{ position: 'absolute', top: 36, right: 36, transform: 'rotate(3deg)' }}>
+        <div className="ac-pricing-ticket" style={{ position: 'absolute', top: 36, right: 36, transform: 'rotate(3deg)' }}>
           <TicketStub bg={AC.marigold} border={AC.ink} style={{ padding: '14px 28px' }}>
             <p style={{ ...acSmall, color: AC.ink, margin: 0, lineHeight: 2, fontSize: 12 }}>ADMIT ONE<br />YOUR PINT<br />good forever</p>
           </TicketStub>
         </div>
 
         {/* Price */}
-        <div style={{ paddingTop: 80 }}>
+        <div className="ac-pricing-body">
           <p style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 'clamp(120px, 18vw, 260px)', color: AC.ink, margin: 0, lineHeight: 0.9, letterSpacing: '-0.02em' }}>
             $19<span style={{ color: AC.rasp }}>.99</span>
           </p>
@@ -268,8 +270,8 @@ export default function DreamInput() {
             { n: '03', q: 'How long from order to doorstep?',  a: 'Typically 5–7 business days from confirmation to your front door, shipped on dry ice.' },
             { n: '04', q: 'Can I save and re-order a flavor?', a: 'Yes — every flavor gets a permanent page. Bookmark it and reorder anytime.' },
           ].map(({ n, q, a }) => (
-            <div key={n} style={{ display: 'grid', gridTemplateColumns: '100px 1fr 1fr', gap: '0 32px', alignItems: 'start', borderTop: `1px dashed ${AC.parchment}55`, padding: '28px 0' }}>
-              <span style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 80, color: AC.marigold, lineHeight: 0.85, opacity: 0.65 }}>{n}</span>
+            <div key={n} className="ac-faq-row" style={{ borderTop: `1px dashed ${AC.parchment}55`, padding: '28px 0' }}>
+              <span className="ac-faq-num" style={{ fontFamily: FF.serif, fontStyle: 'italic', color: AC.marigold, opacity: 0.65 }}>{n}</span>
               <h4 style={{ fontFamily: FF.serif, fontSize: 30, color: AC.cream, margin: 0, lineHeight: 1.2 }}>{q}</h4>
               <p style={{ fontFamily: FF.serif, fontSize: 16, lineHeight: 1.7, color: AC.parchment, opacity: 0.85, margin: 0 }}>{a}</p>
             </div>
