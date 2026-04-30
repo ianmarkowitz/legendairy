@@ -118,6 +118,30 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         </nav>
 
         {children}
+
+        {/* Site-wide allergen notice */}
+        <div style={{
+          background: '#2A1810',
+          borderTop: '2px solid #2A1810',
+          padding: '20px 24px',
+          textAlign: 'center',
+        }}>
+          <p style={{
+            fontFamily: 'var(--font-fraunces)',
+            fontSize: 12,
+            lineHeight: 1.7,
+            color: '#FBF3D9',
+            opacity: 0.6,
+            margin: 0,
+            maxWidth: 760,
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            letterSpacing: '0.02em',
+          }}>
+            ⚠ <strong>Allergen Notice:</strong> Our kitchen works with common allergens including milk, eggs, wheat, tree nuts, peanuts, and soy. While we take care to keep batches separated, we cannot guarantee that any product is free from cross-contact with allergens. Please order accordingly if you have a severe allergy.
+          </p>
+        </div>
+
         <Analytics />
         <SpeedInsights />
         <GoogleAnalytics gaId="G-PLW0CZ21EW" />
