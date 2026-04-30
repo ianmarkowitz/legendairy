@@ -3,6 +3,7 @@ import { Fraunces, Caveat } from 'next/font/google'
 import Link from 'next/link'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import { GoogleAnalytics } from '@next/third-parties/google'
 import { createClient } from '@/lib/supabase-server'
 import './globals.css'
 
@@ -119,6 +120,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {children}
         <Analytics />
         <SpeedInsights />
+        <GoogleAnalytics gaId="G-PLW0CZ21EW" />
       </body>
     </html>
   )
