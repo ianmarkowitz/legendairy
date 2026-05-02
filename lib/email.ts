@@ -3,9 +3,10 @@ import { createElement } from 'react'
 import type { SpecSheet } from '@/types/flavor'
 import { formatCents, formatShipDate, calculateShipDate } from './utils'
 import { MAKER_EMAIL } from './constants'
-import { OrderConfirmationEmail } from '@/components/emails/OrderConfirmationEmail'
-import { MakerAlertEmail }        from '@/components/emails/MakerAlertEmail'
+import { OrderConfirmationEmail }    from '@/components/emails/OrderConfirmationEmail'
+import { MakerAlertEmail }           from '@/components/emails/MakerAlertEmail'
 import { ShippingNotificationEmail } from '@/components/emails/ShippingNotificationEmail'
+import { LeadCaptureEmail }          from '@/components/emails/LeadCaptureEmail'
 
 const BASE = 'https://www.legendairyicecream.com'
 
@@ -67,6 +68,25 @@ export async function sendOrderConfirmation(opts: {
     to:      customerEmail,
     subject: `Your order is confirmed — ${spec.flavorName} ✦`,
     react:   createElement(OrderConfirmationEmail, { orderRef, customerName, spec, totalCents, orderDate, flavorUrl }),
+  })
+}
+
+// ── Lead capture follow-up ────────────────────────────────────────────────────
+
+export async function sendLeadEmail(opts: {
+  email:      string
+  flavorName: string
+  tagline:    string
+  flavorId:   string
+}) {
+  const { email, flavorName, tagline, flavorId } = opts
+  const flavorUrl = `${BASE}/flavor/${flavorId}`
+
+  return getResend().emails.send({
+    from:    'Legendairy Ice Cream <orders@legendairyicecream.com>',
+    to:      email,
+    subject: `Your ${flavorName} is saved — here's your link ✦`,
+    react:   createElement(LeadCaptureEmail, { flavorName, tagline, flavorUrl }),
   })
 }
 

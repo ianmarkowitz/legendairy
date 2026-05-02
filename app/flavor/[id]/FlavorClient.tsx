@@ -48,6 +48,34 @@ export default function FlavorClient({ flavor, userId, autoVault }: Props) {
   const [remixLoading, setRemixLoading]     = useState(false)
   const [remixError, setRemixError]         = useState<string | null>(null)
   const [remixProgress, setRemixProgress]   = useState(0)
+  const [leadEmail, setLeadEmail]           = useState('')
+  const [leadSubmitted, setLeadSubmitted]   = useState(false)
+  const [leadLoading, setLeadLoading]       = useState(false)
+
+  // Restore lead-captured flag from localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined' && localStorage.getItem('ld_lead_captured')) {
+      setLeadSubmitted(true)
+    }
+  }, [])
+
+  async function handleLeadCapture(e: React.FormEvent) {
+    e.preventDefault()
+    if (!leadEmail.trim() || leadLoading) return
+    setLeadLoading(true)
+    try {
+      const res = await fetch('/api/capture-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: leadEmail, flavorCreationId: flavor.id }),
+      })
+      if (res.ok) {
+        setLeadSubmitted(true)
+        if (typeof window !== 'undefined') localStorage.setItem('ld_lead_captured', '1')
+      }
+    } catch { /* silent */ }
+    setLeadLoading(false)
+  }
 
   // Auto-vault after returning from login with ?vault=1
   useEffect(() => {
@@ -245,6 +273,53 @@ export default function FlavorClient({ flavor, userId, autoVault }: Props) {
 
         </div>
       </section>
+
+      {/* ── LEAD CAPTURE — guests only ── */}
+      {!userId && (
+        <section style={{ background: AC.parchment, borderTop: `1px solid ${AC.ink}18`, borderBottom: `1px solid ${AC.ink}18`, padding: '28px 28px' }}>
+          <div style={{ maxWidth: 1140, margin: '0 auto' }}>
+            {leadSubmitted ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                <span style={{ fontSize: 22 }}>✦</span>
+                <div>
+                  <p style={{ fontFamily: FF.serif, fontStyle: 'italic', fontWeight: 700, fontSize: 16, color: AC.ink, margin: 0 }}>
+                    Check your inbox — we sent you a direct link.
+                  </p>
+                  <p style={{ fontFamily: FF.hand, fontSize: 15, color: `${AC.ink}66`, margin: '2px 0 0' }}>
+                    Your flavor is saved forever at this URL.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 28, flexWrap: 'wrap' }}>
+                <div style={{ flex: '0 0 auto' }}>
+                  <p style={{ fontFamily: FF.hand, fontSize: 18, color: AC.rasp, margin: '0 0 2px' }}>never lose this flavor</p>
+                  <p style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 14, color: `${AC.ink}77`, margin: 0 }}>
+                    We&apos;ll email you a direct link — no account needed.
+                  </p>
+                </div>
+                <form onSubmit={handleLeadCapture} style={{ display: 'flex', gap: 10, flex: 1, minWidth: 260, flexWrap: 'wrap' }}>
+                  <input
+                    type="email"
+                    required
+                    value={leadEmail}
+                    onChange={e => setLeadEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    style={{ flex: 1, minWidth: 200, fontFamily: FF.hand, fontSize: 18, background: AC.cream, border: `1.5px solid ${AC.ink}55`, padding: '10px 14px', color: AC.ink, outline: 'none', borderRadius: 4 }}
+                  />
+                  <button
+                    type="submit"
+                    disabled={!leadEmail.trim() || leadLoading}
+                    style={{ fontFamily: FF.serif, fontStyle: 'italic', fontWeight: 700, fontSize: 14, background: AC.ink, color: AC.cream, border: `2px solid ${AC.ink}`, padding: '10px 22px', cursor: !leadEmail.trim() || leadLoading ? 'default' : 'pointer', opacity: !leadEmail.trim() || leadLoading ? 0.45 : 1, borderRadius: 4, whiteSpace: 'nowrap' }}
+                  >
+                    {leadLoading ? 'Saving…' : 'Send me the link →'}
+                  </button>
+                </form>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* ── CUSTOMIZE ── */}
       <section style={{ background: AC.ink, color: AC.cream, padding: 'clamp(48px, 6vw, 80px) 28px' }}>
