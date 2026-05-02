@@ -48,6 +48,30 @@ body {
   width: max-content;
 }
 
+.animate-marquee-slow {
+  animation: marquee 55s linear infinite;
+  display: flex;
+  width: max-content;
+}
+
+/* ── Recent Flavors card strip ─────────────────────────────── */
+.rf-strip {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(251,243,217,0.18) transparent;
+}
+.rf-strip::-webkit-scrollbar       { height: 4px; }
+.rf-strip::-webkit-scrollbar-track { background: transparent; }
+.rf-strip::-webkit-scrollbar-thumb { background: rgba(251,243,217,0.18); border-radius: 2px; }
+
+.rf-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+.rf-card:hover {
+  transform: translateY(-6px) rotate(0.5deg);
+  box-shadow: 0 18px 44px rgba(0,0,0,0.38);
+}
+
 /* ── Stamp border (rough ink box) ───────────────────────── */
 .stamp {
   display: inline-block;

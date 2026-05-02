@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
 import DreamInput from '@/components/DreamInput'
+import RecentFlavors from '@/components/RecentFlavors'
+
+export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'Legendairy — Custom Artisan Ice Cream Made to Order',
@@ -124,6 +127,7 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <DreamInput />
+      <RecentFlavors />
     </main>
   )
 }
