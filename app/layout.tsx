@@ -119,27 +119,53 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
         {children}
 
-        {/* Site-wide allergen notice */}
-        <div style={{
-          background: '#2A1810',
-          borderTop: '2px solid #2A1810',
-          padding: '20px 24px',
-          textAlign: 'center',
-        }}>
-          <p style={{
-            fontFamily: 'var(--font-fraunces)',
-            fontSize: 12,
-            lineHeight: 1.7,
-            color: '#FBF3D9',
-            opacity: 0.6,
-            margin: 0,
-            maxWidth: 760,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            letterSpacing: '0.02em',
-          }}>
-            ⚠ <strong>Allergen Notice:</strong> Our kitchen works with common allergens including milk, eggs, wheat, tree nuts, peanuts, and soy. While we take care to keep batches separated, we cannot guarantee that any product is free from cross-contact with allergens. Please order accordingly if you have a severe allergy.
-          </p>
+        {/* Site-wide footer */}
+        <div style={{ background: '#2A1810', borderTop: '2px solid #2A1810', padding: '28px 24px' }}>
+          <div style={{ maxWidth: 760, margin: '0 auto' }}>
+
+            {/* Allergen notice */}
+            <p style={{
+              fontFamily: 'var(--font-fraunces)',
+              fontSize: 12,
+              lineHeight: 1.7,
+              color: '#FBF3D9',
+              opacity: 0.6,
+              margin: '0 0 20px',
+              letterSpacing: '0.02em',
+              textAlign: 'center',
+            }}>
+              ⚠ <strong>Allergen Notice:</strong> Our kitchen works with common allergens including milk, eggs, wheat, tree nuts, peanuts, and soy. While we take care to keep batches separated, we cannot guarantee that any product is free from cross-contact with allergens. Please order accordingly if you have a severe allergy.
+            </p>
+
+            {/* Policy links */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: 28,
+              flexWrap: 'wrap',
+              borderTop: '1px solid #FBF3D920',
+              paddingTop: 20,
+            }}>
+              {[
+                { label: 'Privacy Policy',          href: '/privacy' },
+                { label: 'Terms of Service',        href: '/terms'   },
+                { label: 'Refund & Cancellation',   href: '/refunds' },
+              ].map(({ label, href }) => (
+                <a key={href} href={href} style={{
+                  fontFamily: 'var(--font-fraunces)',
+                  fontSize: 11,
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  color: '#FBF3D9',
+                  opacity: 0.45,
+                  textDecoration: 'none',
+                }}>
+                  {label}
+                </a>
+              ))}
+            </div>
+
+          </div>
         </div>
 
         <Analytics />
