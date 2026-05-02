@@ -21,9 +21,25 @@ const caveat = Caveat({
 })
 
 export const metadata: Metadata = {
-  title:       'Legendairy Ice Cream — Dream a Flavor',
-  description: 'Every flavor is a one-of-a-kind creation, made just for you. Describe your dream ice cream and we\'ll churn it from scratch.',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'),
+  metadataBase: new URL('https://www.legendairyicecream.com'),
+  title: {
+    default:  'Legendairy — Custom Artisan Ice Cream Made to Order',
+    template: '%s | Legendairy',
+  },
+  description: 'Describe any flavor — a memory, a feeling, a craving — and we\'ll turn it into a one-of-one artisan ice cream recipe. Churned fresh and shipped to your door.',
+  openGraph: {
+    siteName: 'Legendairy',
+    type:     'website',
+    locale:   'en_US',
+  },
+  twitter: {
+    card:    'summary_large_image',
+    creator: '@legendairyicecream',
+  },
+  robots: {
+    index:  true,
+    follow: true,
+  },
 }
 
 const MARQUEE_ITEMS = [

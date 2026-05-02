@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
 import { supabase } from '@/lib/supabase'
 import { createClient } from '@/lib/supabase-server'
 import FlavorClient from './FlavorClient'
@@ -6,8 +7,41 @@ import type { FlavorCreation } from '@/types/flavor'
 
 interface Props { params: { id: string }; searchParams: { vault?: string } }
 
+const BASE = 'https://www.legendairyicecream.com'
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { data } = await supabase
+    .from('flavor_creations')
+    .select('flavor_name, tagline, suggested_color, created_at')
+    .eq('id', params.id)
+    .single()
+
+  if (!data) return {}
+
+  const title = `${data.flavor_name} — Legendairy Custom Ice Cream`
+  const description = `${data.tagline} A one-of-one artisan ice cream, churned fresh and shipped to your door by Legendairy.`
+  const url = `${BASE}/flavor/${params.id}`
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: 'Legendairy',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+    alternates: { canonical: url },
+  }
+}
+
 export default async function FlavorPage({ params, searchParams }: Props) {
-  // Read auth session (null for guests)
   const serverSupabase = await createClient()
   const { data: { user } } = await serverSupabase.auth.getUser()
 
@@ -19,7 +53,6 @@ export default async function FlavorPage({ params, searchParams }: Props) {
 
   if (error || !data) notFound()
 
-  // Map snake_case DB columns → camelCase type
   const flavor: FlavorCreation = {
     id:               data.id,
     customerPrompt:   data.customer_prompt,
@@ -41,5 +74,34 @@ export default async function FlavorPage({ params, searchParams }: Props) {
     createdAt:        data.created_at,
   }
 
-  return <FlavorClient flavor={flavor} userId={user?.id ?? null} autoVault={searchParams.vault === '1'} />
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: flavor.flavorName,
+    description: flavor.tagline,
+    brand: { '@type': 'Brand', name: 'Legendairy' },
+    offers: {
+      '@type': 'Offer',
+      price: '19.99',
+      priceCurrency: 'USD',
+      priceSpecification: {
+        '@type': 'UnitPriceSpecification',
+        price: '19.99',
+        priceCurrency: 'USD',
+        unitText: 'per quart',
+      },
+      availability: 'https://schema.org/InStock',
+      url: `${BASE}/flavor/${flavor.id}`,
+    },
+  }
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <FlavorClient flavor={flavor} userId={user?.id ?? null} autoVault={searchParams.vault === '1'} />
+    </>
+  )
 }
