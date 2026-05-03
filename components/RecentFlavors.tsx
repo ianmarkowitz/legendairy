@@ -1,6 +1,17 @@
 import { supabase } from '@/lib/supabase'
 import { AC } from './ac-primitives'
 import Link from 'next/link'
+import { Filter } from 'bad-words'
+
+const filter = new Filter()
+
+function isClean(text: string): boolean {
+  try {
+    return !filter.isProfane(text)
+  } catch {
+    return true
+  }
+}
 
 type FlavorRow = {
   id: string
@@ -48,7 +59,13 @@ export default async function RecentFlavors() {
     .order('created_at', { ascending: false })
     .limit(12)
 
-  if (!flavors || flavors.length < 3) return null
+  if (!flavors || flavors.length === 0) return null
+
+  const clean: FlavorRow[] = (flavors as FlavorRow[]).filter(
+    (f: FlavorRow) => isClean(f.customer_prompt) && isClean(f.flavor_name) && isClean(f.tagline)
+  )
+
+  if (clean.length < 3) return null
 
   const serif = 'var(--font-fraunces)'
   const hand  = 'var(--font-caveat)'
@@ -86,7 +103,7 @@ export default async function RecentFlavors() {
         background: `${AC.cream}06`,
       }}>
         <div className="animate-marquee-slow" aria-hidden="true">
-          {(flavors as FlavorRow[]).map((f, i) => (
+          {clean.map((f, i) => (
             <span key={`a${i}`} style={{
               fontFamily: hand, fontSize: 16,
               color: `${AC.cream}66`, whiteSpace: 'nowrap',
@@ -96,7 +113,7 @@ export default async function RecentFlavors() {
               <span style={{ color: AC.marigold, padding: '0 8px' }}>✦</span>
             </span>
           ))}
-          {(flavors as FlavorRow[]).map((f, i) => (
+          {clean.map((f, i) => (
             <span key={`b${i}`} style={{
               fontFamily: hand, fontSize: 16,
               color: `${AC.cream}66`, whiteSpace: 'nowrap',
@@ -112,7 +129,7 @@ export default async function RecentFlavors() {
       {/* Cards */}
       <div style={{ maxWidth: 1140, margin: '0 auto', padding: '0 28px' }}>
         <div className="rf-strip" style={{ display: 'flex', gap: 20, overflowX: 'auto', paddingBottom: 8 }}>
-          {(flavors as FlavorRow[]).map((f, i) => {
+          {clean.map((f, i) => {
             const color = toColor(f.suggested_color)
             const rot   = ROTATIONS[i % ROTATIONS.length]
             return (
