@@ -1,3 +1,4 @@
+import React from 'react'
 import { supabase } from '@/lib/supabase'
 import { AC } from './ac-primitives'
 import Link from 'next/link'
@@ -48,6 +49,14 @@ function toColor(raw: string | null): string {
 
 function truncate(s: string, n: number) {
   return s.length > n ? s.slice(0, n).trimEnd() + '…' : s
+}
+
+function renderMd(text: string): React.ReactNode {
+  const parts = text.split(/\*\*(.*?)\*\*/g)
+  if (parts.length === 1) return text
+  return parts.map((part, i) =>
+    i % 2 === 1 ? <strong key={i}>{part}</strong> : part
+  )
 }
 
 const ROTATIONS = [1.2, -0.8, 0.5, -1.1, 0.9, -0.4, 1.5, -0.7, 0.3, -1.3, 0.8, -0.5]
@@ -109,7 +118,7 @@ export default async function RecentFlavors() {
               color: `${AC.cream}66`, whiteSpace: 'nowrap',
               padding: '0 20px',
             }}>
-              &ldquo;{truncate(f.customer_prompt, 65)}&rdquo;
+              &ldquo;{truncate(f.customer_prompt.replace(/\*\*/g, ''), 65)}&rdquo;
               <span style={{ color: AC.marigold, padding: '0 8px' }}>✦</span>
             </span>
           ))}
@@ -119,7 +128,7 @@ export default async function RecentFlavors() {
               color: `${AC.cream}66`, whiteSpace: 'nowrap',
               padding: '0 20px',
             }}>
-              &ldquo;{truncate(f.customer_prompt, 65)}&rdquo;
+              &ldquo;{truncate(f.customer_prompt.replace(/\*\*/g, ''), 65)}&rdquo;
               <span style={{ color: AC.marigold, padding: '0 8px' }}>✦</span>
             </span>
           ))}
@@ -172,13 +181,13 @@ export default async function RecentFlavors() {
                       fontFamily: serif, fontStyle: 'italic', fontWeight: 900,
                       fontSize: 17, color: AC.ink, lineHeight: 1.1, marginBottom: 5,
                     }}>
-                      {f.flavor_name}
+                      {renderMd(f.flavor_name)}
                     </div>
                     <div style={{
                       fontFamily: serif, fontStyle: 'italic',
                       fontSize: 12, color: AC.rasp, lineHeight: 1.4, marginBottom: 10,
                     }}>
-                      {truncate(f.tagline, 55)}
+                      {renderMd(truncate(f.tagline, 55))}
                     </div>
                     <div style={{
                       fontFamily: hand, fontSize: 13,
