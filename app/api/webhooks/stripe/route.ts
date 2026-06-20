@@ -3,6 +3,7 @@ import Stripe from 'stripe'
 import { getStripe } from '@/lib/stripe'
 import { supabase } from '@/lib/supabase'
 import { sendMakerAlert, sendOrderConfirmation } from '@/lib/email'
+import { syncContactToResend, firstNameOf } from '@/lib/resendAudience'
 import { buildSpecSheet, buildOrderRef } from '@/lib/utils'
 import type { FlavorOutput, FlavorCustomizations } from '@/types/flavor'
 
@@ -176,6 +177,12 @@ export async function POST(req: NextRequest) {
     ])
     if (makerResult.status   === 'rejected') console.error('Maker alert email failed:',        makerResult.reason)
     if (confirmResult.status === 'rejected') console.error('Customer confirm email failed:', confirmResult.reason)
+
+    // Sync the buyer into the Resend marketing audience (non-blocking, idempotent).
+    if (customerEmail) {
+      syncContactToResend({ email: customerEmail, firstName: firstNameOf(customerName) })
+        .catch(err => console.error('Buyer contact sync failed:', err))
+    }
 
     // Mark spec sheet sent
     await supabase

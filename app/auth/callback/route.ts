@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { supabase as serviceSupabase } from '@/lib/supabase'
+import { syncContactToResend, firstNameOf } from '@/lib/resendAudience'
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
@@ -50,6 +51,12 @@ export async function GET(request: NextRequest) {
       // Non-fatal — user still logged in successfully
     }
   }
+
+  // Sync the now-verified email into the Resend marketing audience.
+  // Awaited (not fire-and-forget) so it reliably runs before this serverless
+  // function returns; the helper swallows its own errors, so login never breaks.
+  const firstName = firstNameOf(data.user.user_metadata?.full_name as string | undefined)
+  await syncContactToResend({ email: data.user.email ?? '', firstName })
 
   const redirectUrl = next.startsWith('/') ? `${origin}${next}` : `${origin}/account`
   return NextResponse.redirect(redirectUrl)

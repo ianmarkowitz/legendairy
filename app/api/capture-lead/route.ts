@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { supabase } from '@/lib/supabase'
 import { sendLeadEmail } from '@/lib/email'
+import { syncContactToResend } from '@/lib/resendAudience'
 
 const schema = z.object({
   email:             z.string().email(),
@@ -43,6 +44,10 @@ export async function POST(req: Request) {
     tagline:    flavor.tagline,
     flavorId:   flavorCreationId,
   }).catch(err => console.error('Lead email failed:', err))
+
+  // Sync lead into the Resend marketing audience (non-blocking, idempotent).
+  // Note: lead emails are unverified — they were typed without confirmation.
+  syncContactToResend({ email }).catch(err => console.error('Lead contact sync failed:', err))
 
   return NextResponse.json({ ok: true })
 }
