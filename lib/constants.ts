@@ -38,6 +38,12 @@ export const BASE_WHOLE_CREAM  = 'whole-cream'    // 12–14% butterfat, AI sele
 // ── Operations ───────────────────────────────────────────────────────────────
 export const MAKER_EMAIL = 'ian@ianmarkowitz.com'
 
+// ── Marketing sends (Resend Broadcasts — see lib/resendBroadcast.ts) ─────────
+// Distinct from transactional `from` addresses in lib/email.ts.
+export const MARKETING_FROM_PERSONAL = 'Ian at Legendairy <ian@legendairyicecream.com>'
+export const MARKETING_FROM_DESIGNED = 'Legendairy Ice Cream <hello@legendairyicecream.com>'
+export const MARKETING_REPLY_TO      = MAKER_EMAIL
+
 // ── Order Reference ───────────────────────────────────────────────────────────
 // Format: LD-YYYYMMDD-XXXX
 export const ORDER_REF_PREFIX = 'LD'
