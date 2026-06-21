@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { supabase } from '@/lib/supabase'
 import { sendLeadEmail } from '@/lib/email'
 import { syncContactToResend } from '@/lib/resendAudience'
+import { emailDomainAcceptsMail } from '@/lib/emailDomain'
 
 const schema = z.object({
   email:             z.string().email(),
@@ -17,6 +18,13 @@ export async function POST(req: Request) {
   if (!parsed.success) return NextResponse.json({ error: 'Invalid input' }, { status: 400 })
 
   const { email, flavorCreationId } = parsed.data
+
+  // Reject domains that can't receive mail at all (typo'd or made-up domains).
+  // Doesn't confirm the mailbox itself exists, and fails open on DNS hiccups —
+  // see lib/emailDomain.ts for why.
+  if (!(await emailDomainAcceptsMail(email))) {
+    return NextResponse.json({ error: 'That email address doesn’t look deliverable — please double-check it.' }, { status: 400 })
+  }
 
   // Fetch flavor details for the email
   const { data: flavor, error: flavorErr } = await supabase
