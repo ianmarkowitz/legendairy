@@ -94,3 +94,25 @@ export async function syncContactsBatch(
 export function firstNameOf(fullName: string | null | undefined): string | null {
   return (fullName ?? '').trim().split(/\s+/)[0] || null
 }
+
+/**
+ * List every contact currently in the Resend Audience. Used by the health
+ * check to compare the marketing list against the DB. Non-throwing.
+ */
+export async function listAudienceContacts(): Promise<
+  { contacts: { email: string; unsubscribed: boolean }[] } | { error: string }
+> {
+  const audienceId = process.env.RESEND_AUDIENCE_ID
+  if (!audienceId) return { error: 'RESEND_AUDIENCE_ID env var is not set.' }
+  try {
+    const { data, error } = await getResend().contacts.list({ audienceId })
+    if (error || !data) return { error: error?.message ?? 'Failed to list audience.' }
+    const contacts = (data.data ?? []).map(c => ({
+      email:        (c.email ?? '').trim().toLowerCase(),
+      unsubscribed: Boolean(c.unsubscribed),
+    }))
+    return { contacts }
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : 'Failed to list audience.' }
+  }
+}
