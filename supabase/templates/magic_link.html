@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Your magic link</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400;1,9..144,700;1,9..144,900&family=Caveat:wght@600;700&display=swap');
+    </style>
+  </head>
+  <body style="margin:0; padding:0; background-color:#F1E1BC;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#F1E1BC;">
+      <tr>
+        <td align="center" style="padding:40px 16px 64px;">
+          <table role="presentation" width="540" cellpadding="0" cellspacing="0" style="max-width:540px; width:100%;">
+
+            <!-- Header -->
+            <tr>
+              <td style="background-color:#2A1810; padding:28px 40px; border-radius:8px 8px 0 0; text-align:center;">
+                <div style="font-family:'Fraunces',Georgia,serif; font-style:italic; font-weight:900; font-size:28px; color:#FBF3D9; line-height:1;">
+                  Legendairy
+                </div>
+                <div style="font-family:'Caveat',cursive; font-size:16px; color:#E8A628; margin-top:4px; line-height:1;">
+                  — the vault —
+                </div>
+              </td>
+            </tr>
+
+            <!-- Body -->
+            <tr>
+              <td style="background-color:#FBF3D9; border:2px solid #2A1810; border-top:none; padding:36px 40px;">
+                <div style="font-family:'Fraunces',Georgia,serif; font-style:italic; font-weight:900; font-size:34px; color:#2A1810; line-height:1.05; margin-bottom:6px;">
+                  Your magic link is here.
+                </div>
+                <div style="font-family:'Fraunces',Georgia,serif; font-style:italic; font-size:15px; color:#2A181077; line-height:1.5; margin-bottom:28px;">
+                  Click below to open the vault — no password needed. This link expires in an hour and can only be used once.
+                </div>
+
+                <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto 8px;">
+                  <tr>
+                    <td style="background-color:#C83A4E; border:2px solid #2A1810;">
+                      <a href="{{ .ConfirmationURL }}"
+                         style="display:inline-block; font-family:'Fraunces',Georgia,serif; font-weight:700; font-style:italic; font-size:16px; color:#FBF3D9; padding:15px 36px; text-decoration:none;">
+                        Open the vault →
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+
+                <hr style="border:none; border-top:1px solid #2A181018; margin:28px 0 20px;" />
+
+                <div style="font-family:'Fraunces',Georgia,serif; font-size:13px; color:#2A181055; line-height:1.7;">
+                  If you didn&rsquo;t request this, you can safely ignore this email — no changes will be made to your account.
+                  Trouble with the button? Copy and paste this link into your browser:
+                  <br />
+                  <a href="{{ .ConfirmationURL }}" style="color:#C83A4E; word-break:break-all;">{{ .ConfirmationURL }}</a>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="background-color:#2A1810; padding:16px 40px; border-radius:0 0 8px 8px; text-align:center;">
+                <div style="font-family:'Fraunces',Georgia,serif; font-size:11px; color:#FBF3D955; letter-spacing:0.06em;">
+                  Legendairy · Artisan Ice Cream · legendairyicecream.com
+                </div>
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

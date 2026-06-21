@@ -24,3 +24,18 @@ already been pushed — add a new one instead.
 
 `supabase/schema.sql` is kept only as a historical, single-file reference of
 the full schema — it is not run directly and is not updated for new changes.
+
+## Auth email templates
+
+Supabase Auth's own emails (e.g. the magic-link sign-in email) are configured
+in `supabase/config.toml` under `[auth.email.template.*]`, with the HTML body
+in `supabase/templates/`. After editing a template, push it to the linked
+project the same way as migrations:
+
+```bash
+npx supabase config push        # syncs config.toml (incl. email templates) to the linked project
+```
+
+These templates use Go's `html/template` syntax (e.g. `{{ .ConfirmationURL }}`),
+not React/JSX — see [Supabase's docs](https://supabase.com/docs/guides/auth/auth-email-templates)
+for the available variables per template.
