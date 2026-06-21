@@ -29,12 +29,20 @@ the full schema — it is not run directly and is not updated for new changes.
 
 Supabase Auth's own emails (e.g. the magic-link sign-in email) are configured
 in `supabase/config.toml` under `[auth.email.template.*]`, with the HTML body
-in `supabase/templates/`. After editing a template, push it to the linked
-project the same way as migrations:
+in `supabase/templates/`.
 
-```bash
-npx supabase config push        # syncs config.toml (incl. email templates) to the linked project
-```
+`content_path` only applies to local dev (`supabase start` / Inbucket) —
+`supabase config push` does **not** upload template content to a hosted
+project. For the linked production project, copy the subject and HTML body
+manually into Supabase Dashboard → Authentication → Email Templates. Keep
+`supabase/templates/` and the Dashboard in sync by hand whenever a template
+changes.
+
+`npx supabase config push` still syncs the rest of `config.toml`'s `[auth]`
+section (site URL, redirect URLs, JWT settings, etc.) to the linked project —
+just not email template content. Double-check `site_url` and
+`additional_redirect_urls` reflect production values before running it,
+since it overwrites whatever is currently configured on the live project.
 
 These templates use Go's `html/template` syntax (e.g. `{{ .ConfirmationURL }}`),
 not React/JSX — see [Supabase's docs](https://supabase.com/docs/guides/auth/auth-email-templates)
