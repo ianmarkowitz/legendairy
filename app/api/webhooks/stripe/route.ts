@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { sendMakerAlert, sendOrderConfirmation } from '@/lib/email'
 import { syncContactToResend, firstNameOf } from '@/lib/resendAudience'
 import { buildSpecSheet, buildOrderRef } from '@/lib/utils'
+import { PRICE_PER_QUART_CENTS } from '@/lib/constants'
 import type { FlavorOutput, FlavorCustomizations } from '@/types/flavor'
 
 // Raw body is read via req.text() below — no config needed in App Router.
@@ -98,7 +99,7 @@ export async function POST(req: NextRequest) {
     }
 
     const orderDate  = new Date()
-    const totalCents = quantityQuarts * 100 * 19.99 // safety recalc
+    const totalCents = quantityQuarts * PRICE_PER_QUART_CENTS // safety recalc
 
     // Generate sequential order ref for today
     const today = new Date()
@@ -142,8 +143,8 @@ export async function POST(req: NextRequest) {
         order_reference:          orderRef,
         flavor_creation_id:       flavorCreationId,
         quantity_quarts:          quantityQuarts,
-        unit_price_cents:         1999,
-        total_price_cents:        quantityQuarts * 1999,
+        unit_price_cents:         PRICE_PER_QUART_CENTS,
+        total_price_cents:        quantityQuarts * PRICE_PER_QUART_CENTS,
         stripe_payment_intent_id: session.payment_intent as string,
         stripe_session_id:        session.id,
         customer_name:            customerName,
@@ -167,7 +168,7 @@ export async function POST(req: NextRequest) {
     // Send emails (non-blocking — don't fail the webhook on email errors)
     const emailOpts = {
       orderRef, customerName, customerEmail, spec,
-      totalCents: quantityQuarts * 1999,
+      totalCents: quantityQuarts * PRICE_PER_QUART_CENTS,
       orderDate,
     }
 

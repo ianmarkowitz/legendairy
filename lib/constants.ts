@@ -4,7 +4,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ── Pricing ──────────────────────────────────────────────────────────────────
-export const PRICE_PER_QUART_CENTS = 50            // ⚠️ TEST MODE — change back to 1999 before launch
+export const PRICE_PER_QUART_CENTS = 4999
 export const MIN_QUARTS            = 2
 export const QUART_INCREMENT       = 2             // UI stepper increment
 

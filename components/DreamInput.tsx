@@ -6,8 +6,10 @@ import {
   AC, ScoopDoodle, Scribble, Starburst, WaxSeal,
   Stamp, TicketStub, paperGrain, acSerif, acHand, acSmall,
 } from './ac-primitives'
+import { PRICE_PER_QUART_CENTS } from '@/lib/constants'
 
 const FF = { serif: 'var(--font-fraunces)', hand: 'var(--font-caveat)' }
+const PRICE_DISPLAY = (PRICE_PER_QUART_CENTS / 100).toFixed(2)
 
 const CHIPS = [
   { text: 'Apple pie filling folded into ice cream', icon: '🍎', grad: ['#E8A628', '#C83A4E'] },
@@ -266,7 +268,7 @@ export default function DreamInput() {
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           {[
             { n: '01', q: 'Is every flavor really one-of-one?', a: 'Yes. Each recipe is generated specifically for your prompt and never reused.' },
-            { n: '02', q: 'How does pricing work?',             a: '$19.99/qt with a two-quart minimum order. No hidden fees, ever.' },
+            { n: '02', q: 'How does pricing work?',             a: `$${PRICE_DISPLAY}/qt with a two-quart minimum order. No hidden fees, ever.` },
             { n: '03', q: 'How long from order to doorstep?',  a: 'Typically 5–7 business days from confirmation to your front door, shipped on dry ice.' },
             { n: '04', q: 'Can I save and re-order a flavor?', a: 'Yes — every flavor gets a permanent page. Bookmark it and reorder anytime.' },
           ].map(({ n, q, a }) => (
