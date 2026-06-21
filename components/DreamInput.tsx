@@ -10,6 +10,7 @@ import { PRICE_PER_QUART_CENTS } from '@/lib/constants'
 
 const FF = { serif: 'var(--font-fraunces)', hand: 'var(--font-caveat)' }
 const PRICE_DISPLAY = (PRICE_PER_QUART_CENTS / 100).toFixed(2)
+const [PRICE_DOLLARS, PRICE_CENTS] = PRICE_DISPLAY.split('.')
 
 const CHIPS = [
   { text: 'Apple pie filling folded into ice cream', icon: '🍎', grad: ['#E8A628', '#C83A4E'] },
@@ -241,7 +242,7 @@ export default function DreamInput() {
         {/* Price */}
         <div className="ac-pricing-body">
           <p style={{ fontFamily: FF.serif, fontStyle: 'italic', fontSize: 'clamp(120px, 18vw, 260px)', color: AC.ink, margin: 0, lineHeight: 0.9, letterSpacing: '-0.02em' }}>
-            $19<span style={{ color: AC.rasp }}>.99</span>
+            ${PRICE_DOLLARS}<span style={{ color: AC.rasp }}>.{PRICE_CENTS}</span>
           </p>
           <p style={{ fontFamily: FF.hand, fontSize: 22, color: AC.ink, opacity: 0.6, margin: '20px 0 52px' }}>per quart · two-quart minimum</p>
         </div>
