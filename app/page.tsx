@@ -1,8 +1,11 @@
 import type { Metadata } from 'next'
 import DreamInput from '@/components/DreamInput'
 import RecentFlavors from '@/components/RecentFlavors'
+import { PRICE_PER_QUART_CENTS } from '@/lib/constants'
 
 export const revalidate = 60
+
+const PRICE_DISPLAY = (PRICE_PER_QUART_CENTS / 100).toFixed(2)
 
 export const metadata: Metadata = {
   title: 'Legendairy — Custom Artisan Ice Cream Made to Order',
@@ -66,11 +69,11 @@ const jsonLd = {
       brand: { '@type': 'Brand', name: 'Legendairy' },
       offers: {
         '@type': 'Offer',
-        price: '19.99',
+        price: PRICE_DISPLAY,
         priceCurrency: 'USD',
         priceSpecification: {
           '@type': 'UnitPriceSpecification',
-          price: '19.99',
+          price: PRICE_DISPLAY,
           priceCurrency: 'USD',
           unitText: 'per quart',
         },
@@ -95,7 +98,7 @@ const jsonLd = {
           name: 'How much does custom ice cream cost?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: '$19.99 per quart with a two-quart minimum order. No hidden fees.',
+            text: `$${PRICE_DISPLAY} per quart with a two-quart minimum order. No hidden fees.`,
           },
         },
         {

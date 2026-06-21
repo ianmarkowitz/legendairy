@@ -399,7 +399,7 @@ export default function FlavorClient({ flavor, userId, autoVault }: Props) {
 
         {/* Price box */}
         <div style={{ background: AC.cream, border: `2px solid ${AC.ink}`, padding: '20px 26px', marginBottom: 20, maxWidth: 480, display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: `5px 5px 0 ${AC.marigold}` }}>
-          <span style={{ fontFamily: FF.serif, fontSize: 15, color: `${AC.ink}88` }}>{quantityQuarts} qt × $19.99</span>
+          <span style={{ fontFamily: FF.serif, fontSize: 15, color: `${AC.ink}88` }}>{quantityQuarts} qt × ${(PRICE_PER_QUART_CENTS / 100).toFixed(2)}</span>
           <span style={{ ...ital(36, AC.ink) }}>${(totalCents / 100).toFixed(2)}</span>
         </div>
 
