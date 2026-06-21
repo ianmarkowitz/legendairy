@@ -49,25 +49,37 @@ export async function POST() {
     }
   }
 
-  const [{ data: profiles }, { data: leads }, { data: orders }] = await Promise.all([
+  const [profilesRes, leadsRes, ordersRes] = await Promise.all([
     serviceClient.from('profiles').select('email, full_name'),
     serviceClient.from('leads').select('email'),
     serviceClient.from('orders').select('customer_email, customer_name'),
   ])
+  const { data: profiles, error: profilesErr } = profilesRes
+  const { data: leads,    error: leadsErr }    = leadsRes
+  const { data: orders,   error: ordersErr }   = ordersRes
 
   for (const p of profiles ?? []) add(p.email, p.full_name)
   for (const l of leads    ?? []) add(l.email)
   for (const o of orders   ?? []) add(o.customer_email, o.customer_name)
+
+  // A failed source (e.g. a table that hasn't been migrated yet) must not be
+  // mistaken for "0 contacts found" — surface it as a warning instead.
+  const warnings = [
+    profilesErr && `profiles: ${profilesErr.message}`,
+    leadsErr    && `leads: ${leadsErr.message}`,
+    ordersErr   && `orders: ${ordersErr.message}`,
+  ].filter((w): w is string => Boolean(w))
 
   // 3. Sync them all (throttled, idempotent).
   const counts = await syncContactsBatch(Array.from(contacts.values()))
 
   return NextResponse.json({
     sources: {
-      profiles: profiles?.length ?? 0,
-      leads:    leads?.length    ?? 0,
-      orders:   orders?.length   ?? 0,
+      profiles: profilesErr ? null : profiles?.length ?? 0,
+      leads:    leadsErr    ? null : leads?.length    ?? 0,
+      orders:   ordersErr   ? null : orders?.length   ?? 0,
     },
+    ...(warnings.length > 0 && { warnings }),
     uniqueEmails: contacts.size,
     result: counts,
   })

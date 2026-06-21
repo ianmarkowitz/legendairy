@@ -33,6 +33,12 @@ export async function POST(req: Request) {
     .upsert({ email, flavor_creation_id: flavorCreationId }, { onConflict: 'email,flavor_creation_id', ignoreDuplicates: true })
 
   if (insertErr) {
+    // 42P01 = undefined_table — the `leads` table migration hasn't been run.
+    // Surface this distinctly so it isn't confused with a transient DB error.
+    if (insertErr.code === '42P01') {
+      console.error('Lead insert error: leads table does not exist (migration not applied)')
+      return NextResponse.json({ error: 'Lead capture is not set up yet' }, { status: 503 })
+    }
     console.error('Lead insert error:', insertErr.message)
     return NextResponse.json({ error: 'Could not save lead' }, { status: 500 })
   }
