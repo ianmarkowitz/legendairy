@@ -1,23 +1,34 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { supabase as serviceClient } from '@/lib/supabase'
 import { syncContactsBatch, firstNameOf } from '@/lib/resendAudience'
 
-// 400-ish contacts × ~120ms throttle ≈ under a minute. Give the function headroom.
-// (Idempotent — if it ever times out, just call it again.)
+// One batch (≈100 contacts × ~120ms throttle + Resend round-trips) comfortably
+// fits in a single request. The whole list does NOT — for a few hundred
+// contacts the naive one-shot loop runs well past Vercel's request timeout
+// and gets killed with a 504 before finishing. So this is chunked: each call
+// processes one page and returns nextOffset; the caller loops until done.
 export const maxDuration = 60
+const DEFAULT_BATCH_SIZE = 100
 
 /**
- * One-off backfill: push every email already in the DB (profiles + leads +
- * order buyers) into the Resend Audience. Admin-only. Safe to re-run.
+ * Backfill: push emails already in the DB (profiles + leads + order buyers)
+ * into the Resend Audience, one batch at a time. Admin-only. Idempotent and
+ * resumable — safe to re-run or to re-request the same offset.
  *
- *   curl -X POST https://<host>/api/admin/sync-resend-contacts \
- *        -H "cookie: <your admin session cookie>"
+ * Easiest path: sign in as admin, open the browser console on the site, and
+ * run this loop (it pages through automatically until done):
  *
- * Easiest path: sign in as admin, open the browser console on the site, and run
- *   fetch('/api/admin/sync-resend-contacts', { method: 'POST' }).then(r => r.json()).then(console.log)
+ *   let offset = 0, totals = { synced: 0, exists: 0, skipped: 0, error: 0 }
+ *   while (offset !== null) {
+ *     const r = await fetch(`/api/admin/sync-resend-contacts?offset=${offset}`, { method: 'POST' }).then(r => r.json())
+ *     console.log(r)
+ *     for (const k in totals) totals[k] += r.result[k]
+ *     offset = r.nextOffset
+ *   }
+ *   console.log('done', totals)
  */
-export async function POST() {
+export async function POST(req: NextRequest) {
   // 1. Auth + admin check (same pattern as other /api/admin routes)
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -70,8 +81,19 @@ export async function POST() {
     ordersErr   && `orders: ${ordersErr.message}`,
   ].filter((w): w is string => Boolean(w))
 
-  // 3. Sync them all (throttled, idempotent).
-  const counts = await syncContactsBatch(Array.from(contacts.values()))
+  // 3. Sort for a stable order across calls, then take this one batch.
+  const allContacts = Array.from(contacts.values()).sort((a, b) => a.email.localeCompare(b.email))
+
+  const offsetParam = Number(req.nextUrl.searchParams.get('offset') ?? '0')
+  const offset = Number.isFinite(offsetParam) && offsetParam >= 0 ? offsetParam : 0
+  const limitParam = Number(req.nextUrl.searchParams.get('limit') ?? '')
+  const limit = Number.isFinite(limitParam) && limitParam > 0 ? Math.min(limitParam, 200) : DEFAULT_BATCH_SIZE
+
+  const batch = allContacts.slice(offset, offset + limit)
+  const nextOffset = offset + limit < allContacts.length ? offset + limit : null
+
+  // 4. Sync this batch only (throttled, idempotent).
+  const counts = await syncContactsBatch(batch)
 
   return NextResponse.json({
     sources: {
@@ -80,7 +102,11 @@ export async function POST() {
       orders:   ordersErr   ? null : orders?.length   ?? 0,
     },
     ...(warnings.length > 0 && { warnings }),
-    uniqueEmails: contacts.size,
+    uniqueEmails: allContacts.length,
+    offset,
+    limit,
+    nextOffset,
+    done: nextOffset === null,
     result: counts,
   })
 }
