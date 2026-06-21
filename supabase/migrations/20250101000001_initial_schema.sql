@@ -1,17 +1,11 @@
 -- ─────────────────────────────────────────────────────────────────────────────
--- LEGENDAIRY ICE CREAM — SUPABASE SCHEMA (historical reference)
---
--- SUPERSEDED as the source of truth by supabase/migrations/*.sql, applied via
--- `npm run db:push` (Supabase CLI). This file is kept as a single-file view of
--- the full schema for reading — do not run it directly, and do not add new
--- changes here. To change the schema: add a new file under supabase/migrations.
+-- LEGENDAIRY ICE CREAM — INITIAL SCHEMA
 -- ─────────────────────────────────────────────────────────────────────────────
 
--- Enable UUID extension (usually already enabled on Supabase)
 create extension if not exists "uuid-ossp";
 
 -- ── profiles ─────────────────────────────────────────────────────────────────
--- Linked to Supabase auth.users. Created via trigger on sign-up (Phase 2).
+-- Linked to Supabase auth.users. Created via trigger on sign-up (see phase2 migration).
 create table if not exists profiles (
   id         uuid primary key references auth.users(id) on delete cascade,
   full_name  text,
@@ -90,72 +84,11 @@ alter table flavor_creations  enable row level security;
 alter table orders            enable row level security;
 
 -- Admins can do everything (Phase 3 dashboard will use service role anyway)
+drop policy if exists "Service role bypass" on profiles;
 create policy "Service role bypass" on profiles
   using (true) with check (true);
 
 -- Flavor creations are readable by anyone with the ID (public by UUID)
+drop policy if exists "Public read by ID" on flavor_creations;
 create policy "Public read by ID" on flavor_creations
   for select using (true);
-
--- ─────────────────────────────────────────────────────────────────────────────
--- PHASE 2 MIGRATIONS — run these in Supabase SQL editor
--- ─────────────────────────────────────────────────────────────────────────────
-
--- 1. Add vault flag to flavor_creations
-alter table flavor_creations
-  add column if not exists is_vaulted boolean not null default false;
-
-create index if not exists idx_flavor_creations_vaulted
-  on flavor_creations(user_id, is_vaulted);
-
--- 2. Auto-create profile row when a user signs up via magic link
-create or replace function public.handle_new_user()
-returns trigger language plpgsql security definer as $$
-begin
-  insert into public.profiles (id, email, full_name)
-  values (
-    new.id,
-    new.email,
-    coalesce(new.raw_user_meta_data->>'full_name', '')
-  )
-  on conflict (id) do nothing;
-  return new;
-end;
-$$;
-
-drop trigger if exists on_auth_user_created on auth.users;
-create trigger on_auth_user_created
-  after insert on auth.users
-  for each row execute function public.handle_new_user();
-
--- 3. Enable magic link / OTP in Supabase Dashboard:
---    Auth → Providers → Email → enable "Magic links"
---    Auth → URL Configuration → add https://www.legendairyicecream.com/auth/callback
-
--- ─────────────────────────────────────────────────────────────────────────────
--- REFINEMENTS MIGRATIONS — run in Supabase SQL editor
--- ─────────────────────────────────────────────────────────────────────────────
-
--- 4. Add 'shipped' status + tracking columns
-alter type order_status add value if not exists 'shipped';
-alter table orders add column if not exists tracking_number  text;
-alter table orders add column if not exists shipped_at       timestamptz;
-
--- 5. Add carrier column for shipping notifications
-alter table orders add column if not exists tracking_carrier text check (tracking_carrier in ('UPS', 'USPS', 'FedEx', 'Other'));
-
--- ─────────────────────────────────────────────────────────────────────────────
--- PHASE 3 MIGRATIONS — run in Supabase SQL editor
--- ─────────────────────────────────────────────────────────────────────────────
-
--- 6. Lead capture table (guests who submit email on flavor page without ordering)
-create table if not exists leads (
-  id                 uuid primary key default uuid_generate_v4(),
-  email              text not null,
-  flavor_creation_id uuid references flavor_creations(id) on delete cascade,
-  created_at         timestamptz not null default now(),
-  unique (email, flavor_creation_id)
-);
-
-create index if not exists idx_leads_email      on leads(email);
-create index if not exists idx_leads_created_at on leads(created_at desc);

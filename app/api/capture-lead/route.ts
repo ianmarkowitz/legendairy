@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { supabase } from '@/lib/supabase'
 import { sendLeadEmail } from '@/lib/email'
+import { syncContactToResend } from '@/lib/resendAudience'
 
 const schema = z.object({
   email:             z.string().email(),
@@ -32,6 +33,12 @@ export async function POST(req: Request) {
     .upsert({ email, flavor_creation_id: flavorCreationId }, { onConflict: 'email,flavor_creation_id', ignoreDuplicates: true })
 
   if (insertErr) {
+    // 42P01 = undefined_table — the `leads` table migration hasn't been run.
+    // Surface this distinctly so it isn't confused with a transient DB error.
+    if (insertErr.code === '42P01') {
+      console.error('Lead insert error: leads table does not exist (migration not applied)')
+      return NextResponse.json({ error: 'Lead capture is not set up yet' }, { status: 503 })
+    }
     console.error('Lead insert error:', insertErr.message)
     return NextResponse.json({ error: 'Could not save lead' }, { status: 500 })
   }
@@ -43,6 +50,10 @@ export async function POST(req: Request) {
     tagline:    flavor.tagline,
     flavorId:   flavorCreationId,
   }).catch(err => console.error('Lead email failed:', err))
+
+  // Sync lead into the Resend marketing audience (non-blocking, idempotent).
+  // Note: lead emails are unverified — they were typed without confirmation.
+  syncContactToResend({ email }).catch(err => console.error('Lead contact sync failed:', err))
 
   return NextResponse.json({ ok: true })
 }
